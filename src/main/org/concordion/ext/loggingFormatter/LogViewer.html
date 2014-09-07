@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style type="text/css">
+	h1 {
+		margin-bottom: 0px;
+	}
+
+	.levelkey {
+		margin-top: 25px;
+		padding 0;
+		border-collapse:collapse;
+	}
+	
+	.levelkey td{
+		width: 48px;
+		border: 1px solid gray;
+		text-align: center;
+	}
+	
+	.alignleft {
+		display:inline-block;
+	}
+	.alignright {
+		display:inline-block;
+		float: right;
+		margin-right: 40px;
+	}
+
+	.line {
+		font-family: monospace;
+	}
+
+	.info {
+	}
+
+	.info-color {
+		background-color: White;
+	}
+	
+	.debug {
+	}
+
+	.debug-color {
+		background-color: Gainsboro;
+	}
+
+	.trace {
+	}
+	
+	.trace-color {
+		background-color: Khaki;
+	}
+	
+	.warn {
+	}
+	
+	.warn-color {
+		background-color: Orange;
+	}
+	
+	.error {
+	}
+	
+	.error-color {
+		background-color: Tomato;
+	}
+	
+	.line-numbers {
+		background: #e9e9e9;
+		border-right: 1px solid #666;
+		display:inline-block;
+		width: 40px;
+		text-align: right;
+		padding: 0 5px;
+		-webkit-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+	}
+	
+	.split-debug-levels {
+		border-bottom: none;
+	}
+	
+	.split-trace-levels {
+		border-bottom: none;
+	}
+	
+	div.header-fixed {
+		background-color: white;
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		padding-left: 10px;
+		z-index: 100000;
+	}
+	
+	ul.content {
+		margin-top: 125px;
+		padding-left: 0px;
+		white-space: nowrap;
+		list-style-type: none;
+	}
+	
+	pre {
+		margin: 0px;
+		padding 0px;
+		display:inline-block;
+	}
+	
+</style>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script type="text/javascript">
+	function loadLogFile(){
+		$.get(
+			"LOG_FILE_NAME",
+			{language: "php", version: 5},
+			function(responseText){
+				responseText = responseText.replace(/</g, "&lt;");
+				responseText = responseText.replace(/>/g, "&gt;");
+			
+				var lineLevel = "";
+				var lines = responseText.split(/\n/gm);
+				
+				for (index = 0; index < lines.length; index++) {
+					var prevLineLevel = lineLevel;
+
+					// Check line starts with date and time
+					if (lines[index].search(/\d\d?-\d\d?-\d\d\d\d \d\d?:/) == 0) {
+						if (lines[index].search(/.* INFO /) == 0) lineLevel = "info";
+						if (lines[index].search(/.* DEBUG /) == 0) lineLevel = "debug";
+						if (lines[index].search(/.* TRACE /) == 0) lineLevel = "trace";
+						if (lines[index].search(/.* WARN /) == 0) lineLevel = "warn";
+						if (lines[index].search(/.* ERROR /) == 0) lineLevel = "error";
+						
+						if(prevLineLevel != lineLevel && (lineLevel == "debug" || lineLevel == "trace")) {
+							if (index > 0) {
+								//lines[index-1] = lines[index-1].replace("<div class=\"line-numbers\">", "<div class=\"line-numbers split-" + lineLevel + "-levels\">");
+								lines[index-1] = lines[index-1].replace("<li class=\"line ", "<li class=\"line split-" + lineLevel + "-levels ");
+							}
+						}
+					}					
+					
+					lines[index] = "<li class=\"line " + lineLevel + " " + lineLevel + "-color" + "\"><div class=\"line-numbers\">" + (index + 1) + "</div><pre>" + lines[index] + "</pre></li>";
+				}
+				responseText = lines.join("");
+				
+				$("#content").html(responseText);
+			},
+			"html"
+		);
+	}
+  
+	function filterDebug(cb) {
+		doFilter(".debug", cb.checked);
+		doSplit(".split-debug-levels",  cb.checked);
+	}
+	function filterTrace(cb) {
+		doFilter(".trace", cb.checked);
+		doSplit(".split-trace-levels",  cb.checked);
+	}
+	function doFilter(className, checked) {
+		var setting = checked ? "inherit" : "none";
+		$(className).css({"display": setting});
+	}
+	function doSplit(className, checked) {
+		var setting = checked ? "none" : "1px dotted black";
+		$(className).css({"border-bottom": setting});
+	}	
+</script>
+</head>
+<body onload="loadLogFile();">
+<div class="header-fixed" >
+	<h1 class="alignleft">Log File Viewer</h1>
+	<table class="levelkey alignright">
+		<tr>
+			<td class="info-color">Info</td>
+			<td class="debug-color">Debug</td>
+			<td class="trace-color">Trace</td>
+			<td class="warn-color">Warn</td>
+			<td class="error-color">Error</td>
+		</tr>
+	</table>
+	
+	<p>
+		<label class="alignleft"><input id="chkDebug" type="checkbox" onclick="filterDebug(this);" checked>Show 'DEBUG' level statements</label>
+		<label class="alignleft"><input id="chkTrace" type="checkbox" onclick="filterTrace(this);" checked>Show 'TRACE' level statements</label>
+		<span class="alignright"><a href="LOG_FILE_NAME">Raw Log File</a></span>
+	</p>
+	<hr style="clear: both;">
+</div>
+<ul class="content" id="content">loading...</ul>
+</div>
+</body>
+</html>
