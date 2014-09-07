@@ -9,4 +9,4 @@ Provides Logback logging support for concordion including:
 
 This extension was originally developed once we started running our tests in parallel (using the latest update to cordion to allow this) and discovered that one interleaved log file was not particularly useful.  Even if you are not running tests in parallel the ability to click on a link in the specification to access the log file is very nice :-)
 
-The log viewer was an attempt to make the logging less scary for non developers, and came before I thought of the storyboard extension.  I'm a little unsure wether its an improvement or not.
+The log viewer was an attempt to make the logging less scary for non developers, and came before I thought of the storyboard extension.  I'm a little unsure whether its an improvement or not.
