@@ -3,7 +3,6 @@ package org.concordion.ext;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.logging.ConsoleHandler;
 
 import org.concordion.ext.logging.LogMessenger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +14,7 @@ import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
 import ch.qos.logback.classic.filter.ThresholdFilter;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.Appender;
+import ch.qos.logback.core.ConsoleAppender;
 import ch.qos.logback.core.OutputStreamAppender;
 
 /**
@@ -84,7 +84,7 @@ public class LogbackLogMessenger implements LogMessenger {
 			for (Iterator<Appender<ILoggingEvent>> index = logger.iteratorForAppenders(); index.hasNext();) {
 				Appender<ILoggingEvent> appender = index.next();
 
-				if (appender.getClass().isAssignableFrom(ConsoleHandler.class)) {
+				if (appender.getClass().isAssignableFrom(ConsoleAppender.class)) {
 					root.detachAppender(appender);
 				}
 			}

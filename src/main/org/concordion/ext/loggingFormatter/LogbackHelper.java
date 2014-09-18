@@ -91,10 +91,9 @@ public class LogbackHelper
 	 *            name of the new log file
 	 * @throws Exception
 	 */
-	public static void startTestLogging(final String testClassName) {
+	public static void startTestLogging(final Object testClass) {
 		String baseDir = getConcordionBaseOutputDir();
-
-		// String fullClassName = test.getClass().getName();
+		String testClassName = testClass.getClass().getName();
 
 		MDC.put(TEST_NAME, baseDir + testClassName.replace(".", "/"));
 	}

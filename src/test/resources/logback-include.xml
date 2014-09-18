@@ -1,0 +1,52 @@
+<included>
+
+<!-- java.util.logging.SimpleFormatter.format= [%1$tc]: %2$s: %4$s: %5$s%n -->
+
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<!-- encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+		<encoder>
+			<pattern>%d{dd-MM-yyyy HH:mm:ss.SSS} %-5level %logger{36} - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="STDOUT-INFO" class="ch.qos.logback.core.ConsoleAppender">
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>INFO</level>			
+		</filter>
+
+		<!-- encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+		<encoder>
+			<pattern>%d{dd-MM-yyyy HH:mm:ss.SSS} %-5level %logger{36} - %msg%n</pattern>
+		</encoder>
+	</appender>
+	    
+	<appender name="FILE-PER-TEST" class="ch.qos.logback.classic.sift.SiftingAppender">
+		<discriminator>
+			<Key>testname</Key>
+			<DefaultValue>build/testrun</DefaultValue>
+		</discriminator>
+		<sift>
+			<appender name="FILE-${testname}" class="ch.qos.logback.core.FileAppender">
+				<!-- location is determined by concordion.output.dir property in gradle.build file --> 
+				<File>${testname}.log</File>
+				<append>false</append>				
+				<layout class="ch.qos.logback.classic.PatternLayout">
+ 					<pattern>%d{dd-MM-yyyy HH:mm:ss.SSS} %-5level %logger{36} - %msg%n</pattern> 
+				</layout>
+			</appender>
+		</sift>
+	</appender>
+
+	<logger name="org.apache.http" level="WARNING"/>
+	<logger name="org.openqa.selenium" level="WARNING"/>
+	<logger name="com.sun.activation.registries.LogSupport" level="WARNING"/>
+	<logger name="groovy.sql.Sql" level="WARNING"/>
+	<logger name="sun.net.www.protocol.http.HttpURLConnection" level="WARNING"/>
+	
+	<!-- TODO: Not really what I wanted, just trying to stop info level going to console appender when running in Jenkins as
+	 this belongs in the test file -->
+	<logger name="selenium.events" additivity="false">
+    	<appender-ref ref="FILE-PER-TEST" />
+  	</logger>
+</included>
+
