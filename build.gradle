@@ -3,6 +3,11 @@
  */
 
 apply plugin: 'groovy'
+apply plugin: 'wrapper'
+
+wrapper {
+	gradleVersion = '2.2'
+}
 
 // Java compilier compliance level
 sourceCompatibility = 1.7
