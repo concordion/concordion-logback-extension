@@ -65,7 +65,7 @@ public class LogbackLogMessenger implements LogMessenger {
 		encoder.setPattern("%msg%n");
 		encoder.start();
 
-		streamAppender = new OutputStreamAppender<>();
+		streamAppender = new OutputStreamAppender<ILoggingEvent>();
 		streamAppender.setName("OutputStream Appender");
 		streamAppender.setContext(lc);
 		streamAppender.setEncoder(encoder);
