@@ -13,9 +13,9 @@ import ch.qos.logback.core.Appender;
 import ch.qos.logback.core.util.StatusPrinter;
 
 /**
- * Class to handle setting/removing MDC on per test case basis. This helps us log each test case into it's own log file. Please see {@link http
- * ://logback.qos.ch/manual/appenders.html#SiftingAppender} and {@link http://logback.qos.ch/manual/mdc.html}
- * 
+ * Class to handle setting/removing MDC on per test case basis. This helps us log each test case into it's own log file. 
+ * @see <a href="http://logback.qos.ch/manual/appenders.html#SiftingAppender">Sifting Appender</a>
+ * @see <a href="http://logback.qos.ch/manual/mdc.html">MDC</a>
  */
 public class LogbackHelper
 {
@@ -33,8 +33,6 @@ public class LogbackHelper
 
 	/**
 	 * Gets the base output folder used by concordion - copied from ConcordionBuilder.getBaseOutputDir()
-	 * 
-	 * @return
 	 */
 	public static String getConcordionBaseOutputDir() {
 		String outputPath = System.getProperty(PROPERTY_OUTPUT_DIR);
@@ -86,10 +84,6 @@ public class LogbackHelper
 
 	/**
 	 * Adds the test name to MDC so that sift appender can use it and log the new log events to a different file
-	 * 
-	 * @param name
-	 *            name of the new log file
-	 * @throws Exception
 	 */
 	public static void startTestLogging(final Object testClass) {
 		String baseDir = getConcordionBaseOutputDir();
@@ -100,8 +94,6 @@ public class LogbackHelper
 
 	/**
 	 * Removes the key (log file name) from MDC
-	 * 
-	 * @return name of the log file, if one existed in MDC
 	 */
 	public static String stopTestLogging() {
 		String name = MDC.get(TEST_NAME);

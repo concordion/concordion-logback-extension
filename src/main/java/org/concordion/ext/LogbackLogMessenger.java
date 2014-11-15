@@ -25,7 +25,7 @@ public class LogbackLogMessenger implements LogMessenger {
 	private final ByteArrayOutputStream printStream;
 
 	/**
-	 * Configures a {@link Handler} to store new messages. Based on JavaUtilLogMessenger.
+	 * Configures loggers to store new messages. Based on JavaUtilLogMessenger.
 	 * 
 	 * @param loggerNames
 	 * @param loggingLevel
