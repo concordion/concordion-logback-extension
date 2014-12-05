@@ -112,46 +112,6 @@
 </style>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script type="text/javascript">
-	function loadLogFile(){
-		$.get(
-			"LOG_FILE_NAME",
-			{language: "php", version: 5},
-			function(responseText){
-				responseText = responseText.replace(/</g, "&lt;");
-				responseText = responseText.replace(/>/g, "&gt;");
-			
-				var lineLevel = "";
-				var lines = responseText.split(/\n/gm);
-				
-				for (index = 0; index < lines.length; index++) {
-					var prevLineLevel = lineLevel;
-
-					// Check line starts with date and time
-					if (lines[index].search(/\d\d?-\d\d?-\d\d\d\d \d\d?:/) == 0) {
-						if (lines[index].search(/.* INFO /) == 0) lineLevel = "info";
-						if (lines[index].search(/.* DEBUG /) == 0) lineLevel = "debug";
-						if (lines[index].search(/.* TRACE /) == 0) lineLevel = "trace";
-						if (lines[index].search(/.* WARN /) == 0) lineLevel = "warn";
-						if (lines[index].search(/.* ERROR /) == 0) lineLevel = "error";
-						
-						if(prevLineLevel != lineLevel && (lineLevel == "debug" || lineLevel == "trace")) {
-							if (index > 0) {
-								//lines[index-1] = lines[index-1].replace("<div class=\"line-numbers\">", "<div class=\"line-numbers split-" + lineLevel + "-levels\">");
-								lines[index-1] = lines[index-1].replace("<li class=\"line ", "<li class=\"line split-" + lineLevel + "-levels ");
-							}
-						}
-					}					
-					
-					lines[index] = "<li class=\"line " + lineLevel + " " + lineLevel + "-color" + "\"><div class=\"line-numbers\">" + (index + 1) + "</div><pre>" + lines[index] + "</pre></li>";
-				}
-				responseText = lines.join("");
-				
-				$("#content").html(responseText);
-			},
-			"html"
-		);
-	}
-  
 	function filterDebug(cb) {
 		doFilter(".debug", cb.checked);
 		doSplit(".split-debug-levels",  cb.checked);
@@ -170,7 +130,7 @@
 	}	
 </script>
 </head>
-<body onload="loadLogFile();">
+<body>
 <div class="header-fixed" >
 	<h1 class="alignleft">Log File Viewer</h1>
 	<table class="levelkey alignright">
@@ -190,7 +150,9 @@
 	</p>
 	<hr style="clear: both;">
 </div>
-<ul class="content" id="content">loading...</ul>
+<ul class="content" id="content">
+    LOG_FILE_CONTENT
+</ul>
 </div>
 </body>
 </html>
