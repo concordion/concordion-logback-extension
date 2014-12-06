@@ -48,7 +48,7 @@ public class LogbackLogMessenger implements LogMessenger {
 
 			logger.addAppender(streamAppender);
 			
-			if (!displayRootConsoleLogging) {
+			if (!displayRootConsoleLogging && loggerName != Logger.ROOT_LOGGER_NAME) {
 				logger.setAdditive(false);
 			}			
 		}
