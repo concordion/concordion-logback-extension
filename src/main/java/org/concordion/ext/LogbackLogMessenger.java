@@ -27,10 +27,11 @@ public class LogbackLogMessenger implements LogMessenger {
 	/**
 	 * Configures loggers to store new messages. Based on JavaUtilLogMessenger.
 	 * 
-	 * @param loggerNames
-	 * @param loggingLevel
-	 * @param displayRootConsoleLogging
-	 */
+     * @param loggerNames a comma separated list of the names of loggers whose output is to be shown in the Concordion output. An empty string indicates the root logger.
+     * @param loggingLevel the logging {@link Level} for the handler that writes to the Concordion output. Log messages of this level and
+     * higher will be output.  Note that the associated {@link Logger}s must also have an appropriate logging level set.
+     * @param displayRootConsoleLogging <code>false</code> to remove console output for the root logger, <code>true</code> to show the console output
+ 	 */
 	public LogbackLogMessenger(String loggerNames, final Level loggingLevel, final boolean displayRootConsoleLogging) {
 		printStream = new ByteArrayOutputStream(4096);
 
@@ -40,16 +41,16 @@ public class LogbackLogMessenger implements LogMessenger {
 
 		for (String loggerName : loggerNames.split(",")) {
 			Logger logger = (Logger) LoggerFactory.getLogger(loggerName.trim());
-
+			
 			if (streamAppender == null) {
 				streamAppender = getNewAppender(logger.getLoggerContext(), loggingLevel);
 			}
 
 			logger.addAppender(streamAppender);
-		}
-
-		if (!displayRootConsoleLogging) {
-			removeRootConsoleHandler();
+			
+			if (!displayRootConsoleLogging) {
+				logger.setAdditive(false);
+			}			
 		}
 	}
 
@@ -74,21 +75,6 @@ public class LogbackLogMessenger implements LogMessenger {
 		streamAppender.start();
 
 		return streamAppender;
-	}
-
-	private void removeRootConsoleHandler() {
-		// TODO This has never been tested...
-		Logger root = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
-
-		for (Logger logger : root.getLoggerContext().getLoggerList()) {
-			for (Iterator<Appender<ILoggingEvent>> index = logger.iteratorForAppenders(); index.hasNext();) {
-				Appender<ILoggingEvent> appender = index.next();
-
-				if (appender.getClass().isAssignableFrom(ConsoleAppender.class)) {
-					root.detachAppender(appender);
-				}
-			}
-		}
 	}
 
 	@Override
