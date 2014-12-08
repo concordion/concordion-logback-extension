@@ -27,7 +27,8 @@ public class LogbackLogMessenger implements LogMessenger {
      * @param loggerNames a comma separated list of the names of loggers whose output is to be shown in the Concordion output. An empty string indicates the root logger.
      * @param loggingLevel the logging {@link Level} for the handler that writes to the Concordion output. Log messages of this level and
      * higher will be output.  Note that the associated {@link Logger}s must also have an appropriate logging level set.
-     * @param isAdditive <code>false</code> to prevent other loggers/appenders displaying (eg console) displaying tooltip output, <code>true</code> to show the output in other loggers/appenders as their filters allow
+     * @param isAdditive <code>false</code> to prevent other loggers/appenders displaying (eg console) displaying tooltip output, <code>true</code> to show the
+     * 					 output in other loggers/appenders as their filters allow.  Use carefully as can disable all logging if applied to root/test specific logger.
  	 */
 	public LogbackLogMessenger(String loggerNames, final Level loggingLevel, final boolean isAdditive) {
 		printStream = new ByteArrayOutputStream(4096);
