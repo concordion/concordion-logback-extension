@@ -20,6 +20,7 @@ import ch.qos.logback.core.OutputStreamAppender;
 public class LogbackLogMessenger implements LogMessenger {
 	private OutputStreamAppender<ILoggingEvent> streamAppender = null;
 	private final ByteArrayOutputStream printStream;
+	private final String tooltipPattern;
 
 	/**
 	 * Configures loggers to store new messages. Based on JavaUtilLogMessenger.
@@ -31,6 +32,21 @@ public class LogbackLogMessenger implements LogMessenger {
      * 					 output in other loggers/appenders as their filters allow.  Use carefully as can disable all logging if applied to root/test specific logger.
  	 */
 	public LogbackLogMessenger(String loggerNames, final Level loggingLevel, final boolean isAdditive) {
+		this(loggerNames, loggingLevel, isAdditive, "[%d{h:mm:ss.SSS}] %msg%n");
+	}
+
+	/**
+	 * Configures loggers to store new messages.
+	 * 
+	 * @param loggingLevel the logging {@link Level} for the handler that writes to the Concordion output. Log messages of this level and
+     * 					   higher will be output.  Note that the associated {@link Logger}s must also have an appropriate logging level set.
+     * @param isAdditive <code>false</code> to prevent other loggers/appenders displaying (eg console) displaying tooltip output, <code>true</code> to show the
+     * 					 output in other loggers/appenders as their filters allow.  Use carefully as can disable all logging if applied to root/test specific logger.
+ 	 * @param tooltipPattern sets the pattern used to format the tooltip logs.  Any valid logback pattern can be used. <i>Is optional.</i>
+	 */
+	public LogbackLogMessenger(String loggerNames, final Level loggingLevel, final boolean isAdditive, String tooltipPattern) {
+		this.tooltipPattern = tooltipPattern;
+		
 		printStream = new ByteArrayOutputStream(4096);
 
 		if (loggerNames.isEmpty()) {
@@ -48,10 +64,12 @@ public class LogbackLogMessenger implements LogMessenger {
 			
 			if (!isAdditive) {
 				logger.setAdditive(false);
-			}			
+			}		
+		
 		}
+		
 	}
-
+	
 	private OutputStreamAppender<ILoggingEvent> getNewAppender(final LoggerContext lc, final Level loggingLevel) {
 		OutputStreamAppender<ILoggingEvent> streamAppender;
 
@@ -61,7 +79,7 @@ public class LogbackLogMessenger implements LogMessenger {
 
 		PatternLayoutEncoder encoder = new PatternLayoutEncoder();
 		encoder.setContext(lc);
-		encoder.setPattern("[%d{h:mm:ss.SSS}] %msg%n");
+		encoder.setPattern(this.tooltipPattern);
 		encoder.start();
 
 		streamAppender = new OutputStreamAppender<ILoggingEvent>();
