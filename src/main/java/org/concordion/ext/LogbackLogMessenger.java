@@ -2,7 +2,6 @@ package org.concordion.ext;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Iterator;
 
 import org.concordion.ext.logging.LogMessenger;
 import org.slf4j.LoggerFactory;
@@ -13,8 +12,6 @@ import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
 import ch.qos.logback.classic.filter.ThresholdFilter;
 import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.core.Appender;
-import ch.qos.logback.core.ConsoleAppender;
 import ch.qos.logback.core.OutputStreamAppender;
 
 /**
@@ -30,9 +27,9 @@ public class LogbackLogMessenger implements LogMessenger {
      * @param loggerNames a comma separated list of the names of loggers whose output is to be shown in the Concordion output. An empty string indicates the root logger.
      * @param loggingLevel the logging {@link Level} for the handler that writes to the Concordion output. Log messages of this level and
      * higher will be output.  Note that the associated {@link Logger}s must also have an appropriate logging level set.
-     * @param displayRootConsoleLogging <code>false</code> to remove console output for the root logger, <code>true</code> to show the console output
+     * @param isAdditive <code>false</code> to prevent other loggers/appenders displaying (eg console) displaying tooltip output, <code>true</code> to show the output in other loggers/appenders as their filters allow
  	 */
-	public LogbackLogMessenger(String loggerNames, final Level loggingLevel, final boolean displayRootConsoleLogging) {
+	public LogbackLogMessenger(String loggerNames, final Level loggingLevel, final boolean isAdditive) {
 		printStream = new ByteArrayOutputStream(4096);
 
 		if (loggerNames.isEmpty()) {
@@ -48,7 +45,7 @@ public class LogbackLogMessenger implements LogMessenger {
 
 			logger.addAppender(streamAppender);
 			
-			if (!displayRootConsoleLogging && loggerName != Logger.ROOT_LOGGER_NAME) {
+			if (!isAdditive) {
 				logger.setAdditive(false);
 			}			
 		}
@@ -63,7 +60,7 @@ public class LogbackLogMessenger implements LogMessenger {
 
 		PatternLayoutEncoder encoder = new PatternLayoutEncoder();
 		encoder.setContext(lc);
-		encoder.setPattern("%msg%n");
+		encoder.setPattern("[%d{h:mm:ss.SSS}] %msg%n");
 		encoder.start();
 
 		streamAppender = new OutputStreamAppender<ILoggingEvent>();
@@ -84,7 +81,7 @@ public class LogbackLogMessenger implements LogMessenger {
 		} catch (IOException e) {
 			// Ignore this exception
 		}
-
+		
 		String text = printStream.toString();
 		printStream.reset();
 
