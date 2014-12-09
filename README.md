@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/concordion/concordion-logback-extension.svg?branch=master)](https://travis-ci.org/concordion/concordion-logback-extension)
 
-This [Concordion](http://www.concordion.org) extension provides the capability to embed screenshots in the output specification.
+This [Concordion](http://www.concordion.org) extension provides support for Logback logging.
 
 The [demo project](http://github.com/concordion/concordion-logback-extension-demo) demonstrates this extension.
 
@@ -11,9 +11,11 @@ Provides [Logback](http://logback.qos.ch) logging support for concordion
 This extension was originally developed once we started running our tests in parallel (using the latest update to cordion to allow this) and discovered that one interleaved log file was not particularly useful.  Even if you are not running tests in parallel the ability to click on a link in the specification to access the log file is very nice :-)
 
 # Tooltip
+---------
 Adds the LogbackLogMessenger class to support the [toolip extension](http://github.com/concordion/concordion-tooltip-extension)
 
 # Unique Log Per Test
+---------------------
 The LoggingFormatterExtension places a link at the bottom right of each specification to the specifications log file
  
 The log is presented wrapped by a log viewer page, this was an attempt to make the logging less scary for non developers and came before I thought of the [storyboard extension](http://github.com/concordion/concordion-storyboard-extension).  I'm a little unsure whether its an improvement or not.  There log viewer provides access to the raw log file as well. 
