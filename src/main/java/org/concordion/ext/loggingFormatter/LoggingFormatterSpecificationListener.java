@@ -69,7 +69,6 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 
 		try {
 			// Copy LogViewer.html to Concordion output location
-			//String viewerContent = FileUtils.readFileToString(new File(LoggingFormatterSpecificationListener.class.getResource(viewerSource).getFile()));
 			String viewerContent = IOUtils.toString(LoggingFormatterSpecificationListener.class.getResourceAsStream(viewerSource));
 			
 			viewerContent = viewerContent.replaceAll("LOG_FILE_NAME", logName);

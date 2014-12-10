@@ -2,6 +2,7 @@ package org.concordion.ext;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.logging.Handler;
 
 import org.concordion.ext.logging.LogMessenger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +16,8 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.OutputStreamAppender;
 
 /**
- * Configures Logback logging to store new messages for subsequent retrieval.
+ * Configures a @link OutputStreamAppender to store new log messages from Logback 
+ * for delivery to @Link LoggingTooltipExtension
  */
 public class LogbackLogMessenger implements LogMessenger {
 	private OutputStreamAppender<ILoggingEvent> streamAppender = null;
