@@ -24,5 +24,5 @@ Your Logback configuration must have an active SiftingAppender with a discrimina
 
 # Further info
 
-* [API](http://concordion.github.io/concordion-screenshot-extension/api/index.html)
-* [Demo project](http://github.com/concordion/concordion-screenshot-extension-demo)
+* [API](http://concordion.github.io/concordion-logback-extension/api/index.html)
+* [Demo project](http://github.com/concordion/concordion-logback-extension-demo)
