@@ -12,7 +12,7 @@ This extension was originally developed once we started running our tests in par
 
 # Tooltip
 ---------
-Adds the LogbackLogMessenger class to support the [toolip extension](http://github.com/concordion/concordion-tooltip-extension)
+Adds the LogbackLogMessenger class to support the [tooltip extension](http://github.com/concordion/concordion-tooltip-extension)
 
 # Unique Log Per Test
 ---------------------
