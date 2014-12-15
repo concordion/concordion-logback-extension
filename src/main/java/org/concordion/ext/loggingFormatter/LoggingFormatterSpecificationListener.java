@@ -18,6 +18,11 @@ import org.slf4j.LoggerFactory;
 
 public class LoggingFormatterSpecificationListener implements SpecificationProcessingListener, ConcordionBuildListener {
 	private static final Logger LOGGER = LoggerFactory.getLogger(LoggingFormatterSpecificationListener.class);
+	private boolean useLogFileViewer;
+	
+	public LoggingFormatterSpecificationListener(boolean useLogFileViewer) {
+		this.useLogFileViewer = useLogFileViewer;
+	}
 
 	@Override
 	public void beforeProcessingSpecification(final SpecificationProcessingEvent event) {
@@ -67,17 +72,21 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 		String viewerSource = "LogViewer.html";
 		String viewerDestination = testName + viewerSource;
 
-		try {
-			// Copy LogViewer.html to Concordion output location
-			String viewerContent = IOUtils.toString(LoggingFormatterSpecificationListener.class.getResourceAsStream(viewerSource));
-			
-			viewerContent = viewerContent.replaceAll("LOG_FILE_NAME", logName);
-			viewerContent = viewerContent.replaceAll("LOG_FILE_CONTENT", getLogContent(LogbackHelper.getTestPath() + logName));			
-			
-			FileUtils.writeStringToFile(new File(LogbackHelper.getTestPath() + viewerDestination), viewerContent);
-		} catch (IOException e) {
-			LOGGER.error(e.getMessage());
-			return logName;
+		if (useLogFileViewer) {			
+			try {
+				// Copy LogViewer.html to Concordion output location
+				String viewerContent = IOUtils.toString(LoggingFormatterSpecificationListener.class.getResourceAsStream(viewerSource));
+				
+				viewerContent = viewerContent.replaceAll("LOG_FILE_NAME", logName);
+				viewerContent = viewerContent.replaceAll("LOG_FILE_CONTENT", getLogContent(LogbackHelper.getTestPath() + logName));			
+				
+				FileUtils.writeStringToFile(new File(LogbackHelper.getTestPath() + viewerDestination), viewerContent);
+			} catch (IOException e) {
+				LOGGER.error(e.getMessage());
+				viewerDestination = logName;
+			}
+		} else {
+			viewerDestination = logName;
 		}
 
 		return viewerDestination;
@@ -105,11 +114,11 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 				
 				// starts with a date
 				if (line.matches("^.*[0-9 -.:].*")) {
-					if (line.contains(" INFO ")) lineLevel = "info";
-					if (line.contains(" DEBUG ")) lineLevel = "debug";
-					if (line.contains(" TRACE ")) lineLevel = "trace";
-					if (line.contains(" WARN ")) lineLevel = "warn";
-					if (line.contains(" ERROR ")) lineLevel = "error";
+					if (line.contains("INFO ")) lineLevel = "info";
+					if (line.contains("DEBUG ")) lineLevel = "debug";
+					if (line.contains("TRACE ")) lineLevel = "trace";
+					if (line.contains("WARN ")) lineLevel = "warn";
+					if (line.contains("ERROR ")) lineLevel = "error";
 					
 					if(prevLineLevel != lineLevel && (lineLevel == "debug" || lineLevel == "trace")) {
 						if (prevline != null) {
