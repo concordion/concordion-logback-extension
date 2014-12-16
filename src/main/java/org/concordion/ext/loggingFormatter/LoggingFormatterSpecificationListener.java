@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.regex.Matcher;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -78,7 +79,7 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 				String viewerContent = IOUtils.toString(LoggingFormatterSpecificationListener.class.getResourceAsStream(viewerSource));
 				
 				viewerContent = viewerContent.replaceAll("LOG_FILE_NAME", logName);
-				viewerContent = viewerContent.replaceAll("LOG_FILE_CONTENT", getLogContent(LogbackHelper.getTestPath() + logName));			
+				viewerContent = viewerContent.replaceAll("LOG_FILE_CONTENT", Matcher.quoteReplacement(getLogContent(LogbackHelper.getTestPath() + logName)));			
 				
 				FileUtils.writeStringToFile(new File(LogbackHelper.getTestPath() + viewerDestination), viewerContent);
 			} catch (IOException e) {
