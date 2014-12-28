@@ -112,23 +112,30 @@
 	}
 	
 </style>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script type="text/javascript">
 	function filterDebug(cb) {
-		doFilter(".debug", cb.checked);
-		doSplit(".split-debug-levels",  cb.checked);
+		doFilter("debug", cb.checked);
+		doSplit("split-debug-levels",  cb.checked);
 	}
 	function filterTrace(cb) {
-		doFilter(".trace", cb.checked);
-		doSplit(".split-trace-levels",  cb.checked);
+		doFilter("trace", cb.checked);
+		doSplit("split-trace-levels",  cb.checked);
 	}
 	function doFilter(className, checked) {
 		var setting = checked ? "inherit" : "none";
-		$(className).css({"display": setting});
+		
+		var all = document.getElementsByClassName(className);
+		for (var i = 0; i < all.length; i++) {
+		  all[i].style.display = setting;
+		}
 	}
 	function doSplit(className, checked) {
 		var setting = checked ? "none" : "1px dotted black";
-		$(className).css({"border-bottom": setting});
+		
+		var all = document.getElementsByClassName(className);
+		for (var i = 0; i < all.length; i++) {
+		  all[i].style.borderBottom = setting;
+		}
 	}	
 </script>
 </head>
@@ -137,9 +144,9 @@
 	<h1 class="alignleft">Log File Viewer</h1>
 	<table class="levelkey alignright">
 		<tr>
-			<td class="info-color">Info</td>
-			<td class="debug-color">Debug</td>
 			<td class="trace-color">Trace</td>
+			<td class="debug-color">Debug</td>
+			<td class="info-color">Info</td>
 			<td class="warn-color">Warn</td>
 			<td class="error-color">Error</td>
 		</tr>
