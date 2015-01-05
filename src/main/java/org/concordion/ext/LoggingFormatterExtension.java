@@ -5,8 +5,6 @@ import org.concordion.api.extension.ConcordionExtender;
 import org.concordion.api.extension.ConcordionExtension;
 import org.concordion.ext.loggingFormatter.LoggingFormatterSpecificationListener;
 
-import ch.qos.logback.classic.Level;
-
 /**
  * Formats the footer of the Concordion specification to show a link to the log file that has been created for this test.<br><br>
  * By default this link leads to a log file viewer which attempts to format the log file for easier reading. For the log file 

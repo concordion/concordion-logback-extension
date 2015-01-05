@@ -2,7 +2,6 @@ package org.concordion.ext;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.logging.Handler;
 
 import org.concordion.ext.logging.LogMessenger;
 import org.slf4j.LoggerFactory;
