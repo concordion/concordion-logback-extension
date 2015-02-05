@@ -37,6 +37,10 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 
 		// Update spec with link to viewer
 		String logURL = createViewer();
+		
+		if(logURL.isEmpty()) {
+			return;
+		}
 
 		Element body = event.getRootElement().getFirstChildElement("body");
 
@@ -68,6 +72,11 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 
 	private String createViewer() {
 		String testName = LogbackHelper.getTestClassName();
+		
+		if(testName.isEmpty()) {
+			return "";
+		}
+		
 		String logName = testName + ".log";
 		String viewerSource = "LogViewer.html";
 		String viewerDestination = testName + viewerSource;

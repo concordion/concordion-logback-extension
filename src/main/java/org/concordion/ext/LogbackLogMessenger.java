@@ -39,6 +39,7 @@ public class LogbackLogMessenger implements LogMessenger {
 	/**
 	 * Configures loggers to store new messages.
 	 * 
+	 * @param loggerNames a comma separated list of the names of loggers whose output is to be shown in the Concordion output. An empty string indicates the root logger.
 	 * @param loggingLevel the logging {@link Level} for the handler that writes to the Concordion output. Log messages of this level and
      * 					   higher will be output.  Note that the associated {@link Logger}s must also have an appropriate logging level set.
      * @param isAdditive <code>false</code> to prevent other loggers/appenders displaying (eg console) displaying tooltip output, <code>true</code> to show the

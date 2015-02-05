@@ -33,6 +33,8 @@ public class LogbackHelper
 
 	/**
 	 * Gets the base output folder used by concordion - copied from ConcordionBuilder.getBaseOutputDir()
+	 * 
+	 * @return base output folder 
 	 */
 	public static String getConcordionBaseOutputDir() {
 		String outputPath = System.getProperty(PROPERTY_OUTPUT_DIR);
@@ -84,6 +86,8 @@ public class LogbackHelper
 
 	/**
 	 * Adds the test name to MDC so that sift appender can use it and log the new log events to a different file
+	 * 
+	 * @param testClass the test that is being run
 	 */
 	public static void startTestLogging(final Object testClass) {
 		String baseDir = getConcordionBaseOutputDir();
@@ -94,6 +98,8 @@ public class LogbackHelper
 
 	/**
 	 * Removes the key (log file name) from MDC
+	 * 
+	 * @return the key that got removed
 	 */
 	public static String stopTestLogging() {
 		String name = MDC.get(TEST_NAME);
@@ -109,6 +115,10 @@ public class LogbackHelper
 	public static String getTestClassName() {
 		String name = MDC.get(TEST_NAME);
 
+		if (name == null) {
+			return "";
+		}		
+		
 		return name.substring(name.lastIndexOf("/") + 1);
 	}
 
