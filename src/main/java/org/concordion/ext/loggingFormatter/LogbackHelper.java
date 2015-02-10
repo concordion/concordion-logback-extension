@@ -2,6 +2,7 @@ package org.concordion.ext.loggingFormatter;
 
 import java.io.File;
 import java.util.Iterator;
+import java.util.Stack;
 
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -22,7 +23,8 @@ public class LogbackHelper
 	public static final String TEST_NAME = "testname";
 	private static Boolean isLoggingFilePerTest = null;
 	private static final String PROPERTY_OUTPUT_DIR = "concordion.output.dir";
-
+	private static Stack<String> testStack = new Stack<String>();
+	
 	/**
 	 * print logback's internal status
 	 */
@@ -74,6 +76,7 @@ public class LogbackHelper
 
 				if (appender.getClass().isAssignableFrom(SiftingAppender.class)) {
 					SiftingAppender sift = (SiftingAppender) appender;
+					
 
 					if (sift.getDiscriminatorKey().equals(TEST_NAME)) {
 						isLoggingFilePerTest = true;
@@ -85,25 +88,56 @@ public class LogbackHelper
 	}
 
 	/**
+	 * Checks whether concordion is running tests in parallel or sequential
+	 * 
+	 * @return True if multi-threaded
+	 */
+	private static boolean isMultiThreaded() {
+		String threadCount = System.getenv("concordion.run.threadCount");
+		
+		try  
+		{  
+			Integer.parseInt(threadCount);  
+		}  
+		catch(NumberFormatException nfe)  
+		{  
+			return false;  
+		}  
+		return true;  
+	}
+	
+	/**
 	 * Adds the test name to MDC so that sift appender can use it and log the new log events to a different file
 	 * 
 	 * @param testClass the test that is being run
 	 */
 	public static void startTestLogging(final Object testClass) {
-		String baseDir = getConcordionBaseOutputDir();
-		String testClassName = testClass.getClass().getName();
-
-		MDC.put(TEST_NAME, baseDir + testClassName.replace(".", "/"));
+		String testName = getConcordionBaseOutputDir() + testClass.getClass().getName().replace(".", "/");
+		
+		testStack.push(testName);
+		MDC.put(TEST_NAME, testName);
 	}
 
 	/**
-	 * Removes the key (log file name) from MDC
+	 * If running tests sequentially then updates the MDC with the name of the previous test to handle tests calling
+	 * other tests using the Run command.  
+	 * 
+	 * If running tests in parallel (ie multi-threaded) then does nothing as MDC should correctly handle things. 
+	 * 
+	 * NOTE: MDC only handles one value per thread.
 	 * 
 	 * @return the key that got removed
 	 */
 	public static String stopTestLogging() {
 		String name = MDC.get(TEST_NAME);
-		MDC.remove(TEST_NAME);
+		
+		testStack.pop();
+		//MDC.remove(TEST_NAME);
+				
+		if(!isMultiThreaded() && !testStack.isEmpty()) {
+			MDC.put(TEST_NAME, testStack.peek());
+		}
+		
 		return name;
 	}
 
