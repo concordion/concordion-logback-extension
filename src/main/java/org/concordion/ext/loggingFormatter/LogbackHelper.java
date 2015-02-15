@@ -88,25 +88,6 @@ public class LogbackHelper
 	}
 
 	/**
-	 * Checks whether concordion is running tests in parallel or sequential
-	 * 
-	 * @return True if multi-threaded
-	 */
-	private static boolean isMultiThreaded() {
-		String threadCount = System.getenv("concordion.run.threadCount");
-		
-		try  
-		{  
-			Integer.parseInt(threadCount);  
-		}  
-		catch(NumberFormatException nfe)  
-		{  
-			return false;  
-		}  
-		return true;  
-	}
-	
-	/**
 	 * Adds the test name to MDC so that sift appender can use it and log the new log events to a different file
 	 * 
 	 * @param testClass the test that is being run
@@ -119,26 +100,18 @@ public class LogbackHelper
 	}
 
 	/**
-	 * If running tests sequentially then updates the MDC with the name of the previous test to handle tests calling
-	 * other tests using the Run command.  
+	 * If running tests sequentially (Concordion's default) then updates the MDC with the name of the previous test to handle tests calling
+	 * other tests using the Concordion Run command.  
 	 * 
-	 * If running tests in parallel (ie multi-threaded) then does nothing as MDC should correctly handle things. 
-	 * 
-	 * NOTE: MDC only handles one value per thread.
-	 * 
-	 * @return the key that got removed
+	 * If running tests in parallel then this call is essentially redundant as tests started using the Concordion Run command will start on 
+	 * a new thread and MDC maintains a value per thread.
 	 */
-	public static String stopTestLogging() {
-		String name = MDC.get(TEST_NAME);
-		
+	public static void stopTestLogging() {
 		testStack.pop();
-		//MDC.remove(TEST_NAME);
 				
-		if(!isMultiThreaded() && !testStack.isEmpty()) {
+		if(!testStack.isEmpty()) {
 			MDC.put(TEST_NAME, testStack.peek());
 		}
-		
-		return name;
 	}
 
 	/**
@@ -163,6 +136,10 @@ public class LogbackHelper
 	 */
 	public static String getTestPath() {
 		String path = MDC.get(TEST_NAME);
+
+		if (path == null) {
+			return "";
+		}		
 
 		int index = path.lastIndexOf("/");
 
