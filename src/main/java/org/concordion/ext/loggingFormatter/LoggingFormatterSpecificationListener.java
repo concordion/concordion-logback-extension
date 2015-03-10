@@ -9,18 +9,19 @@ import java.util.regex.Matcher;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.concordion.api.Element;
-import org.concordion.api.listener.ConcordionBuildEvent;
-import org.concordion.api.listener.ConcordionBuildListener;
 import org.concordion.api.listener.SpecificationProcessingEvent;
 import org.concordion.api.listener.SpecificationProcessingListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class LoggingFormatterSpecificationListener implements SpecificationProcessingListener, ConcordionBuildListener {
+public class LoggingFormatterSpecificationListener implements SpecificationProcessingListener {
 	private static final Logger LOGGER = LoggerFactory.getLogger(LoggingFormatterSpecificationListener.class);
+	private ILoggingAdaptor loggingAdaptor;
 	private boolean useLogFileViewer;
 	
-	public LoggingFormatterSpecificationListener(boolean useLogFileViewer) {
+	
+	public LoggingFormatterSpecificationListener(ILoggingAdaptor loggingAdaptor, boolean useLogFileViewer) {
+		this.loggingAdaptor = loggingAdaptor;
 		this.useLogFileViewer = useLogFileViewer;
 	}
 
@@ -31,7 +32,7 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 
 	@Override
 	public void afterProcessingSpecification(final SpecificationProcessingEvent event) {
-		if (!LogbackHelper.isLoggingFilePerTest()) {
+		if (!loggingAdaptor.doesLogfileExist()) {
 			return;
 		}
 
@@ -65,21 +66,15 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 		}
 	}
 
-	@Override
-	public void concordionBuilt(final ConcordionBuildEvent event) {
-		event.getTarget();
-	}
-
 	private String createViewer() {
-		String testName = LogbackHelper.getTestClassName();
+		String logName = loggingAdaptor.getLogName();
 		
-		if(testName.isEmpty()) {
+		if(logName.isEmpty()) {
 			return "";
 		}
 		
-		String logName = testName + ".log";
 		String viewerSource = "LogViewer.html";
-		String viewerDestination = testName + viewerSource;
+		String viewerDestination = logName.replaceFirst(".log", "") + viewerSource;
 
 		if (useLogFileViewer) {			
 			try {
@@ -87,9 +82,9 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 				String viewerContent = IOUtils.toString(LoggingFormatterSpecificationListener.class.getResourceAsStream(viewerSource));
 				
 				viewerContent = viewerContent.replaceAll("LOG_FILE_NAME", logName);
-				viewerContent = viewerContent.replaceAll("LOG_FILE_CONTENT", Matcher.quoteReplacement(getLogContent(LogbackHelper.getTestPath() + logName)));			
+				viewerContent = viewerContent.replaceAll("LOG_FILE_CONTENT", Matcher.quoteReplacement(getLogContent(loggingAdaptor.getLogPath() + logName)));			
 				
-				FileUtils.writeStringToFile(new File(LogbackHelper.getTestPath() + viewerDestination), viewerContent);
+				FileUtils.writeStringToFile(new File(loggingAdaptor.getLogPath() + viewerDestination), viewerContent);
 			} catch (IOException e) {
 				LOGGER.error(e.getMessage());
 				viewerDestination = logName;

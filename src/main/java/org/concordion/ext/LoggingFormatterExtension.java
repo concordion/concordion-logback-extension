@@ -3,6 +3,7 @@ package org.concordion.ext;
 
 import org.concordion.api.extension.ConcordionExtender;
 import org.concordion.api.extension.ConcordionExtension;
+import org.concordion.ext.loggingFormatter.LogbackAdaptor;
 import org.concordion.ext.loggingFormatter.LoggingFormatterSpecificationListener;
 
 /**
@@ -27,8 +28,7 @@ public class LoggingFormatterExtension implements ConcordionExtension {
 
 	@Override
 	public void addTo(final ConcordionExtender concordionExtender) {
-		LoggingFormatterSpecificationListener listener = new LoggingFormatterSpecificationListener(useLogFileViewer);
+		LoggingFormatterSpecificationListener listener = new LoggingFormatterSpecificationListener(new LogbackAdaptor(), useLogFileViewer);
 		concordionExtender.withSpecificationProcessingListener(listener);
-		concordionExtender.withBuildListener(listener);
 	}
 }
