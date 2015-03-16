@@ -2,14 +2,19 @@
 <link href="../../concordion.css" rel="stylesheet" type="text/css" />
 <body>
 
-<h1>Google Calculator</h1>
+<h1>Unique Log File Per Test</h1>
 
-<p>Google acts as a calculator if you enter a sum.</p> 
+<p>If a log file exists in the same location and the specification and has the same base file name, but an extension of ".log" then a link to the log file will be placed in the footer 
+of the specification.  This will work regardless of whether the tests are being run in parallel or sequentially.</p> 
+ 
 
 <div class="example">
 <h4>Example</h4>
-<p>Confirm "<span c:execute="multiply(#TEXT)">11 * 12</span>" displays "<span c:assertEquals="getCalculatorResult()">132</span>".</p>
+<p>This is specification, and the one we're linking to, contain a link to their log files.</p> 
+<span c:execute="logsomething()"></span>
+<a c:run="concordion" href="LogbackLoggingDemo.html">Run Demo</a>
 </div>
+
 
 <div class="example" style="background-color: #ffffd0; border: 3px solid #eeeeb0;">
 <h4>Look for:</h4>

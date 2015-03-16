@@ -1,4 +1,4 @@
-package temp;
+package spec;
 
 /**
  * A fixture class for the LoggingDemo.html specification.

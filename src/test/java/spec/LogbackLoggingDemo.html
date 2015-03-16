@@ -1,0 +1,25 @@
+<html xmlns:c="http://www.concordion.org/2007/concordion">
+<link href="../../concordion.css" rel="stylesheet" type="text/css" />
+<body>
+
+<h1>Logback Logging Extension</h1>
+
+<p>Check that various components are working.</p> 
+
+<div class="example">
+<h4>Example</h4>
+<p>Confirm "<span c:execute="multiply(#TEXT)">11 * 12</span>" displays "<span c:assertEquals="getCalculatorResult()">132</span>".</p>
+</div>
+
+<div class="example" style="background-color: #ffffd0; border: 3px solid #eeeeb0;">
+<h4>Look for:</h4>
+<ul>
+	<li>Hover over the i icons to see the tooltip logging</li>
+	<li>Look at log file link on the bottom right of the page.</li>
+	<li>Note that the console output is much reduced - this is a result of the logback configuration rather than this extension</li>
+	<li>This extension is particularly useful when running tests in parallel, or have a large number of tests and your log file is unusable</li>
+</ul>
+</div>
+
+</body>
+</html>
