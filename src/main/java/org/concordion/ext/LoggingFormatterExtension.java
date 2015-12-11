@@ -12,9 +12,10 @@ import org.concordion.ext.loggingFormatter.LoggingFormatterSpecificationListener
  * viewer to work correctly the log file must contain the log level, if not switching the viewer off is advised.
  */
 public class LoggingFormatterExtension implements ConcordionExtension {
-	private boolean useLogFileViewer = true;
+	private final LoggingFormatterSpecificationListener listener;
 	
 	public LoggingFormatterExtension() {
+		this(true);
 	}
 	
 	/**
@@ -23,12 +24,39 @@ public class LoggingFormatterExtension implements ConcordionExtension {
 	 * 			Flag whether to show raw log file (false) or present the log file inside a log file viewer (true, default).
 	 */
 	public LoggingFormatterExtension(boolean useLogFileViewer) {
-		this.useLogFileViewer = useLogFileViewer;
+		listener = new LoggingFormatterSpecificationListener(new LogbackAdaptor(), useLogFileViewer);
 	}
 
 	@Override
 	public void addTo(final ConcordionExtender concordionExtender) {
-		LoggingFormatterSpecificationListener listener = new LoggingFormatterSpecificationListener(new LogbackAdaptor(), useLogFileViewer);
 		concordionExtender.withSpecificationProcessingListener(listener);
+		concordionExtender.withExampleListener(listener);
+		concordionExtender.withThrowableListener(listener);
 	}
+	
+	/**
+	 * If set to true will add an entry to the log file with the header of the example that is about to be run
+	 * 
+	 * @param value
+	 * @return
+	 */
+	public LoggingFormatterExtension setLogExampleStartEvent(boolean value) {
+		listener.setLogExample(value);
+		return this;
+	}
+	
+	/**
+	 * If set to true will log any exceptions not handled by the test fixture
+	 * 
+	 * @param value
+	 * @return
+	 */
+	public LoggingFormatterExtension setLogExceptions(LogLevel value) {
+		listener.setLogExceptions(value);
+		return this;
+	}
+	    
+    public enum LogLevel {
+    	NONE, EXCEPTION, EXCEPTION_WITH_STACK_TRACE
+    }
 }
