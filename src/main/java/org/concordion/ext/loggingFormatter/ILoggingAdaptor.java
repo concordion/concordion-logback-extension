@@ -8,21 +8,17 @@ package org.concordion.ext.loggingFormatter;
 public interface ILoggingAdaptor
 {
 	/**
-	 * Adds the test name to MDC so that sift appender can use it and log the new log events to a different file
+	 * Update logger so that logging statements are directed to specified file
 	 * 
 	 * @param testClass the test that is being run
 	 */
-	//public void startTestLogging(final Object testClass);
+	public void startLogFile(String fileName);
 	
 	/**
-	 * If running tests sequentially (Concordion's default) then updates the MDC with the name of the previous test to handle tests calling
-	 * other tests using the Concordion Run command.  
-	 * 
-	 * If running tests in parallel then this call is essentially redundant as tests started using the Concordion Run command will start on 
-	 * a new thread and MDC maintains a value per thread.
+	 * Stop directing logging statements to test specific log file
 	 */
-	//public void stopTestLogging();
-
+	public void stopLogFile();
+	
 	/**
 	 * Checks to see if a log file has been created for this test
 	 * 

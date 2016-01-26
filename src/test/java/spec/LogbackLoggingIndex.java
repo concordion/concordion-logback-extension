@@ -1,5 +1,8 @@
 package spec;
 
+import org.concordion.api.AfterSpecification;
+import org.concordion.api.BeforeSpecification;
+
 /**
  * A fixture class for the LoggingDemo.html specification.
  * <p>
@@ -12,7 +15,21 @@ package spec;
  * Run this class as a JUnit test to produce the Concordion results.
  */
 public class LogbackLoggingIndex extends AcceptanceTest {
-	public void logsomething() {
+	public void logBeforeRun() {
 		getLogger().info("logging something to where?");
+	}
+	
+	public void logAfterRun() {
+		getLogger().info("done logging?");
+	}
+	
+	@BeforeSpecification
+	public void before() {
+		getLogger().info("before spec");
+	}
+
+	@AfterSpecification
+	public void after() {
+		getLogger().info("after spec");
 	}
 }

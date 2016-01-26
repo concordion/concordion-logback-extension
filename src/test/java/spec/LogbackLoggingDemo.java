@@ -1,5 +1,8 @@
 package spec;
 
+import org.concordion.api.AfterSpecification;
+import org.concordion.api.BeforeSpecification;
+
 /**
  * A fixture class for the LoggingDemo.html specification.
  * <p>
@@ -33,5 +36,15 @@ public class LogbackLoggingDemo extends AcceptanceTest {
 	public String getCalculatorResult() {		
 		getLogger().debug("NOTE: no tooltip showing for getCalculatorResult()");
 		return result.toString();
+	}
+	
+	@BeforeSpecification
+	public void before() {
+		getLogger().info("before spec demo");
+	}
+
+	@AfterSpecification
+	public void after() {
+		getLogger().info("after spec demo");
 	}
 }

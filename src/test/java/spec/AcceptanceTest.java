@@ -8,8 +8,6 @@ import org.concordion.ext.LoggingFormatterExtension;
 import org.concordion.ext.LoggingTooltipExtension;
 import org.concordion.ext.loggingFormatter.LogbackAdaptor;
 import org.concordion.integration.junit4.ConcordionRunner;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,17 +47,5 @@ public abstract class AcceptanceTest {
 	public void addConcordionTooltip(final String message) {
 		// Logging at debug level means the message won't make it to the console, but will make it to the logs (based on included logback configuration files)
 		tooltipLogger.debug(message);
-	}
-	
-	@Before
-	public void startUpTest() {
-		LogbackAdaptor.startTestLogging(this);
-		//logger.info("Initialising the acceptance test class {} on thread {}", this.getClass().getSimpleName(), Thread.currentThread().getName());
-	}
-
-	@After
-	public void tearDownTest() {
-		//logger.info("Tearing down the acceptance test class on thread {}", Thread.currentThread().getName());
-		LogbackAdaptor.stopTestLogging();
 	}
 }

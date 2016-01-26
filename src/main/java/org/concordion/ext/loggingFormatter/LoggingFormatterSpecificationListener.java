@@ -42,25 +42,56 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 	}
 
 ////////////////////////////// Specification Processing Listener //////////////////////////////
+	/**
+	 * Gets the base output folder used by concordion - copied from ConcordionBuilder.getBaseOutputDir()
+	 * 
+	 * @return base output folder 
+	 */
+	private static String getConcordionBaseOutputDir() {
+		String outputPath = System.getProperty("concordion.output.dir");
+		
+		if (outputPath == null) {
+			outputPath = new File(System.getProperty("java.io.tmpdir"), "concordion").getAbsolutePath();
+		}
+
+		outputPath = outputPath.replaceAll("\\\\", "/");
+		if (!outputPath.endsWith("/")) {
+			outputPath = outputPath + "/";
+		}
+		return outputPath;
+	}
 	
 	@Override
 	public void beforeProcessingSpecification(final SpecificationProcessingEvent event) {
-		// We don't need to do anything here
+		String testPath = getConcordionBaseOutputDir() + getTestPath(event.getResource().getPath());
+		
+		loggingAdaptor.startLogFile(testPath);
+	}
+
+	private String getTestPath(String testPath) {
+		if (testPath.indexOf(".") > 0) {
+			testPath = testPath.substring(0, testPath.indexOf("."));
+		}
+		
+		if (testPath.startsWith("/") || testPath.startsWith("\\")) {
+			testPath = testPath.substring(1);
+		}
+		
+		return testPath;
 	}
 
 	@Override
 	public void afterProcessingSpecification(final SpecificationProcessingEvent event) {
-		if (!loggingAdaptor.doesLogfileExist()) {
-			return;
+		try {
+			if (loggingAdaptor.doesLogfileExist()) {
+				appendLogFileLinkToFooter(event, createViewer());
+			}
+		} finally  {
+			loggingAdaptor.stopLogFile();		
 		}
+	}
 
-		// Update spec with link to viewer
-		String logURL = createViewer();
-		
-		if(logURL.isEmpty()) {
-			return;
-		}
-
+	private void appendLogFileLinkToFooter(final SpecificationProcessingEvent event, String logURL) {
 		Element body = event.getRootElement().getFirstChildElement("body");
 
 		if (body != null) {

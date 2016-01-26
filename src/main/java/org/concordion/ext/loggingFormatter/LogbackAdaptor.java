@@ -17,7 +17,6 @@ import ch.qos.logback.core.util.StatusPrinter;
 public class LogbackAdaptor implements ILoggingAdaptor
 {
 	public static final String TEST_NAME = "testname";
-	private static final String PROPERTY_OUTPUT_DIR = "concordion.output.dir";
 	private static Stack<String> testStack = new Stack<String>();
 	
 	/**
@@ -29,39 +28,35 @@ public class LogbackAdaptor implements ILoggingAdaptor
 	}
 
 	/**
-	 * Gets the base output folder used by concordion - copied from ConcordionBuilder.getBaseOutputDir()
+	 * Adds the test name to MDC so that sift appender can use it and log the new log events to a different file
 	 * 
-	 * @return base output folder 
+	 * @param testClass the test that is being run
 	 */
-	private static String getConcordionBaseOutputDir() {
-		String outputPath = System.getProperty(PROPERTY_OUTPUT_DIR);
-		if (outputPath == null) {
-			outputPath = new File(System.getProperty("java.io.tmpdir"), "concordion").getAbsolutePath();
-		}
-
-		outputPath = outputPath.replaceAll("\\\\", "/");
-		if (!outputPath.endsWith("/")) {
-			outputPath = outputPath + "/";
-		}
-		return outputPath;
-	}
-
-	public static void startTestLogging(final Object testClass) {
-		String testName = getConcordionBaseOutputDir() + testClass.getClass().getName().replace(".", "/");
+	@Override
+	public void startLogFile(String fileName) {
+		testStack.push(fileName);
 		
-		testStack.push(testName);
-		MDC.put(TEST_NAME, testName);
-	}
-
-
-	public static void stopTestLogging() {
-		testStack.pop();
-				
-		if(!testStack.isEmpty()) {
-			MDC.put(TEST_NAME, testStack.peek());
-		}
+		MDC.put(TEST_NAME, fileName);
 	}
 	
+	/**
+	 * If running tests sequentially (Concordion's default) then updates the MDC with the name of the previous test to handle tests calling
+	 * other tests using the Concordion Run command.  
+	 * 
+	 * If running tests in parallel then this call is essentially redundant as tests started using the Concordion Run command will start on 
+	 * a new thread and MDC maintains a value per thread.
+	 */
+	@Override
+	public void stopLogFile() {
+		testStack.pop();
+		
+		if(!testStack.isEmpty()) {
+			MDC.put(TEST_NAME, testStack.peek());
+		} else {
+			MDC.remove(TEST_NAME);
+		}
+	}
+		
 	@Override
 	public boolean doesLogfileExist() {
 		String name = MDC.get(TEST_NAME);
