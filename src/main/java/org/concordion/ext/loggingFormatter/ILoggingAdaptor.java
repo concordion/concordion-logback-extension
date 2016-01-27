@@ -10,7 +10,7 @@ public interface ILoggingAdaptor
 	/**
 	 * Update logger so that logging statements are directed to specified file
 	 * 
-	 * @param testClass the test that is being run
+	 * @param fileName Full path to the output folder and class (without the file extension) of the current specification
 	 */
 	public void startLogFile(String fileName);
 	

@@ -30,7 +30,7 @@ public class LogbackAdaptor implements ILoggingAdaptor
 	/**
 	 * Adds the test name to MDC so that sift appender can use it and log the new log events to a different file
 	 * 
-	 * @param testClass the test that is being run
+	 * @param fileName The full path to the required log file
 	 */
 	@Override
 	public void startLogFile(String fileName) {

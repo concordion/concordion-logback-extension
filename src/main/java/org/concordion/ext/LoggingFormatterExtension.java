@@ -37,8 +37,8 @@ public class LoggingFormatterExtension implements ConcordionExtension {
 	/**
 	 * If set to true will add an entry to the log file with the header of the example that is about to be run
 	 * 
-	 * @param value
-	 * @return
+	 * @param value Value to set
+	 * @return this
 	 */
 	public LoggingFormatterExtension setLogExampleStartEvent(boolean value) {
 		listener.setLogExample(value);
@@ -48,8 +48,8 @@ public class LoggingFormatterExtension implements ConcordionExtension {
 	/**
 	 * If set to true will log any exceptions not handled by the test fixture
 	 * 
-	 * @param value
-	 * @return
+	 * @param value Value to set
+	 * @return this
 	 */
 	public LoggingFormatterExtension setLogExceptions(LogLevel value) {
 		listener.setLogExceptions(value);
