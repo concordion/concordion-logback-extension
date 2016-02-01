@@ -26,7 +26,7 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 	private ILoggingAdaptor loggingAdaptor;
 	private boolean useLogFileViewer;
 	private boolean logExample = true;
-	private LogLevel logExceptions = LogLevel.EXCEPTION_WITH_STACK_TRACE;
+	private LogLevel logExceptions = LogLevel.EXCEPTION_CAUSES;
 	
 	public void setLogExample(boolean value) {
 		this.logExample = value;
@@ -208,15 +208,14 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 	public void beforeExample(ExampleEvent event) {
 		if (!logExample) return;
 
-		LOGGER.info("");
-		LOGGER.info("=== Start: " + getExampleTitle(event.getElement()) + " ===");
+		LOGGER.info("Example: " + getExampleTitle(event.getElement()));
 	}
 
 	@Override
 	public void afterExample(ExampleEvent event) {
 		if (!logExample) return;
 		
-		LOGGER.info("=== End: " + getExampleTitle(event.getElement()) + " ===");
+		LOGGER.info("End Example: " + getExampleTitle(event.getElement()));
 	}
 	
 	public String getExampleTitle(Element element) {
@@ -238,19 +237,38 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 	
 	@Override
 	public void throwableCaught(ThrowableCaughtEvent event) {
-		if (logExceptions == LogLevel.NONE) return;
-		
-    	String message = event.getThrowable().getMessage();
+		String message = "";
+    	Throwable cause = event.getThrowable();
 
-    	if (logExceptions == LogLevel.EXCEPTION_WITH_STACK_TRACE) {
-    		message += "\n" + getStackTrace(event.getThrowable());
+    	switch (logExceptions) {
+    	case EXCEPTION:
+    		message = cause.getMessage();
+    		break;
+    		
+    	case EXCEPTION_CAUSES:
+    		while (cause != null) {
+    			if (!message.isEmpty()) {
+    				 message += "\n\n";
+    			}
+    			
+    			message += cause.getMessage();
+	    		cause = cause.getCause();
+	    	}
+    		break;
+    		
+    	case EXCEPTION_WITH_STACK_TRACE:
+    		message = cause.getMessage() + "\n" + getStackTrace(cause);
+    		break;
+    		
+    	case NONE:
+    		return;
     	}
     	
     	// Indent multi-line errors to make it easier to scan the log
-    	message = message.replace("\r\n", "\r\n\t");
+    	message = message.replace("\r\n", "\n");
     	message = message.replace("\n", "\n\t");
     	
-		LOGGER.error(message);		
+		LOGGER.error(message);
 	}
     
     private String getStackTrace(final Throwable throwable) {
