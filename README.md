@@ -6,7 +6,9 @@ The [demo project](http://github.com/concordion/concordion-logback-extension-dem
 
 # Introduction
 
-Provides [Logback](http://logback.qos.ch) logging support for concordion
+Provides [Logback](http://logback.qos.ch) logging support for concordion.
+
+When using this extension I recommend not catching and logging exceptions yourself (unless you need to perform a specific action or stop the exception filtering back up to the specification) as this extension will automatically capture and log the exception.
 
 This extension was originally developed once we started running our tests in parallel (using the latest update to cordion to allow this) and discovered that one interleaved log file was not particularly useful.  Even if you are not running tests in parallel the ability to click on a link in the specification to access the log file is very nice :-)
 
