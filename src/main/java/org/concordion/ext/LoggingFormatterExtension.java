@@ -57,6 +57,16 @@ public class LoggingFormatterExtension implements ConcordionExtension {
 	}
 	    
     public enum LogLevel {
-    	NONE, EXCEPTION, EXCEPTION_CAUSES, EXCEPTION_WITH_STACK_TRACE
+    	/** Do not log exceptions */
+    	NONE, 
+    	
+    	/** Log exception message */
+    	EXCEPTION, 
+    	
+    	/** Log exception message of the exception and all its causes (Default) */
+    	EXCEPTION_CAUSES, 
+    	
+    	/** Log full stack trace */
+    	EXCEPTION_WITH_STACK_TRACE
     }
 }
