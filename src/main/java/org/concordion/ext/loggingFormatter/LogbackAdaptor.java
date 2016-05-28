@@ -76,7 +76,8 @@ public class LogbackAdaptor implements ILoggingAdaptor
 			return "";
 		}	
 		
-		return name.substring(name.lastIndexOf("/") + 1) + ".log";
+		//TODO get the name of the log from the configuration?
+		return name.substring(name.lastIndexOf("/") + 1) + "Log.html";
 	}
 
 	@Override

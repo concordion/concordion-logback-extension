@@ -18,7 +18,6 @@ import ch.qos.logback.classic.Level;
  * A base class for Google search tests that opens up the Google site at the Google search page, and closes the browser once the test is complete.
  */
 @RunWith(ConcordionRunner.class)
-@Extensions({ LoggingFormatterExtension.class, LoggingTooltipExtension.class })
 @FailFast
 public abstract class AcceptanceTest {
 
@@ -30,7 +29,10 @@ public abstract class AcceptanceTest {
 	// loggerName: is set to a unique value - this means the tooltip extension will only pick up log messages specifically targeted for the tooltip
 	// isAdditive: set to true so that log messages are also picked up by other appenders (see addConcordionTooltip() for more info)
 	// tooltipPatter: default format is "[timestamp] log message", I've overridden that in this example
-	public final LoggingTooltipExtension tooltipExtension = new LoggingTooltipExtension(new LogbackLogMessenger(tooltipLogger.getName(), Level.ALL, true, "%msg%n"));
+	private final LoggingTooltipExtension tooltipExtension = new LoggingTooltipExtension(new LogbackLogMessenger(tooltipLogger.getName(), Level.ALL, true, "%msg%n"));
+
+	@Extension
+	private final LoggingFormatterExtension loggingExtension = new LoggingFormatterExtension(false);
 	
 	static {
 		LogbackAdaptor.logInternalStatus();
