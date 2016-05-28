@@ -23,7 +23,7 @@ githubPages {
 }
 
 dependencies {
-	compile 'ch.qos.logback:logback-classic:1.1.2'
+	compile 'ch.qos.logback:logback-classic:1.1.7'
 	compile "org.concordion:concordion-logging-tooltip-extension:1.1.2"
 	compile 'org.apache.commons:commons-io:1.3.2'
 }

@@ -5,5 +5,6 @@
 		<!-- Normally level would be "STDOUT" so can see all logs in IDE, but for demo limiting to info as would on build server -->
 		<appender-ref ref="STDOUT-INFO" />
 		<appender-ref ref="FILE-PER-TEST" />
+		<appender-ref ref="HTMLFILE" />
 	</root>
 </configuration>
