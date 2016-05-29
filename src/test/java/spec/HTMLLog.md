@@ -30,7 +30,7 @@ Log statements are grouped into steps...
 
 ## [Screenshots](-)
 
-Screenshots can be included...
+Screenshots can be [included](- "c:assertTrue=addScreenshot()").
 
 
 ## [Text Based Data](-)

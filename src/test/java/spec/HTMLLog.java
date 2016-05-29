@@ -8,6 +8,8 @@ import java.io.InputStream;
 import java.util.Iterator;
 
 import org.apache.commons.io.IOUtils;
+import org.concordion.ext.ScreenshotTaker;
+import org.concordion.logback.LogMarkers;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
@@ -18,6 +20,7 @@ import ch.qos.logback.classic.sift.SiftingAppender;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.Appender;
 import ch.qos.logback.core.FileAppender;
+import test.concordion.ext.storyboard.DummyScreenshotTaker;
 
 public class HTMLLog extends AcceptanceTest {
 	
@@ -38,6 +41,14 @@ public class HTMLLog extends AcceptanceTest {
 		}
 		
 		return getLogContent().contains("Hello exception handling!");
+	}
+	
+	public boolean addScreenshot() {
+		Marker screenshot = LogMarkers.screenshotMarker(new DummyScreenshotTaker(), "CurrentPage");
+				
+		getLogger().debug(screenshot, "Have taken a screenshot for some reason...");
+		
+		return false;
 	}
 	
 	private String getLogContent() throws IOException {

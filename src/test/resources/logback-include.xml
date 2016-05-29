@@ -25,13 +25,13 @@
 			<DefaultValue>build/testrun</DefaultValue>
 		</discriminator>
 		<sift>
-			<appender name="FILE-${testname}" class="ch.qos.logback.core.FileAppender">
+			<appender name="FILE-${testname}" class="org.concordion.logback.HTMLFileAppender">
 				<!-- location is determined by concordion.output.dir property in gradle.build file --> 
 				<File>${testname}Log.html</File>
 				<append>false</append>				
 				
 				<encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
-			      <layout class="org.concordion.ext.loggingFormatter.HTMLLayout" />
+			      <layout class="org.concordion.logback.HTMLLayout" />
 			    </encoder>
 <!--
 				<layout class="ch.qos.logback.classic.PatternLayout">

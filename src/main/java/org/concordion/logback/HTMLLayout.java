@@ -1,6 +1,10 @@
-package org.concordion.ext.loggingFormatter;
+package org.concordion.logback;
 
+import java.io.OutputStream;
 import java.util.Map;
+
+import org.concordion.api.Element;
+import org.slf4j.helpers.ScreenshotMarker;
 
 import ch.qos.logback.classic.PatternLayout;
 import ch.qos.logback.classic.pattern.MDCConverter;
@@ -90,6 +94,30 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
         buf.append("</tr>");
         buf.append(LINE_SEPARATOR);
 
+        if (event.getMarker() instanceof ScreenshotMarker) {
+        	buf.append(LINE_SEPARATOR);
+        	buf.append("<tr><td  colspan=\"6\">");
+        	
+        	try {
+        		
+        		/* TODO get file from appender
+        		 * 
+    			// As don't have access to the concordion spec, store the results for later
+    			OutputStream outputStream = getTarget().getOutputStream(imageResource);
+    			Dimension  imageSize = screenshotTaker.writeScreenshotTo(outputStream);
+    			outputStream.close();
+    			*/
+        		
+    			buf.append("<img src=\"").append("str").append("\"/>");
+    			
+    		} catch (Exception e) {
+    			buf.append(e.getMessage());
+    		}
+			
+        	buf.append("</td></tr>");
+        	buf.append(LINE_SEPARATOR);
+        } 
+        
         if (event.getThrowableProxy() != null) {
             throwableRenderer.render(buf, event);
         }
