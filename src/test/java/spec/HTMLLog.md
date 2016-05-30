@@ -3,6 +3,8 @@ Plain text logs supply a lot of useful information but it can take time to trawl
 
 This custom layout for the [LOGBack Logger](http://logback.qos.ch) will combine your logs with screenshots, data and stack trace and present the information in an easy to digest fashion.
 
+Advanced logging features such as recording steps, screenshots and data, are enabled by the use of [SJF4J Markers](http://www.slf4j.org/apidocs/org/slf4j/Marker.html).  
+
 ## [Configuration](-)
 
 Configuring your application to use ConcordionHtmlLayout is a simple matter of updating the logback-includes.xml configuration file and replacing the [Layout section of the FILE-PER-TEST sifting appender](- "c:assertTrue=configuration()") with the following:
@@ -30,10 +32,15 @@ Log statements are grouped into steps...
 
 ## [Screenshots](-)
 
-Screenshots can be [included](- "c:assertTrue=addScreenshot()").
+Screenshots can be [included](- "c:assertTrue=addScreenshot()") using the following:
 
+    Marker screenshot = LogMarkers.screenshotMarker(title, screenshotTaker);
+	getLogger().debug(screenshot, "Clicking the 'Login' button");
 
 ## [Text Based Data](-)
 
-Text based data such as CSV, XML, JSON, HTML, etc can be included...
+Text based data such as CSV, XML, JSON, HTML, etc can be [included](- "c:assertTrue=addData()") using the following:
+
+    Marker data = LogMarkers.dataMarker(title, data);
+    getLogger().debug(data, "Sending SOAP request");
 

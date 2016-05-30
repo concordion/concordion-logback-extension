@@ -4,6 +4,7 @@ import java.io.OutputStream;
 import java.util.Map;
 
 import org.concordion.api.Element;
+import org.slf4j.helpers.DataMarker;
 import org.slf4j.helpers.ScreenshotMarker;
 
 import ch.qos.logback.classic.PatternLayout;
@@ -30,7 +31,8 @@ import static ch.qos.logback.core.CoreConstants.LINE_SEPARATOR;
  * @author S&eacute;bastien Pennec
  */
 public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
-
+	int screenshotsTakenCount = 0;
+	
     /**
      * Default pattern string for log output.
      */
@@ -95,20 +97,14 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
         buf.append(LINE_SEPARATOR);
 
         if (event.getMarker() instanceof ScreenshotMarker) {
+        	ScreenshotMarker sshot = (ScreenshotMarker) event.getMarker();
+        	
         	buf.append(LINE_SEPARATOR);
         	buf.append("<tr><td  colspan=\"6\">");
         	
         	try {
-        		
-        		/* TODO get file from appender
-        		 * 
-    			// As don't have access to the concordion spec, store the results for later
-    			OutputStream outputStream = getTarget().getOutputStream(imageResource);
-    			Dimension  imageSize = screenshotTaker.writeScreenshotTo(outputStream);
-    			outputStream.close();
-    			*/
-        		
-    			buf.append("<img src=\"").append("str").append("\"/>");
+        		buf.append("<img src=\"").append(sshot.writeScreenshot(screenshotsTakenCount)).append("\"/>");
+        		screenshotsTakenCount ++;
     			
     		} catch (Exception e) {
     			buf.append(e.getMessage());
@@ -118,9 +114,29 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
         	buf.append(LINE_SEPARATOR);
         } 
         
+        if (event.getMarker() instanceof DataMarker) {
+        	DataMarker data = (DataMarker) event.getMarker();
+        	
+        	buf.append(LINE_SEPARATOR);
+        	buf.append("<tr><td  colspan=\"6\">");
+        	
+        	try {
+        		buf.append("<pre>");
+        		buf.append(LINE_SEPARATOR);
+        		buf.append(Transform.escapeTags(data.getData()));
+        		buf.append("</pre>");
+    		} catch (Exception e) {
+    			buf.append(e.getMessage());
+    		}
+			
+        	buf.append("</td></tr>");
+        	buf.append(LINE_SEPARATOR);
+        }
+        
         if (event.getThrowableProxy() != null) {
             throwableRenderer.render(buf, event);
         }
+        
         return buf.toString();
     }
 

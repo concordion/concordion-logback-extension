@@ -20,15 +20,12 @@ import ch.qos.logback.classic.sift.SiftingAppender;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.Appender;
 import ch.qos.logback.core.FileAppender;
-import test.concordion.ext.storyboard.DummyScreenshotTaker;
+import test.concordion.logback.DummyScreenshotTaker;
 
 public class HTMLLog extends AcceptanceTest {
 	
 	public boolean configuration() throws IOException {
 		getLogger().debug("Hello World!");
-				
-//		Marker ss = MarkerFactory.getMarker("SCREENSHOT");
-//		getLogger().debug(ss, "Hello World!");
 		
 		return getLogContent().contains(">Hello World!</td>");
 	}
@@ -43,12 +40,31 @@ public class HTMLLog extends AcceptanceTest {
 		return getLogContent().contains("Hello exception handling!");
 	}
 	
-	public boolean addScreenshot() {
-		Marker screenshot = LogMarkers.screenshotMarker(new DummyScreenshotTaker(), "CurrentPage");
+	public boolean addScreenshot() throws IOException {
+		Marker screenshot = LogMarkers.screenshotMarker("CurrentPage", new DummyScreenshotTaker());
 				
 		getLogger().debug(screenshot, "Have taken a screenshot for some reason...");
+		getLogger().debug(screenshot, "And another!");
 		
-		return false;
+		return getLogContent().contains("<img src=");
+	}
+	
+	public boolean addData() throws IOException {
+		Marker data;
+		
+		data = LogMarkers.dataMarker("Adding data", "Some TEXT data...\r\nHows it going?");
+		getLogger().debug(data, "Adding data for some reason...");
+		
+		data = LogMarkers.dataMarker("Adding data", getDataContent("example.csv"));
+		getLogger().debug(data, "Some CSV data...");
+
+		data = LogMarkers.dataMarker("Adding data", getDataContent("example.json"));
+		getLogger().debug(data, "Some JSON data...");
+		
+		data = LogMarkers.dataMarker("Adding data", getDataContent("example.xml"));
+		getLogger().debug(data, "Some XML data...");
+
+		return getLogContent().contains("<pre>");
 	}
 	
 	private String getLogContent() throws IOException {
@@ -62,6 +78,13 @@ public class HTMLLog extends AcceptanceTest {
 			return IOUtils.toString(input);
 		}
 	}
+	
+	private String getDataContent(String fileName) throws IOException {
+		try (InputStream input = this.getClass().getClassLoader().getResourceAsStream("data/" + fileName)) {
+			return IOUtils.toString(input);
+		}
+	}
+	
 	private FileAppender<?> getHTMLAppender() {
 		LoggerContext context = (LoggerContext)LoggerFactory.getILoggerFactory();
 		for (Logger logger : context.getLoggerList())

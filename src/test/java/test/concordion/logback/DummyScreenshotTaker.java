@@ -1,4 +1,4 @@
-package test.concordion.ext.storyboard;
+package test.concordion.logback;
 
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
@@ -14,7 +14,7 @@ import org.concordion.ext.ScreenshotTaker;
  * Returns the contents of a static file, so that screenshots of my system don't inadvertently make it onto the net :-)
  */
 public final class DummyScreenshotTaker implements ScreenshotTaker {
-    private static final String IMAGE_PATH = "image/details#.jpg";
+    private static final String IMAGE_PATH = "data/details#.jpg";
     private int index = 1;
     
     public DummyScreenshotTaker() {
