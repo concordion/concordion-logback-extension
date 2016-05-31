@@ -89,7 +89,7 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 
         Converter<ILoggingEvent> c = head;
         while (c != null) {
-			appendEventToBuffer(buf, c, event, event.getMarker().contains("CONTAINS_HTML"));
+			appendEventToBuffer(buf, c, event, (event.getMarker() == null ? false : event.getMarker().contains("CONTAINS_HTML")));
             c = c.getNext();
         }
         buf.append("</tr>");

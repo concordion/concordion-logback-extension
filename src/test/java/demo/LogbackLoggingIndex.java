@@ -1,7 +1,9 @@
-package spec;
+package demo;
 
 import org.concordion.api.AfterSpecification;
 import org.concordion.api.BeforeSpecification;
+
+import spec.BaseFixture;
 
 /**
  * A fixture class for the LoggingDemo.html specification.
@@ -14,7 +16,7 @@ import org.concordion.api.BeforeSpecification;
  * <p>
  * Run this class as a JUnit test to produce the Concordion results.
  */
-public class LogbackLoggingIndex extends AcceptanceTest {
+public class LogbackLoggingIndex extends BaseFixture {
 	public void logBeforeRun() {
 		getLogger().info("logging something to where?");
 	}

@@ -1,9 +1,10 @@
 # HTML Logs
 Plain text logs supply a lot of useful information but it can take time to trawl though to find the information you want.
 
-This custom layout for the [LOGBack Logger](http://logback.qos.ch) will combine your logs with screenshots, data and stack trace and present the information in an easy to digest fashion.
+This custom layout and appender for the [LogBack Logger](http://logback.qos.ch) will combine your logs with screenshots, data and stack trace and present the information in an easy to digest fashion.
 
-Advanced logging features such as recording steps, screenshots and data, are enabled by the use of [SJF4J Markers](http://www.slf4j.org/apidocs/org/slf4j/Marker.html).  
+Advanced logging features such as recording steps, screenshots and data, are enabled by the use of [Markers](http://www.slf4j.org/apidocs/org/slf4j/Marker.html) (there is some more information on markers buried in the LogBag Manual chapter on [filters](http://logback.qos.ch/manual/filters.html)).  
+
 
 ## [Configuration](-)
 

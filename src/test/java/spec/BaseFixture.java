@@ -1,8 +1,6 @@
 package spec;
 
-import org.concordion.api.FailFast;
 import org.concordion.api.extension.Extension;
-import org.concordion.api.extension.Extensions;
 import org.concordion.ext.LogbackLogMessenger;
 import org.concordion.ext.LoggingFormatterExtension;
 import org.concordion.ext.LoggingTooltipExtension;
@@ -18,28 +16,15 @@ import ch.qos.logback.classic.Level;
  * A base class for Google search tests that opens up the Google site at the Google search page, and closes the browser once the test is complete.
  */
 @RunWith(ConcordionRunner.class)
-@FailFast
-public abstract class AcceptanceTest {
-
+public class BaseFixture {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 	private final Logger tooltipLogger = LoggerFactory.getLogger("TOOLTIP_" + this.getClass().getName());
 
-	@Extension
-	// Some notes on LogbackLogMessenger parameters:
-	// loggerName: is set to a unique value - this means the tooltip extension will only pick up log messages specifically targeted for the tooltip
-	// isAdditive: set to true so that log messages are also picked up by other appenders (see addConcordionTooltip() for more info)
-	// tooltipPatter: default format is "[timestamp] log message", I've overridden that in this example
-	private final LoggingTooltipExtension tooltipExtension = new LoggingTooltipExtension(new LogbackLogMessenger(tooltipLogger.getName(), Level.ALL, true, "%msg%n"));
-
-	@Extension
-	private final LoggingFormatterExtension loggingExtension = new LoggingFormatterExtension(false);
+	@Extension private final LoggingTooltipExtension tooltipExtension = new LoggingTooltipExtension(new LogbackLogMessenger(tooltipLogger.getName(), Level.ALL, true, "%msg%n"));
+	@Extension private final LoggingFormatterExtension loggingExtension = new LoggingFormatterExtension(false);
 	
 	static {
 		LogbackAdaptor.logInternalStatus();
-	}
-
-	public AcceptanceTest() {
-		
 	}
 
 	public Logger getLogger() {
@@ -47,7 +32,8 @@ public abstract class AcceptanceTest {
 	}
 
 	public void addConcordionTooltip(final String message) {
-		// Logging at debug level means the message won't make it to the console, but will make it to the logs (based on included logback configuration files)
+		// Logging at debug level means the message won't make it to the console, but will make 
+		// it to the logs (based on included logback configuration files)
 		tooltipLogger.debug(message);
 	}
 }

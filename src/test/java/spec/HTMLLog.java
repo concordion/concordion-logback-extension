@@ -19,7 +19,7 @@ import ch.qos.logback.core.Appender;
 import ch.qos.logback.core.FileAppender;
 import test.concordion.logback.DummyScreenshotTaker;
 
-public class HTMLLog extends AcceptanceTest {
+public class HTMLLog extends BaseFixture {
 	
 	public boolean configuration() throws IOException {
 		getLogger().debug("Hello World!");
