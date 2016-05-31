@@ -18,8 +18,25 @@
 			<pattern>%d{dd-MM-yyyy HH:mm:ss.SSS} %-5level %logger{36} - %msg%n</pattern>
 		</encoder>
 	</appender>
-	    
+
 	<appender name="FILE-PER-TEST" class="ch.qos.logback.classic.sift.SiftingAppender">
+		<discriminator>
+			<Key>testname</Key>
+			<DefaultValue>build/testrun</DefaultValue>
+		</discriminator>
+		<sift>
+			<appender name="FILE-${testname}" class="ch.qos.logback.core.FileAppender">
+				<!-- location is determined by concordion.output.dir property in gradle.build file --> 
+				<File>${testname}.log</File>
+				<append>false</append>				
+				<layout class="ch.qos.logback.classic.PatternLayout">
+ 					<pattern>%d{dd-MM-yyyy HH:mm:ss.SSS} %-5level %logger{36} - %msg%n</pattern> 
+				</layout>
+			</appender>
+		</sift>
+	</appender>
+	    
+	<appender name="HTML-FILE-PER-TEST" class="ch.qos.logback.classic.sift.SiftingAppender">
 		<discriminator>
 			<Key>testname</Key>
 			<DefaultValue>build/testrun</DefaultValue>
@@ -33,11 +50,6 @@
 				<encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
 			      <layout class="org.concordion.logback.HTMLLayout" />
 			    </encoder>
-<!--
-				<layout class="ch.qos.logback.classic.PatternLayout">
- 					<pattern>%d{dd-MM-yyyy HH:mm:ss.SSS} %-5level %logger{36} - %msg%n</pattern> 
-				</layout>
-  -->				
 			</appender>
 		</sift>
 	</appender>

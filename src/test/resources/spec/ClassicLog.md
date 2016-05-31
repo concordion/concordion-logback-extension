@@ -1,67 +1,20 @@
-# HTML Logs
-Plain text logs supply a lot of useful information but it can take time to trawl though to find the information you want.
+# Classic Logs
 
-This custom layout and appender for the [LogBack Logger](http://logback.qos.ch) will combine your logs with screenshots, data and stack trace and present the information in an easy to digest fashion.
+If text based logs are enough for you then this ones for you.
 
-Advanced logging features such as recording steps, screenshots and data, are enabled by the use of [Markers](http://www.slf4j.org/apidocs/org/slf4j/Marker.html) (there is some more information on markers buried in the LogBag Manual chapter on [filters](http://logback.qos.ch/manual/filters.html)).  
+The primary purpose of this extension is the ability to have a separate log per test and place a link to the log in the specification footer.
 
+This extension includes a LogViewer to make the logs a little friendlier to use and gives the ability to filter the logs by the log level.  
 
-## [Configuration](-)
+## Configuration
 
-Configuring your application to use ConcordionHtmlLayout is a simple matter of updating the logback-includes.xml configuration file and replacing the [Layout section of the FILE-PER-TEST sifting appender](- "c:assertTrue=configuration()") with the following:
+The extension comes with an example set of logback configuration files to use.  Configuring to use the classic text logs is a simple matter of adding the appender <appender-ref ref="HTML-FILE-PER-TEST" /> to the logback-jenkins.xml and logback.xml files.
 
-    <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
-      <layout class="org.concordion.ext.loggingFormatter.HTMLLayout" />
-    </encoder>
+Further customisation, such as the format of the log statement can be done in logback-include.xml.
 
-The content of the table columns are specified using a conversion pattern. For more information about this layout, please refer to the online manual at <http://logback.qos.ch/manual/layouts.html#ClassicHTMLLayout>.
+## [Write to Log](-)
+When configured to the the appender named [FILE-PER-TEST]("c:assertTrue=useAppender(#TEXT)") the specification gets a link to the log [file]("#withLogViewer=false") in the [footer]("c:assertTrue=writeLog(#TEXT, #withLogViewer)"). 
 
-    <layout class="org.concordion.ext.loggingFormatter.HTMLLayout" />
-      <pattern>%relative%thread%mdc%level%logger%msg</pattern>
-    </layout>
+## [Use Log Viewer](-)
+When configured to the the appender named [FILE-PER-TEST]("c:assertTrue=useAppender(#TEXT)") and use the [log viewer]("#withLogViewer=true") the specification gets a link to the log viewer in the [footer]("c:assertTrue=writeLog(#TEXT, #withLogViewer)"). 
 
-
-## [Exceptions](-)
-
-Exceptions are formatted within a [collapsible section](- "c:assertTrue=throwException()") that presents the error message by default but will allow the user to drill down into the stack trace.  
-
-
-## [Actions](-)
-
-Log statements are grouped into steps...
-
-
-## [Screenshots](-)
-
-Screenshots can be [included](- "c:assertTrue=addScreenshot()") using the following:
-
-    Marker screenshot = LogMarkers.screenshotMarker(title, screenshotTaker);
-	getLogger().debug(screenshot, "Clicking the 'Login' button");
-
-## [Text Based Data](-)
-
-Text based data such as CSV, XML and JSON can be [included](- "c:assertTrue=addData()") using the following:
-
-    Marker data = LogMarkers.dataMarker(title, data);
-    getLogger().debug(data, "Sending SOAP request");
-
-## [HTML Based Data](-)
-
-Custom HTML can be included as [data](- "c:assertTrue=addHtmlData()"):
-
-    Marker data = LogMarkers.htmlMarker(title, "<p>Some <b><i>HTML</i></b></p>", true);
-    getLogger().debug(data, "Sending HTML request");
-
-or in the [log statement](- "c:assertTrue=addHtmlStatement()"):
-
-    Marker data = LogMarkers.htmlStatement();
-    getLogger().debug(data, "Sending HTML request");
-
-and can be combined with [other markers](- "c:assertTrue=addCombinedHtml()"):
-    
-    Marker html = LogMarkers.htmlMarker("Adding data", "<p>This is some <b><i>HTML</i></b> data...");
-    html.add(LogMarkers.htmlStatementMarker());
-		
-    getLogger().debug(html, "Some <b><i>Combined HTML Statement</i></b> plus...");
-
-NOTE: When combining markers the data markers (Screenshot, Data, HTML) must be at the top level otherwise they will be ignored.  The htmlStatementMarker can be added at any level.    
