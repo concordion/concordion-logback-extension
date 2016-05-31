@@ -2,17 +2,14 @@ package spec;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
 
 import org.apache.commons.io.IOUtils;
-import org.concordion.ext.ScreenshotTaker;
 import org.concordion.logback.LogMarkers;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
-import org.slf4j.MarkerFactory;
 
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
@@ -66,7 +63,34 @@ public class HTMLLog extends AcceptanceTest {
 
 		return getLogContent().contains("<pre>");
 	}
+
+	public boolean addHtmlData() {
+		Marker data = LogMarkers.htmlMarker("Adding data", "<p>This is some <b><i>HTML</i></b> data...");
+		getLogger().debug(data, "Some <b><i>HTML</i></b> that won't display as HTML plus...");
+
+		// TODO How validate?
+		return true;
+	}
 	
+	public boolean addHtmlStatement() {
+		Marker html = LogMarkers.htmlStatementMarker();
+		getLogger().debug(html, "Some <b><i>HTML</i></b> data...");
+
+		// TODO How validate?
+		return true;
+	}
+
+	public boolean addCombinedHtml() {
+
+		Marker html = LogMarkers.htmlMarker("Adding data", "<p>This is some <b><i>HTML</i></b> data...");
+		html.add(LogMarkers.htmlStatementMarker());
+		
+		getLogger().debug(html, "Some <b><i>Combined HTML Statement</i></b> plus...");
+
+		// TODO How validate?
+		return true;
+	}
+
 	private String getLogContent() throws IOException {
 		FileAppender<?> fileAppender = getHTMLAppender();
 		

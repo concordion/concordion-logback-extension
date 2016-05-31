@@ -2,14 +2,12 @@ package org.slf4j.helpers;
 
 import java.awt.Dimension;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import org.concordion.api.Resource;
 import org.concordion.ext.ScreenshotTaker;
-import org.slf4j.helpers.BasicMarker;
+import org.slf4j.Marker;
 
 public class ScreenshotMarker extends BasicMarker {
 	private static final long serialVersionUID = 9167884710836103981L;
@@ -55,5 +53,10 @@ public class ScreenshotMarker extends BasicMarker {
 	
 	public String getFileName(int index) {
 		return String.format("%sScreenShot%s.%s", baseFile, index, screenshotTaker.getFileExtension());		
+	}
+
+	public ScreenshotMarker withMarker(Marker marker) {
+		this.add(marker);
+		return this;
 	}
 }

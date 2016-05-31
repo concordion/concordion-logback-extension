@@ -39,8 +39,28 @@ Screenshots can be [included](- "c:assertTrue=addScreenshot()") using the follow
 
 ## [Text Based Data](-)
 
-Text based data such as CSV, XML, JSON, HTML, etc can be [included](- "c:assertTrue=addData()") using the following:
+Text based data such as CSV, XML and JSON can be [included](- "c:assertTrue=addData()") using the following:
 
     Marker data = LogMarkers.dataMarker(title, data);
     getLogger().debug(data, "Sending SOAP request");
 
+## [HTML Based Data](-)
+
+Custom HTML can be included as [data](- "c:assertTrue=addHtmlData()"):
+
+    Marker data = LogMarkers.htmlMarker(title, "<p>Some <b><i>HTML</i></b></p>", true);
+    getLogger().debug(data, "Sending HTML request");
+
+or in the [log statement](- "c:assertTrue=addHtmlStatement()"):
+
+    Marker data = LogMarkers.htmlStatement();
+    getLogger().debug(data, "Sending HTML request");
+
+and can be combined with [other markers](- "c:assertTrue=addCombinedHtml()"):
+    
+    Marker html = LogMarkers.htmlMarker("Adding data", "<p>This is some <b><i>HTML</i></b> data...");
+    html.add(LogMarkers.htmlStatementMarker());
+		
+    getLogger().debug(html, "Some <b><i>Combined HTML Statement</i></b> plus...");
+
+NOTE: When combining markers the data markers (Screenshot, Data, HTML) must be at the top level otherwise they will be ignored.  The htmlStatementMarker can be added at any level.    
