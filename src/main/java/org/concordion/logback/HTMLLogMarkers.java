@@ -31,12 +31,4 @@ public class HTMLLogMarkers {
 	public static Marker step() {
 		return MarkerFactory.getMarker(STEP);
 	}
-	
-	public static boolean containsMarker(Marker marker, String name) {
-		if (marker == null) {
-			return false;
-		}
-		
-		return marker.contains(name);
-	}
 }

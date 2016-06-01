@@ -4,9 +4,11 @@ import static ch.qos.logback.core.CoreConstants.LINE_SEPARATOR;
 
 import java.util.Map;
 
+import org.slf4j.Marker;
 import org.slf4j.helpers.DataMarker;
 import org.slf4j.helpers.ScreenshotMarker;
 
+import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.PatternLayout;
 import ch.qos.logback.classic.html.DefaultCssBuilder;
 import ch.qos.logback.classic.html.DefaultThrowableRenderer;
@@ -30,14 +32,14 @@ import ch.qos.logback.core.pattern.Converter;
  * @author S&eacute;bastien Pennec
  */
 public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
-	int screenshotsTakenCount = 0;
-	
     /**
      * Default pattern string for log output.
      */
     static final String DEFAULT_CONVERSION_PATTERN = "%date%thread%level%logger%mdc%msg";
 
-    IThrowableRenderer<ILoggingEvent> throwableRenderer;
+    private IThrowableRenderer<ILoggingEvent> throwableRenderer;
+	private StepRecorder stepRecorder;
+	private int screenshotsTakenCount = 0;
 
     /**
      * Constructs a PatternLayout using the DEFAULT_LAYOUT_PATTERN.
@@ -70,8 +72,8 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
         StringBuilder buf = new StringBuilder();
         startNewTableIfLimitReached(buf);
 
-        if (HTMLLogMarkers.containsMarker(event.getMarker(), HTMLLogMarkers.STEP)) {
-        	appendStepToBuffer(buf, event, HTMLLogMarkers.containsMarker(event.getMarker(), HTMLLogMarkers.HTML));
+        if (containsMarker(event, HTMLLogMarkers.STEP) || event.getLevel() == stepRecorder.getLevel()) {
+        	appendStepToBuffer(buf, event);
         	counter = 0;
         	return buf.toString();
         }
@@ -95,7 +97,7 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
     
         Converter<ILoggingEvent> c = head;
         while (c != null) {
-			appendEventToBuffer(buf, c, event, (event.getMarker() == null ? false : event.getMarker().contains("CONTAINS_HTML")));
+			appendEventToBuffer(buf, c, event);
             c = c.getNext();
         }
         
@@ -116,11 +118,11 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
         return buf.toString();
     }
 
-	private void appendEventToBuffer(StringBuilder buf, Converter<ILoggingEvent> c, ILoggingEvent event, boolean containsHtml) {
+	private void appendEventToBuffer(StringBuilder buf, Converter<ILoggingEvent> c, ILoggingEvent event) {
         buf.append("<td class=\"");
         buf.append(computeConverterName(c));
         buf.append("\">");
-		if (containsHtml) {
+		if (containsMarker(event, HTMLLogMarkers.HTML)) {
 			buf.append(c.convert(event));
 		} else {
 			buf.append(Transform.escapeTags(c.convert(event)));
@@ -129,13 +131,13 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
         buf.append(LINE_SEPARATOR);
     }
 
-	public void appendStepToBuffer(StringBuilder buf, ILoggingEvent event, boolean containsHtml) {
+	public void appendStepToBuffer(StringBuilder buf, ILoggingEvent event) {
 		buf.append(LINE_SEPARATOR);
         buf.append("<tr>");
         buf.append(LINE_SEPARATOR);
         buf.append("<td class=\"step\" colspan=\"6\">");
         
-        if (containsHtml) {
+        if (containsMarker(event, HTMLLogMarkers.HTML)) {
 			buf.append(event.getMessage());
 		} else {
 			buf.append(Transform.escapeTags(event.getMessage()));
@@ -216,8 +218,15 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
     }
 
 	public void setStepRecorder(StepRecorder stepRecorder) {
-		// TODO Auto-generated method stub
-		
-		
+		this.stepRecorder = stepRecorder;
 	}
+	
+	private boolean containsMarker(ILoggingEvent event, String name) {
+		if (event.getMarker() == null) {
+			return false;
+		}
+		
+		return event.getMarker().contains(name);
+	}
+
 }

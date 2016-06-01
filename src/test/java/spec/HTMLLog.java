@@ -22,14 +22,14 @@ import test.concordion.logback.DummyScreenshotTaker;
 public class HTMLLog extends BaseFixture {
 	
 	public boolean configuration() throws IOException {
-		getLogger().debug(HTMLLogMarkers.step(), "Configuration");
+		getLogger().info(HTMLLogMarkers.step(), "Configuration");
 		getLogger().debug("Hello World!");
 		
 		return getLogContent().contains(">Hello World!</td>");
 	}
 	
 	public boolean throwException() throws IOException {
-		getLogger().debug(HTMLLogMarkers.step(), "Exception Handling");
+		getLogger().info(HTMLLogMarkers.step(), "Exception Handling");
 		try {
 			throw new IllegalStateException("Hello exception handling!");
 		} catch (IllegalStateException e) {
@@ -40,17 +40,17 @@ public class HTMLLog extends BaseFixture {
 	}
 	
 	public boolean recordStepsUsingLogLevel() {
-		getLogger().debug(HTMLLogMarkers.step(), "Step using Log Level");
+		getLogger().info(HTMLLogMarkers.step(), "Step using Log Level");
 		return true;
 	}
 	
 	public boolean recordStepsUsingStepMarker() {
-		getLogger().debug(HTMLLogMarkers.step(), "Step using Step Marker");
+		getLogger().info(HTMLLogMarkers.step(), "Step using Step Marker");
 		return true;
 	}
 	
 	public boolean addScreenshot() throws IOException {
-		getLogger().debug(HTMLLogMarkers.step(), "Screenshot");
+		getLogger().info(HTMLLogMarkers.step(), "Screenshot");
 		Marker screenshot = HTMLLogMarkers.screenshot("CurrentPage", new DummyScreenshotTaker());
 				
 		getLogger().debug(screenshot, "Have taken a screenshot for some reason...");
@@ -60,7 +60,7 @@ public class HTMLLog extends BaseFixture {
 	}
 	
 	public boolean addData() throws IOException {
-		getLogger().debug(HTMLLogMarkers.step(), "Text Data");
+		getLogger().info(HTMLLogMarkers.step(), "Text Data");
 		Marker data;
 		
 		data = HTMLLogMarkers.data("Adding data", "Some TEXT data...\r\nHows it going?");
@@ -79,7 +79,7 @@ public class HTMLLog extends BaseFixture {
 	}
 
 	public boolean addHtmlData() {
-		getLogger().debug(HTMLLogMarkers.step(), "HTML Data");
+		getLogger().info(HTMLLogMarkers.step(), "HTML Data");
 		
 		Marker data = HTMLLogMarkers.html("Adding data", "<p>This is some <b><i>HTML</i></b> data...");
 		getLogger().debug(data, "Some <b><i>HTML</i></b> that won't display as HTML plus...");
@@ -89,7 +89,7 @@ public class HTMLLog extends BaseFixture {
 	}
 	
 	public boolean addHtmlStatement() {
-		getLogger().debug(HTMLLogMarkers.step(), "HTML Statement");
+		getLogger().info(HTMLLogMarkers.step(), "HTML Statement");
 		
 		Marker html = HTMLLogMarkers.htmlStatementMarker();
 		getLogger().debug(html, "Some <b><i>HTML</i></b> data...");
@@ -99,7 +99,7 @@ public class HTMLLog extends BaseFixture {
 	}
 
 	public boolean addCombinedHtml() {
-		getLogger().debug(HTMLLogMarkers.step(), "Combinded HTML and Statement");
+		getLogger().info(HTMLLogMarkers.step(), "Combinded HTML and Statement");
 		
 		Marker html = HTMLLogMarkers.html("Adding data", "<p>This is some <b><i>HTML</i></b> data...");
 		html.add(HTMLLogMarkers.htmlStatementMarker());

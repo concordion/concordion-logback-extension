@@ -18,6 +18,7 @@ import org.concordion.api.listener.SpecificationProcessingListener;
 import org.concordion.api.listener.ThrowableCaughtEvent;
 import org.concordion.api.listener.ThrowableCaughtListener;
 import org.concordion.ext.LoggingFormatterExtension.LogLevel;
+import org.concordion.logback.HTMLLogMarkers;
 import org.concordion.logback.StepRecorder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,8 +29,7 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 	private boolean useLogFileViewer;
 	private boolean logExample = true;
 	private LogLevel logExceptions = LogLevel.EXCEPTION_CAUSES;
-	private StepRecorder stepRecorder = StepRecorder.STEP_MARKER;
-	
+		
 	public void setLogExample(boolean value) {
 		this.logExample = value;
 	}
@@ -38,10 +38,6 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 		this.logExceptions = value;
 	}
 
-	public void recordStepsUsing(StepRecorder stepRecorder) {
-		this.stepRecorder = stepRecorder;
-	}
-	
 	public LoggingFormatterSpecificationListener(ILoggingAdaptor loggingAdaptor, boolean useLogFileViewer) {
 		this.loggingAdaptor = loggingAdaptor;
 		this.useLogFileViewer = useLogFileViewer;
@@ -214,14 +210,14 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 	public void beforeExample(ExampleEvent event) {
 		if (!logExample) return;
 
-		LOGGER.info("Example: " + getExampleTitle(event.getElement()));
+		LOGGER.info(HTMLLogMarkers.step(), "Example: " + getExampleTitle(event.getElement()));
 	}
 
 	@Override
 	public void afterExample(ExampleEvent event) {
 		if (!logExample) return;
 		
-		LOGGER.info("End Example: " + getExampleTitle(event.getElement()));
+		LOGGER.info(HTMLLogMarkers.step(), "End Example: " + getExampleTitle(event.getElement()));
 	}
 	
 	public String getExampleTitle(Element element) {

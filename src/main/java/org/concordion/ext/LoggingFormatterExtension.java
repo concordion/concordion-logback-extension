@@ -58,17 +58,6 @@ public class LoggingFormatterExtension implements ConcordionExtension {
 		listener.setLogExceptions(value);
 		return this;
 	}
-	
-    /**
-     * Set the trigger that will add a step to the log.
-     *  
-     * @param stepRecorder Which trigger to use
-     * @return A self reference
-     */
-	public LoggingFormatterExtension recordStepsUsing(StepRecorder stepRecorder) {
-		listener.recordStepsUsing(stepRecorder);
-		return this;
-	}
 	    
     public enum LogLevel {
     	/** Do not log exceptions */

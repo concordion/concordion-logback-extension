@@ -6,9 +6,11 @@ The primary purpose of this extension is the ability to have a separate log per 
 
 This extension includes a LogViewer to make the logs a little friendlier to use and gives the ability to filter the logs by the log level.  
 
-## Configuration
+## Appender Configuration
 
-The extension comes with an example set of logback configuration files to use.  Configuring to use the classic text logs is a simple matter of adding the appender <appender-ref ref="HTML-FILE-PER-TEST" /> to the logback-jenkins.xml and logback.xml files.
+The extension comes with an example set of logback configuration files to use.  
+
+Configuring to use the classic text logs is a simple matter of adding the appender <appender-ref ref="FILE-PER-TEST" /> to the logback-jenkins.xml and logback-test.xml files.
 
 Further customisation, such as the format of the log statement can be done in logback-include.xml.
 
