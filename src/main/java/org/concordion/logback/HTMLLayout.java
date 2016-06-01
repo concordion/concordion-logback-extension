@@ -161,7 +161,7 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 		buf.append(LINE_SEPARATOR);
 	}
 
-    public IThrowableRenderer getThrowableRenderer() {
+	public IThrowableRenderer<?> getThrowableRenderer() {
         return throwableRenderer;
     }
 
@@ -170,7 +170,7 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
     }
 
     @Override
-    protected String computeConverterName(Converter c) {
+	protected String computeConverterName(@SuppressWarnings("rawtypes") Converter c) {
         if (c instanceof MDCConverter) {
             MDCConverter mc = (MDCConverter) c;
             String key = mc.getFirstOption();
