@@ -47,7 +47,7 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
     public HTMLLayout() {
         pattern = DEFAULT_CONVERSION_PATTERN;
         throwableRenderer = new DefaultThrowableRenderer();
-        cssBuilder = new DefaultCssBuilder();
+        cssBuilder = new HTMLLayoutCssBuilder();
     }
 
     @Override
@@ -100,8 +100,7 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
         }
         
         buf.append("</tr>");
-        buf.append(LINE_SEPARATOR);
-
+        
         if (event.getMarker() instanceof ScreenshotMarker) {
 			appendScreenshotToBuffer(buf, (ScreenshotMarker) event.getMarker());
         } 
@@ -132,22 +131,27 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 
 	public void appendStepToBuffer(StringBuilder buf, ILoggingEvent event, boolean containsHtml) {
 		buf.append(LINE_SEPARATOR);
-        buf.append("<tr class=\"step\">");
-        buf.append("<td  colspan=\"6\">");
+        buf.append("<tr>");
         buf.append(LINE_SEPARATOR);
+        buf.append("<td class=\"step\" colspan=\"6\">");
+        
         if (containsHtml) {
 			buf.append(event.getMessage());
 		} else {
 			buf.append(Transform.escapeTags(event.getMessage()));
 		}
+        
+        buf.append("</td>");
 		buf.append(LINE_SEPARATOR);
-		buf.append("</td></tr>");
+		buf.append("</tr>");
 	}
 	
 	public void appendScreenshotToBuffer(StringBuilder buf, ScreenshotMarker screenshot) {
 		buf.append(LINE_SEPARATOR);
-		buf.append("<tr><td  colspan=\"6\">");
-
+		buf.append("<tr>");
+		buf.append(LINE_SEPARATOR);
+        buf.append("<td colspan=\"6\">");
+        
 		try {
 			buf.append("<img src=\"").append(screenshot.writeScreenshot(screenshotsTakenCount)).append("\"/>");
 			screenshotsTakenCount++;
@@ -156,14 +160,17 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 			buf.append(e.getMessage());
 		}
 
-		buf.append("</td></tr>");
+		buf.append("</td>");
 		buf.append(LINE_SEPARATOR);
+		buf.append("</tr>");
 	}
 
 	public void appendDataToBuffer(StringBuilder buf, DataMarker data) {
 		buf.append(LINE_SEPARATOR);
-		buf.append("<tr><td  colspan=\"6\">");
-
+		buf.append("<tr>");
+		buf.append(LINE_SEPARATOR);
+		buf.append("<td  colspan=\"6\">");
+		
 		try {
 			buf.append("<pre>");
 			buf.append(LINE_SEPARATOR);
@@ -173,13 +180,16 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 			} else {
 				buf.append(data.getData());
 			}
+			
+			buf.append(LINE_SEPARATOR);
 			buf.append("</pre>");
 		} catch (Exception e) {
 			buf.append(e.getMessage());
 		}
-
-		buf.append("</td></tr>");
+		
+		buf.append("</td>");
 		buf.append(LINE_SEPARATOR);
+		buf.append("</tr>");
 	}
 
 	public IThrowableRenderer<?> getThrowableRenderer() {
