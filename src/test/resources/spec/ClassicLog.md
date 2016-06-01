@@ -13,8 +13,4 @@ The extension comes with an example set of logback configuration files to use.  
 Further customisation, such as the format of the log statement can be done in logback-include.xml.
 
 ## [Write to Log](-)
-When configured to the the appender named [FILE-PER-TEST]("c:assertTrue=useAppender(#TEXT)") the specification gets a link to the log [file]("#withLogViewer=false") in the [footer]("c:assertTrue=writeLog(#TEXT, #withLogViewer)"). 
-
-## [Use Log Viewer](-)
-When configured to the the appender named [FILE-PER-TEST]("c:assertTrue=useAppender(#TEXT)") and use the [log viewer]("#withLogViewer=true") the specification gets a link to the log viewer in the [footer]("c:assertTrue=writeLog(#TEXT, #withLogViewer)"). 
-
+When configured to the the appender named [FILE-PER-TEST]("c:assertTrue=useAppender(#TEXT)") the specification gets a link to the log file in the [footer]("c:assertTrue=writeLog(#TEXT, #withLogViewer)"). 
