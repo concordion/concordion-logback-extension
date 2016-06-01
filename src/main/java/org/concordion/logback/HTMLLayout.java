@@ -70,11 +70,17 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
         StringBuilder buf = new StringBuilder();
         startNewTableIfLimitReached(buf);
 
+        if (HTMLLogMarkers.containsMarker(event.getMarker(), HTMLLogMarkers.STEP)) {
+        	appendStepToBuffer(buf, event, HTMLLogMarkers.containsMarker(event.getMarker(), HTMLLogMarkers.HTML));
+        	counter = 0;
+        	return buf.toString();
+        }
+        
         boolean odd = true;
         if (((counter++) & 1) == 0) {
             odd = false;
         }
-
+        
         String level = event.getLevel().toString().toLowerCase();
 
         buf.append(LINE_SEPARATOR);
@@ -86,12 +92,13 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
             buf.append(" even\">");
         }
         buf.append(LINE_SEPARATOR);
-
+    
         Converter<ILoggingEvent> c = head;
         while (c != null) {
 			appendEventToBuffer(buf, c, event, (event.getMarker() == null ? false : event.getMarker().contains("CONTAINS_HTML")));
             c = c.getNext();
         }
+        
         buf.append("</tr>");
         buf.append(LINE_SEPARATOR);
 
@@ -123,6 +130,20 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
         buf.append(LINE_SEPARATOR);
     }
 
+	public void appendStepToBuffer(StringBuilder buf, ILoggingEvent event, boolean containsHtml) {
+		buf.append(LINE_SEPARATOR);
+        buf.append("<tr class=\"step\">");
+        buf.append("<td  colspan=\"6\">");
+        buf.append(LINE_SEPARATOR);
+        if (containsHtml) {
+			buf.append(event.getMessage());
+		} else {
+			buf.append(Transform.escapeTags(event.getMessage()));
+		}
+		buf.append(LINE_SEPARATOR);
+		buf.append("</td></tr>");
+	}
+	
 	public void appendScreenshotToBuffer(StringBuilder buf, ScreenshotMarker screenshot) {
 		buf.append(LINE_SEPARATOR);
 		buf.append("<tr><td  colspan=\"6\">");

@@ -7,7 +7,7 @@ import java.io.InputStream;
 import java.util.Iterator;
 
 import org.apache.commons.io.IOUtils;
-import org.concordion.logback.LogMarkers;
+import org.concordion.logback.HTMLLogMarkers;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
 
@@ -22,12 +22,14 @@ import test.concordion.logback.DummyScreenshotTaker;
 public class HTMLLog extends BaseFixture {
 	
 	public boolean configuration() throws IOException {
+		getLogger().debug(HTMLLogMarkers.step(), "Configuration");
 		getLogger().debug("Hello World!");
 		
 		return getLogContent().contains(">Hello World!</td>");
 	}
 	
 	public boolean throwException() throws IOException {
+		getLogger().debug(HTMLLogMarkers.step(), "Exception Handling");
 		try {
 			throw new IllegalStateException("Hello exception handling!");
 		} catch (IllegalStateException e) {
@@ -37,8 +39,19 @@ public class HTMLLog extends BaseFixture {
 		return getLogContent().contains("Hello exception handling!");
 	}
 	
+	public boolean recordStepsUsingLogLevel() {
+		getLogger().debug(HTMLLogMarkers.step(), "Step using Log Level");
+		return true;
+	}
+	
+	public boolean recordStepsUsingStepMarker() {
+		getLogger().debug(HTMLLogMarkers.step(), "Step using Step Marker");
+		return true;
+	}
+	
 	public boolean addScreenshot() throws IOException {
-		Marker screenshot = LogMarkers.screenshotMarker("CurrentPage", new DummyScreenshotTaker());
+		getLogger().debug(HTMLLogMarkers.step(), "Screenshot");
+		Marker screenshot = HTMLLogMarkers.screenshot("CurrentPage", new DummyScreenshotTaker());
 				
 		getLogger().debug(screenshot, "Have taken a screenshot for some reason...");
 		getLogger().debug(screenshot, "And another!");
@@ -47,25 +60,28 @@ public class HTMLLog extends BaseFixture {
 	}
 	
 	public boolean addData() throws IOException {
+		getLogger().debug(HTMLLogMarkers.step(), "Text Data");
 		Marker data;
 		
-		data = LogMarkers.dataMarker("Adding data", "Some TEXT data...\r\nHows it going?");
+		data = HTMLLogMarkers.data("Adding data", "Some TEXT data...\r\nHows it going?");
 		getLogger().debug(data, "Adding data for some reason...");
 		
-		data = LogMarkers.dataMarker("Adding data", getDataContent("example.csv"));
+		data = HTMLLogMarkers.data("Adding data", getDataContent("example.csv"));
 		getLogger().debug(data, "Some CSV data...");
 
-		data = LogMarkers.dataMarker("Adding data", getDataContent("example.json"));
+		data = HTMLLogMarkers.data("Adding data", getDataContent("example.json"));
 		getLogger().debug(data, "Some JSON data...");
 		
-		data = LogMarkers.dataMarker("Adding data", getDataContent("example.xml"));
+		data = HTMLLogMarkers.data("Adding data", getDataContent("example.xml"));
 		getLogger().debug(data, "Some XML data...");
 
 		return getLogContent().contains("<pre>");
 	}
 
 	public boolean addHtmlData() {
-		Marker data = LogMarkers.htmlMarker("Adding data", "<p>This is some <b><i>HTML</i></b> data...");
+		getLogger().debug(HTMLLogMarkers.step(), "HTML Data");
+		
+		Marker data = HTMLLogMarkers.html("Adding data", "<p>This is some <b><i>HTML</i></b> data...");
 		getLogger().debug(data, "Some <b><i>HTML</i></b> that won't display as HTML plus...");
 
 		// TODO How validate?
@@ -73,7 +89,9 @@ public class HTMLLog extends BaseFixture {
 	}
 	
 	public boolean addHtmlStatement() {
-		Marker html = LogMarkers.htmlStatementMarker();
+		getLogger().debug(HTMLLogMarkers.step(), "HTML Statement");
+		
+		Marker html = HTMLLogMarkers.htmlStatementMarker();
 		getLogger().debug(html, "Some <b><i>HTML</i></b> data...");
 
 		// TODO How validate?
@@ -81,9 +99,10 @@ public class HTMLLog extends BaseFixture {
 	}
 
 	public boolean addCombinedHtml() {
-
-		Marker html = LogMarkers.htmlMarker("Adding data", "<p>This is some <b><i>HTML</i></b> data...");
-		html.add(LogMarkers.htmlStatementMarker());
+		getLogger().debug(HTMLLogMarkers.step(), "Combinded HTML and Statement");
+		
+		Marker html = HTMLLogMarkers.html("Adding data", "<p>This is some <b><i>HTML</i></b> data...");
+		html.add(HTMLLogMarkers.htmlStatementMarker());
 		
 		getLogger().debug(html, "Some <b><i>Combined HTML Statement</i></b> plus...");
 

@@ -18,6 +18,7 @@ import org.concordion.api.listener.SpecificationProcessingListener;
 import org.concordion.api.listener.ThrowableCaughtEvent;
 import org.concordion.api.listener.ThrowableCaughtListener;
 import org.concordion.ext.LoggingFormatterExtension.LogLevel;
+import org.concordion.ext.LoggingFormatterExtension.StepRecorder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,6 +28,7 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 	private boolean useLogFileViewer;
 	private boolean logExample = true;
 	private LogLevel logExceptions = LogLevel.EXCEPTION_CAUSES;
+	private StepRecorder stepRecorder = StepRecorder.STEP_MARKER;
 	
 	public void setLogExample(boolean value) {
 		this.logExample = value;
@@ -34,6 +36,10 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 	
 	public void setLogExceptions(LogLevel value) {
 		this.logExceptions = value;
+	}
+
+	public void recordStepsUsing(StepRecorder stepRecorder) {
+		this.stepRecorder = stepRecorder;
 	}
 	
 	public LoggingFormatterSpecificationListener(ILoggingAdaptor loggingAdaptor, boolean useLogFileViewer) {

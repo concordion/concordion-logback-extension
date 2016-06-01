@@ -6,7 +6,7 @@ This custom layout and appender for the [LogBack Logger](http://logback.qos.ch) 
 Advanced logging features such as recording steps, screenshots and data, are enabled by the use of [Markers](http://www.slf4j.org/apidocs/org/slf4j/Marker.html) (there is some more information on markers buried in the LogBag Manual chapter on [filters](http://logback.qos.ch/manual/filters.html)).  
 
 
-## [Configuration](-)
+## Configuration
 
 Configuring your application to use ConcordionHtmlLayout is a simple matter of updating the logback-includes.xml configuration file and replacing the [Layout section of the FILE-PER-TEST sifting appender](- "c:assertTrue=configuration()") with the following:
 
@@ -21,14 +21,27 @@ The content of the table columns are specified using a conversion pattern. For m
     </layout>
 
 
-## [Exceptions](-)
+## Exceptions
 
 Exceptions are formatted within a [collapsible section](- "c:assertTrue=throwException()") that presents the error message by default but will allow the user to drill down into the stack trace.  
 
 
-## [Actions](-)
+## Grouping Log Statements
 
-Log statements are grouped into steps...
+A test often involves a series of steps to complete a task.  This extension provides two mechanisms to group log statements.
+
+The simplest method is to choose a [log level](- "c:assertTrue=recordStepsUsingLogLevel()") that will create a step in your log file.  In this example, any log statements at the INFO level will be formatted as a step, all other levels will be grouped under the step.
+
+    loggingExtension.recordStepsUsing(StepRecorder.INFO_LOG_LEVEL);
+    
+    LOGGER.info("My step here");
+    
+A more configurable option (and the default option) is to use a [step marker](- "c:assertTrue=recordStepsUsingStepMarker()"), but for an existing test suite this may take a bit of rework.  In this example, any log statements at any level that have the step marker will be formatted as a step, all other log statements will be grouped under the step.
+
+
+    loggingExtension.recordStepsUsing(StepRecorder.STEP_MARKER);
+    
+    LOGGER.info(HTMLLogMarkers.step(), "My step here");
 
 
 ## [Screenshots](-)
