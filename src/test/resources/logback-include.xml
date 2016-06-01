@@ -43,8 +43,8 @@
 		</discriminator>
 		<sift>
 			<appender name="FILE-${testname}" class="org.concordion.logback.HTMLFileAppender">
-				<!-- location is determined by concordion.output.dir property in gradle.build file --> 
-				<File>${testname}Log.html</File>
+				<File>${testname}Log.html</File> <!-- location is determined by concordion.output.dir property in gradle.build file -->
+				<StepRecorder>STEP_MARKER</StepRecorder> <!-- Options are:  STEP_MARKER, INFO_LOG_LEVEL, DEBUG_LOG_LEVEL -->
 				<append>false</append>				
 				
 				<encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">

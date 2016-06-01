@@ -5,6 +5,7 @@ import org.concordion.api.extension.ConcordionExtender;
 import org.concordion.api.extension.ConcordionExtension;
 import org.concordion.ext.loggingFormatter.LogbackAdaptor;
 import org.concordion.ext.loggingFormatter.LoggingFormatterSpecificationListener;
+import org.concordion.logback.StepRecorder;
 
 import ch.qos.logback.classic.Level;
 
@@ -81,16 +82,5 @@ public class LoggingFormatterExtension implements ConcordionExtension {
     	
     	/** Log full stack trace */
     	EXCEPTION_WITH_STACK_TRACE
-    }
-
-    public enum StepRecorder {
-    	/** Must supply step marker to log steps */
-    	STEP_MARKER, 
-    	
-    	/** All INFO level log statements will be treated as steps */
-    	INFO_LOG_LEVEL, 
-    	
-    	/** All BEBUG level log statements will be treated as steps */
-    	DEBUG_LOG_LEVEL
     }
 }

@@ -214,4 +214,10 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
             return super.computeConverterName(c);
         }
     }
+
+	public void setStepRecorder(StepRecorder stepRecorder) {
+		// TODO Auto-generated method stub
+		
+		
+	}
 }

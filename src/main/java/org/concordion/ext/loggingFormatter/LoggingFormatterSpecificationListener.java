@@ -18,7 +18,7 @@ import org.concordion.api.listener.SpecificationProcessingListener;
 import org.concordion.api.listener.ThrowableCaughtEvent;
 import org.concordion.api.listener.ThrowableCaughtListener;
 import org.concordion.ext.LoggingFormatterExtension.LogLevel;
-import org.concordion.ext.LoggingFormatterExtension.StepRecorder;
+import org.concordion.logback.StepRecorder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
