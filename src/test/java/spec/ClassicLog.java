@@ -2,10 +2,15 @@ package spec;
 
 public class ClassicLog extends BaseFixture {
 	
-	public String writeToolTip(String text) {
-		addConcordionTooltip(text);
-		
-		return text;
+	public boolean useAppender(String appender) {
+		return false;
 	}
 
+	public boolean hasLinkInFooter() {
+		return false;
+	}
+
+	public boolean useLogViewer() {
+		return false;
+	}
 }
