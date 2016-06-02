@@ -23,7 +23,11 @@ public class HtmlLog extends BaseFixture {
 	
 	public boolean configuration() throws IOException {
 		getLogger().info(HTMLLogMarkers.step(), "Configuration");
+		getLogger().trace("Hello World!");
 		getLogger().debug("Hello World!");
+		getLogger().info("Hello World!");
+		getLogger().warn("Hello World!");
+		getLogger().error("Hello World!");
 		
 		return getLogContent().contains(">Hello World!</td>");
 	}

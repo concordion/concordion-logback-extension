@@ -38,19 +38,19 @@
 	    
 	<appender name="HTML-FILE-PER-TEST" class="ch.qos.logback.classic.sift.SiftingAppender">
 		<discriminator>
-			<Key>testname</Key>
-			<DefaultValue>build/testrun</DefaultValue>
+			<key>testname</key>
+			<defaultValue>build/testrun</defaultValue>
 		</discriminator>
 		<sift>
 			<appender name="FILE-${testname}" class="org.concordion.logback.HTMLFileAppender">
-				<File>${testname}Log.html</File> <!-- location is determined by concordion.output.dir property in gradle.build file -->
-				<StepRecorder>STEP_MARKER</StepRecorder> <!-- Options are:  STEP_MARKER, INFO_LOG_LEVEL, DEBUG_LOG_LEVEL -->
+				<file>${testname}Log.html</file> <!-- location is determined by concordion.output.dir property in gradle.build file -->
 				<append>false</append>				
 				
 				<encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
-			      <layout class="org.concordion.logback.HTMLLayout">
-			          <pattern>%d{HH:mm:ss.SSS}%logger{36}%level%msg</pattern>
-			      </layout>
+					<layout class="org.concordion.logback.HTMLLayout">
+						<pattern>%date{HH:mm:ss.SSS}%logger{30}%level%message%file%class%method%line</pattern>
+						<stepRecorder>STEP_MARKER</stepRecorder> <!-- Options are:  STEP_MARKER, INFO_LOG_LEVEL, DEBUG_LOG_LEVEL -->
+					</layout>
 			    </encoder>
 			</appender>
 		</sift>

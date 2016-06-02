@@ -4,13 +4,10 @@ import static ch.qos.logback.core.CoreConstants.LINE_SEPARATOR;
 
 import java.util.Map;
 
-import org.slf4j.Marker;
 import org.slf4j.helpers.DataMarker;
 import org.slf4j.helpers.ScreenshotMarker;
 
-import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.PatternLayout;
-import ch.qos.logback.classic.html.DefaultCssBuilder;
 import ch.qos.logback.classic.html.DefaultThrowableRenderer;
 import ch.qos.logback.classic.pattern.MDCConverter;
 import ch.qos.logback.classic.spi.ILoggingEvent;
@@ -35,11 +32,12 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
     /**
      * Default pattern string for log output.
      */
-    static final String DEFAULT_CONVERSION_PATTERN = "%date%thread%level%logger%mdc%msg";
+    static final String DEFAULT_CONVERSION_PATTERN = "%date{HH:mm:ss.SSS}%logger{30}%level%message";
 
     private IThrowableRenderer<ILoggingEvent> throwableRenderer;
-	private StepRecorder stepRecorder;
+    private StepRecorder stepRecorder = StepRecorder.STEP_MARKER;
 	private int screenshotsTakenCount = 0;
+	private int columnCount;
 
     /**
      * Constructs a PatternLayout using the DEFAULT_LAYOUT_PATTERN.
@@ -48,10 +46,21 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
      */
     public HTMLLayout() {
         pattern = DEFAULT_CONVERSION_PATTERN;
-        throwableRenderer = new DefaultThrowableRenderer();
+        throwableRenderer = new HTMLThrowableRenderer();
         cssBuilder = new HTMLLayoutCssBuilder();
+        columnCount = getColumnCount();
     }
 
+    public void setStepRecorder(String value) {
+		stepRecorder = StepRecorder.valueOf(value);
+	}
+    
+    @Override
+    public void setPattern(String conversionPattern) {
+    	super.setPattern(conversionPattern);
+    	columnCount = getColumnCount();
+    };
+    
     @Override
     public void start() {
         int errorCount = 0;
@@ -112,6 +121,10 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
         }
         
         if (event.getThrowableProxy() != null) {
+        	if (throwableRenderer instanceof HTMLThrowableRenderer) {
+        		((HTMLThrowableRenderer) throwableRenderer).setColumnCount(columnCount);
+        	}
+        		
             throwableRenderer.render(buf, event);
         }
         
@@ -135,7 +148,7 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 		buf.append(LINE_SEPARATOR);
         buf.append("<tr>");
         buf.append(LINE_SEPARATOR);
-        buf.append("<td class=\"step\" colspan=\"6\">");
+        buf.append("<td class=\"step\" colspan=\"").append(columnCount).append("\">");
         
         if (containsMarker(event, HTMLLogMarkers.HTML)) {
 			buf.append(event.getMessage());
@@ -152,7 +165,7 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 		buf.append(LINE_SEPARATOR);
 		buf.append("<tr>");
 		buf.append(LINE_SEPARATOR);
-        buf.append("<td colspan=\"6\">");
+        buf.append("<td colspan=\"").append(columnCount).append("\">");
         
 		try {
 			buf.append("<img src=\"").append(screenshot.writeScreenshot(screenshotsTakenCount)).append("\"/>");
@@ -171,7 +184,7 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 		buf.append(LINE_SEPARATOR);
 		buf.append("<tr>");
 		buf.append(LINE_SEPARATOR);
-		buf.append("<td  colspan=\"6\">");
+		buf.append("<td  colspan=\"").append(columnCount).append("\">");
 		
 		try {
 			buf.append("<pre>");
@@ -217,10 +230,6 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
         }
     }
 
-	public void setStepRecorder(StepRecorder stepRecorder) {
-		this.stepRecorder = stepRecorder;
-	}
-	
 	private boolean containsMarker(ILoggingEvent event, String name) {
 		if (event.getMarker() == null) {
 			return false;
@@ -228,5 +237,8 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 		
 		return event.getMarker().contains(name);
 	}
-
+	
+	private int getColumnCount() {
+		return pattern.length() - pattern.replace("%", "").length();
+	}
 }
