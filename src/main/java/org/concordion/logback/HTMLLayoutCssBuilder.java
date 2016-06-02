@@ -19,7 +19,7 @@ public class HTMLLayoutCssBuilder implements CssBuilder {
         sbuf.append("table { margin-left: 2em; margin-right: 2em; border-left: 2px solid #AAA; }");
         sbuf.append(LINE_SEPARATOR);
 
-        sbuf.append("TR.even { background: #FFFFFF; }");
+        sbuf.append("TD.even, TR.even { background: #FFFFFF; }");
         sbuf.append(LINE_SEPARATOR);
 
         sbuf.append("TR.odd { background: #EAEAEA; }");

@@ -8,7 +8,6 @@ import org.slf4j.helpers.DataMarker;
 import org.slf4j.helpers.ScreenshotMarker;
 
 import ch.qos.logback.classic.PatternLayout;
-import ch.qos.logback.classic.html.DefaultThrowableRenderer;
 import ch.qos.logback.classic.pattern.MDCConverter;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.helpers.Transform;
@@ -83,34 +82,10 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 
         if (containsMarker(event, HTMLLogMarkers.STEP) || event.getLevel() == stepRecorder.getLevel()) {
         	appendStepToBuffer(buf, event);
-        	counter = 0;
         	return buf.toString();
         }
         
-        boolean odd = true;
-        if (((counter++) & 1) == 0) {
-            odd = false;
-        }
-        
-        String level = event.getLevel().toString().toLowerCase();
-
-        buf.append(LINE_SEPARATOR);
-        buf.append("<tr class=\"");
-        buf.append(level);
-        if (odd) {
-            buf.append(" odd\">");
-        } else {
-            buf.append(" even\">");
-        }
-        buf.append(LINE_SEPARATOR);
-    
-        Converter<ILoggingEvent> c = head;
-        while (c != null) {
-			appendEventToBuffer(buf, c, event);
-            c = c.getNext();
-        }
-        
-        buf.append("</tr>");
+        appendMessageToBuffer(buf, event);
         
         if (event.getMarker() instanceof ScreenshotMarker) {
 			appendScreenshotToBuffer(buf, (ScreenshotMarker) event.getMarker());
@@ -131,24 +106,13 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
         return buf.toString();
     }
 
-	private void appendEventToBuffer(StringBuilder buf, Converter<ILoggingEvent> c, ILoggingEvent event) {
-        buf.append("<td class=\"");
-        buf.append(computeConverterName(c));
-        buf.append("\">");
-		if (containsMarker(event, HTMLLogMarkers.HTML)) {
-			buf.append(c.convert(event));
-		} else {
-			buf.append(Transform.escapeTags(c.convert(event)));
-		}
-        buf.append("</td>");
-        buf.append(LINE_SEPARATOR);
-    }
-
 	public void appendStepToBuffer(StringBuilder buf, ILoggingEvent event) {
+    	counter = 0;
+
 		buf.append(LINE_SEPARATOR);
         buf.append("<tr>");
         buf.append(LINE_SEPARATOR);
-        buf.append("<td class=\"step\" colspan=\"").append(columnCount).append("\">");
+        buf.append("<td class=\"step\" colspan=\"").append(columnCount + 1).append("\">");
         
         if (containsMarker(event, HTMLLogMarkers.HTML)) {
 			buf.append(event.getMessage());
@@ -161,11 +125,52 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 		buf.append("</tr>");
 	}
 	
+	private void appendMessageToBuffer(StringBuilder buf, ILoggingEvent event) {
+        boolean odd = true;
+        if (((counter++) & 1) == 0) {
+            odd = false;
+        }
+        
+        String level = event.getLevel().toString().toLowerCase();
+
+        buf.append(LINE_SEPARATOR);
+        buf.append("<tr class=\"");
+        buf.append(level);
+        if (odd) {
+            buf.append(" odd\">");
+        } else {
+            buf.append(" even\">");
+        }
+        buf.append(LINE_SEPARATOR);
+        buf.append("<td class=\"even\"></td>");
+    
+        Converter<ILoggingEvent> c = head;
+        while (c != null) {
+			appendEventToBuffer(buf, c, event);
+            c = c.getNext();
+        }
+        
+        buf.append("</tr>");
+	}
+
+	private void appendEventToBuffer(StringBuilder buf, Converter<ILoggingEvent> c, ILoggingEvent event) {
+        buf.append("<td class=\"");
+        buf.append(computeConverterName(c));
+        buf.append("\">");
+		if (containsMarker(event, HTMLLogMarkers.HTML)) {
+			buf.append(c.convert(event));
+		} else {
+			buf.append(Transform.escapeTags(c.convert(event)));
+		}
+        buf.append("</td>");
+        buf.append(LINE_SEPARATOR);
+    }
+	
 	public void appendScreenshotToBuffer(StringBuilder buf, ScreenshotMarker screenshot) {
 		buf.append(LINE_SEPARATOR);
 		buf.append("<tr>");
 		buf.append(LINE_SEPARATOR);
-        buf.append("<td colspan=\"").append(columnCount).append("\">");
+        buf.append("<td></td><td colspan=\"").append(columnCount).append("\">");
         
 		try {
 			buf.append("<img src=\"").append(screenshot.writeScreenshot(screenshotsTakenCount)).append("\"/>");
@@ -184,7 +189,7 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 		buf.append(LINE_SEPARATOR);
 		buf.append("<tr>");
 		buf.append(LINE_SEPARATOR);
-		buf.append("<td  colspan=\"").append(columnCount).append("\">");
+		buf.append("<td></td><td colspan=\"").append(columnCount).append("\">");
 		
 		try {
 			buf.append("<pre>");
@@ -228,6 +233,46 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
         } else {
             return super.computeConverterName(c);
         }
+    }
+
+    @Override
+    public String getPresentationHeader() {
+        StringBuilder sbuf = new StringBuilder();
+//        sbuf.append("<hr/>");
+//        sbuf.append(LINE_SEPARATOR);
+        sbuf.append("<p>Log session start time ");
+        sbuf.append(new java.util.Date());
+        sbuf.append("</p><p></p>");
+        sbuf.append(LINE_SEPARATOR);
+        sbuf.append(LINE_SEPARATOR);
+        sbuf.append("<table cellspacing=\"0\">");
+        sbuf.append(LINE_SEPARATOR);
+
+        buildHeaderRowForTable(sbuf);
+
+        return sbuf.toString();
+    }
+
+    private void buildHeaderRowForTable(StringBuilder sbuf) {
+        Converter c = head;
+        String name;
+        sbuf.append("<tr class=\"header\"><td style=\"width:50px\"></td>");
+        sbuf.append(LINE_SEPARATOR);
+        while (c != null) {
+            name = computeConverterName(c);
+            if (name == null) {
+                c = c.getNext();
+                continue;
+            }
+            // sbuf.append("<td class=\"").append(name).append("\">");
+            sbuf.append("<td>");
+            sbuf.append(name.replaceAll("(.)([A-Z])", "$1&nbsp;$2"));
+            sbuf.append("</td>");
+            sbuf.append(LINE_SEPARATOR);
+            c = c.getNext();
+        }
+        sbuf.append("</tr>");
+        sbuf.append(LINE_SEPARATOR);
     }
 
 	private boolean containsMarker(ILoggingEvent event, String name) {

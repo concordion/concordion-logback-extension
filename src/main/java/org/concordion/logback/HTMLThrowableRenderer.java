@@ -28,7 +28,7 @@ public class HTMLThrowableRenderer implements IThrowableRenderer<ILoggingEvent> 
 
     public void render(StringBuilder sbuf, ILoggingEvent event) {
         IThrowableProxy tp = event.getThrowableProxy();
-        sbuf.append("<tr><td class=\"Exception\" colspan=\"").append(columnCount).append("\">");
+        sbuf.append("<tr><td></td><td class=\"Exception\" colspan=\"").append(columnCount).append("\">");
         while (tp != null) {
             render(sbuf, tp);
             tp = tp.getCause();
