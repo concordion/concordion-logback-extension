@@ -48,7 +48,9 @@
 				<append>false</append>				
 				
 				<encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
-			      <layout class="org.concordion.logback.HTMLLayout" />
+			      <layout class="org.concordion.logback.HTMLLayout">
+			          <pattern>%d{HH:mm:ss.SSS}%logger{36}%level%msg</pattern>
+			      </layout>
 			    </encoder>
 			</appender>
 		</sift>

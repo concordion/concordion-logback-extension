@@ -4,7 +4,7 @@ Plain text logs supply a lot of useful information but it can take time to trawl
 
 This custom layout and appender for the [LogBack Logger](http://logback.qos.ch) will combine your logs with screenshots, data and stack trace and present the information in an easy to digest fashion.
 
-Advanced logging features such as recording steps, screenshots and data, are enabled by the use of [Markers](http://www.slf4j.org/apidocs/org/slf4j/Marker.html) (there is some more information on markers buried in the LogBag Manual chapter on [filters](http://logback.qos.ch/manual/filters.html)).  
+Advanced logging features such as recording steps, screenshots and data, are enabled by the use of [Markers](http://www.slf4j.org/apidocs/org/slf4j/Marker.html) (there is some more information on markers buried in the LogBack manuals chapter on [filters](http://logback.qos.ch/manual/filters.html)).  
 
 
 ## Appender Configuration
@@ -13,7 +13,7 @@ The extension comes with an example set of logback configuration files to use.
 
 Configuring to use the HTML logs is a simple matter of [adding the appender](- "c:assertTrue=configuration()") `<appender-ref ref="HTML-FILE-PER-TEST" />` to the logback-jenkins.xml and logback-test.xml files.
 
-Further customisation, such as the format of the log statement can be done in logback-include.xml.
+Further customisation, such as the format of the log statements and columns shown can also be configured in logback-include.xml.
 
 
 ## Column Configuration
