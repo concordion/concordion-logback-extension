@@ -13,6 +13,8 @@ TR.header { background: #596ED5; color: #FFF; font-weight: bold; font-size: larg
 TD.Exception { background: #A2AEE8; font-family: courier, monospace;}
 TD.step { background: beige; font-weight: bold; font-size: x-large}
 
+/* Stack Trace */
+
 .exceptionMessage {
   background-color: #fdd;
   font-family: Courier New, Courier, Monospace;
@@ -51,4 +53,29 @@ TD.step { background: beige; font-weight: bold; font-size: x-large}
   font-family: Arial;
 }
 
+
+/* Screenshot */
+img {
+	border: 1px solid beige;
+}
+
+img.screenshot {
+	position:absolute;
+	visibility:hidden;
+	left: 0;
+	top: 0;
+	height: auto;
+	border:solid 1px black;
+	z-index:3000;
+	border: none;
+	box-shadow: 0 1px 4px rgba(0 ,0, 0, 0.4);
+}
+
+img.sizewidth {
+    height: auto;
+}
+
+img.sizeheight {
+    width: auto;
+}
 </style>

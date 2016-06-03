@@ -2,6 +2,7 @@ package org.concordion.logback;
 
 import static ch.qos.logback.core.CoreConstants.LINE_SEPARATOR;
 
+import java.awt.Dimension;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
@@ -205,8 +206,41 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 		buf.append("<td></td><td align=\"center\" colspan=\"").append(columnCount).append("\">");
         
 		try {
-			buf.append("<img src=\"").append(screenshot.writeScreenshot(screenshotsTakenCount)).append("\"/>");
+			screenshot.writeScreenshot(screenshotsTakenCount);
 			screenshotsTakenCount++;
+
+			buf.append("<img");
+			buf.append(" src=\"").append(screenshot.getFileName()).append("\"");
+			buf.append(" onMouseOver=\"showScreenPopup(this);this.style.cursor='pointer'\"");
+			buf.append(" onMouseOut=\"hideScreenPopup();this.style.cursor='default'\"");
+
+			Dimension imageSize = screenshot.getImageSize();
+
+			if (imageSize.width * 1.15 > imageSize.height) {
+				int displaySize = 350;
+
+				if (imageSize.width < displaySize) {
+					displaySize = imageSize.width;
+				}
+
+				buf.append(" width=\"").append(displaySize).append("px\" ");
+				buf.append(" class=\"");
+				buf.append("sizewidth");
+				buf.append("\"");
+			} else {
+				int displaySize = 200;
+
+				if (imageSize.height < displaySize) {
+					displaySize = imageSize.height;
+				}
+
+				buf.append(" height=\"").append(displaySize).append("px\" ");
+				buf.append(" class=\"");
+				buf.append("sizeheight");
+				buf.append("\"");
+			}
+
+			buf.append("/>");
 
 		} catch (Exception e) {
 			buf.append(e.getMessage());
@@ -291,6 +325,9 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 		sbuf.append(LINE_SEPARATOR);
 		sbuf.append("<body>");
 		sbuf.append(LINE_SEPARATOR);
+
+		// Required for screenshot popup
+		sbuf.append("<img id=\"ScreenshotPopup\" class=\"screenshot\"");
 
 		return sbuf.toString();
 	}

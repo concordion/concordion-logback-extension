@@ -15,6 +15,7 @@ public class ScreenshotMarker extends BasicMarker {
 	private final String title;
 	private String baseFile;
 	private Dimension imageSize;
+	private String fileName;
 	
 	public ScreenshotMarker(String title, ScreenshotTaker screenshotTaker) {
 		super("SCREENSHOT");
@@ -31,6 +32,10 @@ public class ScreenshotMarker extends BasicMarker {
 		return title;
 	}
 
+	public Dimension getImageSize() {
+		return imageSize;
+	}
+
 	public void setOutputFolder(String logFile) {
 		int pos = logFile.lastIndexOf('.');
 		
@@ -41,18 +46,23 @@ public class ScreenshotMarker extends BasicMarker {
 		}
 	}
 	
-	public String writeScreenshot(int index) throws IOException {
-		String file = getFileName(index);
+	public void writeScreenshot(int index) throws IOException {
+		String file = buildFileName(index);
 		
-		try (OutputStream outputStream = new FileOutputStream(new File(file))) {
+		File screenshot = new File(file);
+		try (OutputStream outputStream = new FileOutputStream(screenshot)) {
 			this.imageSize = screenshotTaker.writeScreenshotTo(outputStream);
 		}
 		
-		return new File(file).getName();
+		this.fileName = screenshot.getName();
 	}
 	
-	public String getFileName(int index) {
+	private String buildFileName(int index) {
 		return String.format("%sScreenShot%s.%s", baseFile, index, screenshotTaker.getFileExtension());		
+	}
+
+	public String getFileName() {
+		return fileName;
 	}
 
 	public ScreenshotMarker withMarker(Marker marker) {
