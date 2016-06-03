@@ -3,6 +3,7 @@ package org.concordion.logback;
 import static ch.qos.logback.core.CoreConstants.LINE_SEPARATOR;
 
 import java.awt.Dimension;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
@@ -395,16 +396,25 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 	}
 
 	public static String readFile(String filename) {
-		String result = null;
+		InputStream input = null;
 
-		try (InputStream input = HTMLLayout.class.getResourceAsStream(filename)) {
+		try {
+			input = HTMLLayout.class.getResourceAsStream(filename);
 			if (input != null) {
-				result = IOUtils.toString(input, StandardCharsets.UTF_8.name());
+				return IOUtils.toString(input, StandardCharsets.UTF_8.name());
 			}
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			System.err.println(e.getMessage());
+		} finally {
+			if (input != null) {
+				try {
+					input.close();
+				} catch (IOException e) {
+					System.err.println(e.getMessage());
+				}
+			}
 		}
 
-		return result;
+		return null;
 	}
 }
