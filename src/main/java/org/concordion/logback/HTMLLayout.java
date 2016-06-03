@@ -17,15 +17,18 @@ import ch.qos.logback.core.pattern.Converter;
 
 /**
  * 
- * HTMLLayout outputs events in an HTML table. <p> The content of the table
+ * HTMLLayout outputs events in an HTML table.
+ * <p>
+ * The content of the table
  * columns are specified using a conversion pattern. See
  * {@link ch.qos.logback.classic.PatternLayout} for documentation on the
- * available patterns. <p> For more information about this layout, please refer
+ * available patterns.
+ * <p>
+ * For more information about this layout, please refer
  * to the online manual at
  * http://logback.qos.ch/manual/layouts.html#ClassicHTMLLayout
  * 
- * @author Ceki G&uuml;lc&uuml;
- * @author S&eacute;bastien Pennec
+ * @author Andrew Sumner
  */
 public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
     /**
@@ -35,8 +38,10 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 
     private IThrowableRenderer<ILoggingEvent> throwableRenderer;
     private StepRecorder stepRecorder = StepRecorder.STEP_MARKER;
+	private Format format = Format.COLUMN;
 	private int screenshotsTakenCount = 0;
 	private int columnCount;
+	private PatternLayout stringLayout = null;
 
     /**
      * Constructs a PatternLayout using the DEFAULT_LAYOUT_PATTERN.
@@ -53,7 +58,11 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
     public void setStepRecorder(String value) {
 		stepRecorder = StepRecorder.valueOf(value);
 	}
-    
+
+	public void setFormat(String value) {
+		format = Format.valueOf(value);
+	}
+
     @Override
     public void setPattern(String conversionPattern) {
     	super.setPattern(conversionPattern);
@@ -144,10 +153,30 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
         buf.append(LINE_SEPARATOR);
         buf.append("<td class=\"even\"></td>");
     
-        Converter<ILoggingEvent> c = head;
-        while (c != null) {
-			appendEventToBuffer(buf, c, event);
-            c = c.getNext();
+		Converter<ILoggingEvent> c = head;
+		if (format == Format.COLUMN) {
+			while (c != null) {
+				appendEventToBuffer(buf, c, event);
+				c = c.getNext();
+			}
+		} else {
+			buf.append("<td>");
+			
+			if (stringLayout == null) {
+				stringLayout = new PatternLayout();
+				stringLayout.setPattern("%nopex" + this.getPattern());
+				stringLayout.setContext(this.getContext());
+				stringLayout.start();
+			}
+			
+			String text = stringLayout.doLayout(event);
+
+			if (containsMarker(event, HTMLLogMarkers.HTML)) {
+				buf.append(text);
+			} else {
+				buf.append(Transform.escapeTags(text));
+			}
+			buf.append("</td>");
         }
         
         buf.append("</tr>");
@@ -170,7 +199,7 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 		buf.append(LINE_SEPARATOR);
 		buf.append("<tr>");
 		buf.append(LINE_SEPARATOR);
-        buf.append("<td></td><td colspan=\"").append(columnCount).append("\">");
+		buf.append("<td></td><td align=\"center\" colspan=\"").append(columnCount).append("\">");
         
 		try {
 			buf.append("<img src=\"").append(screenshot.writeScreenshot(screenshotsTakenCount)).append("\"/>");
@@ -254,23 +283,29 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
     }
 
     private void buildHeaderRowForTable(StringBuilder sbuf) {
-        Converter c = head;
+		Converter<?> c = head;
         String name;
         sbuf.append("<tr class=\"header\"><td style=\"width:50px\"></td>");
         sbuf.append(LINE_SEPARATOR);
-        while (c != null) {
-            name = computeConverterName(c);
-            if (name == null) {
-                c = c.getNext();
-                continue;
-            }
-            // sbuf.append("<td class=\"").append(name).append("\">");
-            sbuf.append("<td>");
-            sbuf.append(name.replaceAll("(.)([A-Z])", "$1&nbsp;$2"));
-            sbuf.append("</td>");
-            sbuf.append(LINE_SEPARATOR);
-            c = c.getNext();
+        
+        if (format == Format.COLUMN) {
+	        while (c != null) {
+	            name = computeConverterName(c);
+	            if (name == null) {
+	                c = c.getNext();
+	                continue;
+	            }
+	            // sbuf.append("<td class=\"").append(name).append("\">");
+	            sbuf.append("<td>");
+	            sbuf.append(name.replaceAll("(.)([A-Z])", "$1&nbsp;$2"));
+	            sbuf.append("</td>");
+	            sbuf.append(LINE_SEPARATOR);
+	            c = c.getNext();
+	        }
+        } else {
+			sbuf.append("<td>Message</td>");
         }
+        
         sbuf.append("</tr>");
         sbuf.append(LINE_SEPARATOR);
     }
@@ -284,6 +319,10 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 	}
 	
 	private int getColumnCount() {
-		return pattern.length() - pattern.replace("%", "").length();
+		if (format == Format.COLUMN) {
+			return pattern.length() - pattern.replace("%", "").length();
+		} else {
+			return 1;
+		}
 	}
 }

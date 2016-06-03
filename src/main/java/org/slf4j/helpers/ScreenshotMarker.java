@@ -48,7 +48,7 @@ public class ScreenshotMarker extends BasicMarker {
 			this.imageSize = screenshotTaker.writeScreenshotTo(outputStream);
 		}
 		
-		return file;
+		return new File(file).getName();
 	}
 	
 	public String getFileName(int index) {

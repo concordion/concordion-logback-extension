@@ -20,8 +20,28 @@ Further customisation, such as the format of the log statements and columns show
 
 The content of the table columns are specified using a conversion pattern. For more information about this layout, please refer to the online manual at <http://logback.qos.ch/manual/layouts.html#ClassicHTMLLayout>.
 
-    <layout class="org.concordion.ext.loggingFormatter.HTMLLayout" />
-      <pattern>%relative%thread%mdc%level%logger%msg</pattern>
+There is a choice between two different layout formats:
+
+### Multiple Column Layout
+
+Each conversion word in the layout pattern will be shown in a separate column.  Any literals (including spaces) will result in an extra column being added, so don't include spaces or other characters in your pattern.
+
+The "nopex/nopexception" conversion word is ignored in this setting.
+
+    <layout class="org.concordion.logback.HTMLLayout">
+      <format>COLUMN</format>
+      <pattern>%date{HH:mm:ss.SSS}%message%file%line</pattern>
+    </layout>
+
+### Single Column Layout
+
+Each conversion word in the layout pattern will be shown in a single column.  This is much like your traditional log pattern except displayed in a table.
+
+The "nopex/nopexception" conversion word is automatically added in this setting.
+
+    <layout class="org.concordion.logback.HTMLLayout">
+      <format>STRING</format>
+      <pattern>%date{HH:mm:ss.SSS} %message [%file:%line]</pattern>
     </layout>
 
 
@@ -33,19 +53,19 @@ The simplest method is to choose select a [log level](- "c:assertTrue=recordStep
 
 A more flexible option (and the default) is to use a [step marker](- "c:assertTrue=recordStepsUsingStepMarker()"), and any log statement with that marker will be formatted as a step.  
 
-Configuration is done in logback-include.xml by updating the value of the step recorder property to one of: 
- 
-* STEP_MARKER
-* INFO_LOG_LEVEL
-* DEBUG_LOG_LEVEL
-
-Note: using a step marker will always work, regardless of the setting of the StepRecorder property
+Configuration is done in logback-include.xml by updating the value of the step recorder property to: STEP_MARKER, INFO_LOG_LEVEL, or DEBUG_LOG_LEVEL.
 
     <!-- This is set in logback-include.xml -->
-    <StepRecorder>INFO_LOG_LEVEL</StepRecorder>
+    <layout class="org.concordion.logback.HTMLLayout">
+      <format>COLUMN</format>
+      <pattern>%date{HH:mm:ss.SSS}%message%file%line</pattern>
+      <stepRecorder>INFO_LOG_LEVEL</stepRecorder>
+    </layout>
+    
         
     LOGGER.info("My step here");
 
+    // Using a step marker will always work, regardless of the setting of the StepRecorder property
     LOGGER.info(HTMLLogMarkers.step(), "My step here");
 `
 
