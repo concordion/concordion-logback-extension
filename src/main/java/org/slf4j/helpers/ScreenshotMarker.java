@@ -5,8 +5,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 
+import org.apache.commons.io.IOUtils;
 import org.concordion.ext.ScreenshotTaker;
+import org.concordion.logback.HTMLLayout;
 import org.slf4j.Marker;
 
 public class ScreenshotMarker extends BasicMarker {
@@ -50,8 +53,15 @@ public class ScreenshotMarker extends BasicMarker {
 		String file = buildFileName(index);
 		
 		File screenshot = new File(file);
-		try (OutputStream outputStream = new FileOutputStream(screenshot)) {
+		OutputStream outputStream = null;
+		
+		try {
+			outputStream = new FileOutputStream(screenshot);
 			this.imageSize = screenshotTaker.writeScreenshotTo(outputStream);
+		} finally {
+			if (outputStream != null) {
+				outputStream.close();
+			}
 		}
 		
 		this.fileName = screenshot.getName();
