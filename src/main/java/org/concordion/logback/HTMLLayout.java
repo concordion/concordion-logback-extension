@@ -2,8 +2,11 @@ package org.concordion.logback;
 
 import static ch.qos.logback.core.CoreConstants.LINE_SEPARATOR;
 
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
+import org.apache.commons.io.IOUtils;
 import org.slf4j.helpers.DataMarker;
 import org.slf4j.helpers.ScreenshotMarker;
 
@@ -51,7 +54,7 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
     public HTMLLayout() {
         pattern = DEFAULT_CONVERSION_PATTERN;
         throwableRenderer = new HTMLThrowableRenderer();
-        cssBuilder = new HTMLLayoutCssBuilder();
+		cssBuilder = null;
         columnCount = getColumnCount();
     }
 
@@ -265,6 +268,34 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
     }
 
     @Override
+	public String getFileHeader() {
+		StringBuilder sbuf = new StringBuilder();
+		sbuf.append("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"");
+		sbuf.append(" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">");
+		sbuf.append(LINE_SEPARATOR);
+		sbuf.append("<html>");
+		sbuf.append(LINE_SEPARATOR);
+		sbuf.append("  <head>");
+		sbuf.append(LINE_SEPARATOR);
+		sbuf.append("    <title>");
+		sbuf.append(title);
+		sbuf.append("</title>");
+		sbuf.append(LINE_SEPARATOR);
+
+		sbuf.append(readFile("htmllog.css"));
+		sbuf.append(readFile("htmllog.js"));
+		// cssBuilder.addCss(sbuf);
+
+		sbuf.append(LINE_SEPARATOR);
+		sbuf.append("  </head>");
+		sbuf.append(LINE_SEPARATOR);
+		sbuf.append("<body>");
+		sbuf.append(LINE_SEPARATOR);
+
+		return sbuf.toString();
+	}
+
+	@Override
     public String getPresentationHeader() {
         StringBuilder sbuf = new StringBuilder();
 //        sbuf.append("<hr/>");
@@ -324,5 +355,19 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 		} else {
 			return 1;
 		}
+	}
+
+	public static String readFile(String filename) {
+		String result = null;
+
+		try (InputStream input = HTMLLayout.class.getResourceAsStream(filename)) {
+			if (input != null) {
+				result = IOUtils.toString(input, StandardCharsets.UTF_8.name());
+			}
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+
+		return result;
 	}
 }
