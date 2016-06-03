@@ -6,11 +6,11 @@ import org.slf4j.MarkerFactory;
 import org.slf4j.helpers.DataMarker;
 import org.slf4j.helpers.ScreenshotMarker;
 
-public class HTMLLogMarkers {
+public class LogMarkers {
 	public static String STEP = "STEP";
 	public static String HTML = "HTML";
 	
-	private HTMLLogMarkers() {}
+	private LogMarkers() {}
 	
 	public static ScreenshotMarker screenshot(String title, ScreenshotTaker screenshotTaker) {
 		return new ScreenshotMarker(title, screenshotTaker);

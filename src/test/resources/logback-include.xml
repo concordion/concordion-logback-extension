@@ -19,6 +19,7 @@
 		</encoder>
 	</appender>
 
+	<!-- Classic Text based Log File -->
 	<appender name="FILE-PER-TEST" class="ch.qos.logback.classic.sift.SiftingAppender">
 		<discriminator>
 			<Key>testname</Key>
@@ -36,6 +37,7 @@
 		</sift>
 	</appender>
 	    
+	<!-- HTML Log File -->
 	<appender name="HTML-FILE-PER-TEST" class="ch.qos.logback.classic.sift.SiftingAppender">
 		<discriminator>
 			<key>testname</key>

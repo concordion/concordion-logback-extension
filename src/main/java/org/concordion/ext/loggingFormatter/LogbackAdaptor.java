@@ -1,12 +1,21 @@
 package org.concordion.ext.loggingFormatter;
 
 import java.io.File;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.Stack;
 
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
+import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.sift.SiftingAppender;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.Appender;
+import ch.qos.logback.core.FileAppender;
 import ch.qos.logback.core.util.StatusPrinter;
 
 /**
@@ -61,23 +70,27 @@ public class LogbackAdaptor implements ILoggingAdaptor
 	public boolean doesLogfileExist() {
 		String name = MDC.get(TEST_NAME);
 
-		if (name == null) {
+		FileAppender<?> appender = getConfiguredAppender();
+		if (appender == null) {
 			return false;
 		}
 		
-		return new File(name + ".log").exists();
+		String file = appender.getFile();
+		
+		// TODO need to test running tests in parallel
+		if (!file.startsWith(name)) {
+			System.err.println("MDC out of sync with appenders!");
+		}
+		
+		return new File(file).exists();
 	}
 	
 	@Override
 	public String getLogName() {
 		String name = MDC.get(TEST_NAME);
 
-		if (name == null) {
-			return "";
-		}	
-		
-		//TODO get the name of the log from the configuration?
-		return name.substring(name.lastIndexOf("/") + 1) + "Log.html";
+		FileAppender<?> appender = getConfiguredAppender();
+		return new File(appender.getFile()).getName();
 	}
 
 	@Override
@@ -97,5 +110,36 @@ public class LogbackAdaptor implements ILoggingAdaptor
 		}
 
 		return path;
+	}
+	
+	/** Finds the first configured appender that we use to create the log file. */
+	public static FileAppender<?> getConfiguredAppender() {
+		LoggerContext context = (LoggerContext)LoggerFactory.getILoggerFactory();
+		for (Logger logger : context.getLoggerList())
+		{
+			for (Iterator<Appender<ILoggingEvent>> index = logger.iteratorForAppenders(); index.hasNext();) {
+				Object enumElement = index.next();
+				if (enumElement instanceof SiftingAppender) {
+					SiftingAppender sift = (SiftingAppender)enumElement;
+
+					if (sift.getName().equals("HTML-FILE-PER-TEST") || sift.getName().equals("FILE-PER-TEST")) {
+						
+						List<Appender<ILoggingEvent>> activeAppenders = (List<Appender<ILoggingEvent>>)sift.getAppenderTracker().allComponents();
+						ListIterator<Appender<ILoggingEvent>> li = activeAppenders.listIterator(activeAppenders.size());
+
+						// Iterate in reverse.
+						while(li.hasPrevious()) {
+							Appender<ILoggingEvent> appender = li.previous();
+							if (appender instanceof FileAppender) {
+								return (FileAppender<?>)appender;
+							}
+						  
+						}
+					}
+				}
+			}
+		}
+
+		return null;
 	}
 }

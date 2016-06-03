@@ -19,7 +19,7 @@ import org.concordion.api.listener.ThrowableCaughtEvent;
 import org.concordion.api.listener.ThrowableCaughtListener;
 import org.concordion.ext.LoggingFormatterExtension.LogLevel;
 import org.concordion.ext.LoggingFormatterExtension.Split;
-import org.concordion.logback.HTMLLogMarkers;
+import org.concordion.logback.LogMarkers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,6 +29,7 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 	private boolean useLogFileViewer;
 	private boolean logExample = true;
 	private LogLevel logExceptions = LogLevel.EXCEPTION_CAUSES;
+	private String testPath = "";
 	private Split splitBy = Split.EXAMPLE;
 		
 	public void setLogExample(boolean value) {
@@ -70,21 +71,21 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 	
 	@Override
 	public void beforeProcessingSpecification(final SpecificationProcessingEvent event) {
-		String testPath = getConcordionBaseOutputDir() + getTestPath(event.getResource().getPath());
+		testPath = getConcordionBaseOutputDir() + getTestPath(event.getResource().getPath());
 		
 		loggingAdaptor.startLogFile(testPath);
 	}
 
-	private String getTestPath(String testPath) {
-		if (testPath.indexOf(".") > 0) {
-			testPath = testPath.substring(0, testPath.indexOf("."));
+	private String getTestPath(String resourcePath) {
+		if (resourcePath.indexOf(".") > 0) {
+			resourcePath = resourcePath.substring(0, resourcePath.indexOf("."));
 		}
 		
-		if (testPath.startsWith("/") || testPath.startsWith("\\")) {
-			testPath = testPath.substring(1);
+		if (resourcePath.startsWith("/") || resourcePath.startsWith("\\")) {
+			resourcePath = resourcePath.substring(1);
 		}
 		
-		return testPath;
+		return resourcePath;
 	}
 
 	@Override
@@ -213,18 +214,43 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 
 	@Override
 	public void beforeExample(ExampleEvent event) {
-		if (!logExample) return;
-
-		LOGGER.info(HTMLLogMarkers.step(), "Example: " + getExampleTitle(event.getElement()));
+		if (splitBy == Split.EXAMPLE) {
+			String examplePath = testPath + event.getExampleName(); 
+			
+			loggingAdaptor.startLogFile(examplePath);
+		}
+		
+		if (logExample) {
+			LOGGER.info(LogMarkers.step(), "Example: " + getExampleTitle(event.getElement()));
+		}
 	}
 
 	@Override
 	public void afterExample(ExampleEvent event) {
-		if (!logExample) return;
+		if (logExample) {
+			LOGGER.info(LogMarkers.step(), "End Example: " + getExampleTitle(event.getElement()));
+		}
 		
-		LOGGER.info(HTMLLogMarkers.step(), "End Example: " + getExampleTitle(event.getElement()));
+		if (splitBy == Split.EXAMPLE) {
+			try {
+				if (loggingAdaptor.doesLogfileExist()) {
+					appendLogFileLinkToExample(event, loggingAdaptor.getLogName());
+				}
+			} finally  {
+				loggingAdaptor.stopLogFile();		
+			}
+		}
 	}
 	
+	private void appendLogFileLinkToExample(ExampleEvent event, String logURL) {
+		Element anchor = new Element("a");
+		anchor.addAttribute("style", "font-weight: bold; text-decoration: none; color: #89C; float: right; display: inline-block; margin-top: 20px;");
+		anchor.addAttribute("href", logURL);
+		anchor.appendText("Log File");
+
+		event.getElement().prependChild(anchor);
+	}
+
 	public String getExampleTitle(Element element) {
 		String title = element.getAttributeValue("example", "http://www.concordion.org/2007/concordion"); 
 		

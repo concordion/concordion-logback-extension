@@ -93,7 +93,7 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
         StringBuilder buf = new StringBuilder();
         startNewTableIfLimitReached(buf);
 
-        if (containsMarker(event, HTMLLogMarkers.STEP) || event.getLevel() == stepRecorder.getLevel()) {
+        if (containsMarker(event, LogMarkers.STEP) || event.getLevel() == stepRecorder.getLevel()) {
         	appendStepToBuffer(buf, event);
         	return buf.toString();
         }
@@ -127,7 +127,7 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
         buf.append(LINE_SEPARATOR);
         buf.append("<td class=\"step\" colspan=\"").append(columnCount + 1).append("\">");
         
-        if (containsMarker(event, HTMLLogMarkers.HTML)) {
+        if (containsMarker(event, LogMarkers.HTML)) {
 			buf.append(event.getMessage());
 		} else {
 			buf.append(Transform.escapeTags(event.getMessage()));
@@ -175,7 +175,7 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 			
 			String text = stringLayout.doLayout(event);
 
-			if (containsMarker(event, HTMLLogMarkers.HTML)) {
+			if (containsMarker(event, LogMarkers.HTML)) {
 				buf.append(text);
 			} else {
 				buf.append(Transform.escapeTags(text));
@@ -190,7 +190,7 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
         buf.append("<td class=\"");
         buf.append(computeConverterName(c));
         buf.append("\">");
-		if (containsMarker(event, HTMLLogMarkers.HTML)) {
+		if (containsMarker(event, LogMarkers.HTML)) {
 			buf.append(c.convert(event));
 		} else {
 			buf.append(Transform.escapeTags(c.convert(event)));
