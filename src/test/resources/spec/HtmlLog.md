@@ -7,6 +7,21 @@ This custom layout and appender for the [LogBack Logger](http://logback.qos.ch) 
 Advanced logging features such as recording steps, screenshots and data, are enabled by the use of [Markers](http://www.slf4j.org/apidocs/org/slf4j/Marker.html) (there is some more information on markers buried in the LogBack manuals chapter on [filters](http://logback.qos.ch/manual/filters.html)).  
 
 
+## Splitting Log Files
+
+Log files may be split either by specification or by example.
+
+    @Extension
+    private final LoggingFormatterExtension loggingExtension = new LoggingFormatterExtension(false).setSplitBy(Split.SPECIFICATION);
+
+
+### By Specification
+A link to the specifications log file is placed in the footer.
+
+### By Example
+A link to the log file is placed at the top right of each example - this is the default setting.  If there is no example, or log statements are made outside of an example then a link will also be placed in the footer.  
+
+
 ## Appender Configuration
 
 The extension comes with an example set of logback configuration files to use.  

@@ -18,8 +18,8 @@ import org.concordion.api.listener.SpecificationProcessingListener;
 import org.concordion.api.listener.ThrowableCaughtEvent;
 import org.concordion.api.listener.ThrowableCaughtListener;
 import org.concordion.ext.LoggingFormatterExtension.LogLevel;
+import org.concordion.ext.LoggingFormatterExtension.Split;
 import org.concordion.logback.HTMLLogMarkers;
-import org.concordion.logback.StepRecorder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,6 +29,7 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 	private boolean useLogFileViewer;
 	private boolean logExample = true;
 	private LogLevel logExceptions = LogLevel.EXCEPTION_CAUSES;
+	private Split splitBy = Split.EXAMPLE;
 		
 	public void setLogExample(boolean value) {
 		this.logExample = value;
@@ -36,6 +37,10 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 	
 	public void setLogExceptions(LogLevel value) {
 		this.logExceptions = value;
+	}
+
+	public void setSplitBy(Split split) {
+		this.splitBy = split;
 	}
 
 	public LoggingFormatterSpecificationListener(ILoggingAdaptor loggingAdaptor, boolean useLogFileViewer) {

@@ -5,9 +5,6 @@ import org.concordion.api.extension.ConcordionExtender;
 import org.concordion.api.extension.ConcordionExtension;
 import org.concordion.ext.loggingFormatter.LogbackAdaptor;
 import org.concordion.ext.loggingFormatter.LoggingFormatterSpecificationListener;
-import org.concordion.logback.StepRecorder;
-
-import ch.qos.logback.classic.Level;
 
 /**
  * Formats the footer of the Concordion specification to show a link to the log file that has been created for this test.<br><br>
@@ -59,6 +56,21 @@ public class LoggingFormatterExtension implements ConcordionExtension {
 		return this;
 	}
 	    
+	/**
+	 * How to split the logs.
+	 * 
+	 * @param split Setting
+	 * @return A self reference
+	 */
+	public LoggingFormatterExtension setSplitBy(Split split) {
+		listener.setSplitBy(split);
+		return this;
+	}
+
+	public enum Split {
+		EXAMPLE, SPECIFICATION;
+	}
+
     public enum LogLevel {
     	/** Do not log exceptions */
     	NONE, 
@@ -72,4 +84,6 @@ public class LoggingFormatterExtension implements ConcordionExtension {
     	/** Log full stack trace */
     	EXCEPTION_WITH_STACK_TRACE
     }
+
+
 }
