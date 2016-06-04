@@ -118,6 +118,13 @@ or maybe add link an open as file?
 
 * http://www.w3schools.com/tags/tag_embed.asp
 
+And Status Icons
+
+*  http://fontawesome.io
+
+need to figure out which ones to use - will need to look at extent reports
+
+clone https://github.com/anshooarora/extentreports and search for fa-check-circle-o
 
 ## HTML Based Data
 
