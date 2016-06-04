@@ -108,6 +108,16 @@ Text based data such as CSV, XML and JSON can be [included](- "c:assertTrue=addD
 
     Marker data = LogMarkers.dataMarker(title, data);
     getLogger().debug(data, "Sending SOAP request");
+   
+TODO: Display XML just like Internet Explorer
+
+* http://www.geekzilla.co.uk/ViewD245BBE0-2EAB-44C0-9119-8038467926EE.htm
+* http://www.codeproject.com/Articles/24299/XML-String-Browser-just-like-Internet-Explorer-usi
+
+or maybe add link an open as file?
+
+* http://www.w3schools.com/tags/tag_embed.asp
+
 
 ## HTML Based Data
 
