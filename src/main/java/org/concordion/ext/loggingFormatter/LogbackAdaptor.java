@@ -27,6 +27,7 @@ public class LogbackAdaptor implements ILoggingAdaptor
 	public static final String EXAMPLE_SEPERATOR_SUFFIX = "]";
 
 	private static Stack<String> testStack = new Stack<String>();
+	private static String baseFolder = getConcordionBaseOutputDir();
 	
 	/**
 	 * print logback's internal status
@@ -42,19 +43,21 @@ public class LogbackAdaptor implements ILoggingAdaptor
 	 * @param fileName The full path to the required log file
 	 */
 	@Override
-	public void startLogFile(String testPath) {
-		testStack.push(testPath);
+	public void startLogFile(String resourcePath) {
+		String path = baseFolder + getPath(resourcePath);
 
-		MDC.put(TEST_NAME, testPath);
+		testStack.push(path);
+
+		MDC.put(TEST_NAME, path);
 	}
 
 	@Override
-	public void startLogFile(String testPath, String exampleName) {
-		String test = testPath + EXAMPLE_SEPERATOR_PREFIX + exampleName + EXAMPLE_SEPERATOR_SUFFIX;
+	public void startLogFile(String resourcePath, String exampleName) {
+		String path = baseFolder + getPath(resourcePath) + EXAMPLE_SEPERATOR_PREFIX + exampleName + EXAMPLE_SEPERATOR_SUFFIX;
 
-		testStack.push(test);
+		testStack.push(path);
 		
-		MDC.put(TEST_NAME, test);
+		MDC.put(TEST_NAME, path);
 	}
 	
 	/**
@@ -76,54 +79,29 @@ public class LogbackAdaptor implements ILoggingAdaptor
 	}
 		
 	@Override
-	public boolean doesLogfileExist() {
-		String name = MDC.get(TEST_NAME);
+	public boolean logFileExists() {
+		File file = getLogFile();
 
-		FileAppender<?> appender = getConfiguredAppender();
-
-		if (appender == null) {
+		if (file == null) {
 			return false;
 		}
 		
-		String file = appender.getFile();
-		
-		// TODO need to test running tests in parallel
-		if (!file.startsWith(name)) {
-			System.err.println("MDC out of sync with appenders!");
-		}
-		
-		return new File(file).exists();
+		return file.exists();
 	}
-	
-	@Override
-	public String getLogName() {
-		// String name = MDC.get(TEST_NAME);
 
+	@Override
+	public File getLogFile() {
 		FileAppender<?> appender = getConfiguredAppender();
-		return new File(appender.getFile()).getName();
-	}
 
-	@Override
-	public String getLogPath() {
-		String path = MDC.get(TEST_NAME);
-
-		if (path == null) {
-			return "";
-		}		
-
-		int index = path.lastIndexOf("/");
-
-		path = (index > 0) ? path.substring(0, index) : "";
-
-		if (!path.endsWith("/")) {
-			path = path + "/";
+		if (appender == null) {
+			return null;
 		}
 
-		return path;
+		return new File(appender.getFile());
 	}
-	
-	/** Finds the first configured appender that we use to create the log file. */
-	public static FileAppender<?> getConfiguredAppender() {
+
+	/** Finds the first appender matching the MDC value. */
+	private static FileAppender<?> getConfiguredAppender() {
 
 		String currentTest = MDC.get(TEST_NAME);
 
@@ -135,45 +113,26 @@ public class LogbackAdaptor implements ILoggingAdaptor
 		for (Logger logger : context.getLoggerList())
 		{
 			for (Iterator<Appender<ILoggingEvent>> index = logger.iteratorForAppenders(); index.hasNext();) {
-				Object enumElement = index.next();
-				if (enumElement instanceof SiftingAppender) {
-					SiftingAppender sift = (SiftingAppender)enumElement;
-
-					// if (sift.getDiscriminator() instanceof MDCBasedDiscriminator) {
-					// MDCBasedDiscriminator discriminator = (MDCBasedDiscriminator) sift.getDiscriminator();
-					//
-					// discriminator.getKey().equalsIgnoreCase(TEST_NAME);
-					// }
-
-					if (sift.getName().equals("HTML-FILE-PER-TEST") || sift.getName().equals("FILE-PER-TEST")) {
-						
-						for (Appender<ILoggingEvent> appender : sift.getAppenderTracker().allComponents()) {
+				Appender<ILoggingEvent> outerAppender = index.next();
+				
+				if (outerAppender instanceof SiftingAppender) {
+					if (outerAppender.getName().equals("HTML-FILE-PER-TEST") || outerAppender.getName().equals("FILE-PER-TEST")) {
+						for (Appender<ILoggingEvent> appender : ((SiftingAppender) outerAppender).getAppenderTracker().allComponents()) {
 							if (appender instanceof FileAppender) {
 								FileAppender<?> fileAppender = (FileAppender<?>) appender;
-
-								if (fileAppender.getFile().startsWith(currentTest)) {
-									return fileAppender;
+								String file = fileAppender.getFile();
+								
+								if (file.startsWith(currentTest)) {
+									if (file.length() > currentTest.length()) {
+										// If no log statements performed then appender won't be created so ensure not accidentally picking up
+										// example log file when after specification log file
+										if (!file.substring(currentTest.length(), currentTest.length() + 1).equals(EXAMPLE_SEPERATOR_PREFIX)) {
+											return fileAppender;
+										}
+									}
 								}
 							}
 						}
-						
-						/*
-						List<Appender<ILoggingEvent>> activeAppenders = (List<Appender<ILoggingEvent>>)sift.getAppenderTracker().allComponents();
-						ListIterator<Appender<ILoggingEvent>> li = activeAppenders.listIterator(activeAppenders.size());
-
-						// Iterate in reverse.
-						while(li.hasPrevious()) {
-							Appender<ILoggingEvent> appender = li.previous();
-							if (appender instanceof FileAppender) {
-								FileAppender<?> fileAppender = (FileAppender<?>) appender;
-
-								if (fileAppender.getFile().startsWith(currentTest)) {
-									return fileAppender;
-								}
-							}
-						  
-						}
-						*/
 					}
 				}
 			}
@@ -181,4 +140,36 @@ public class LogbackAdaptor implements ILoggingAdaptor
 
 		return null;
 	}
+
+	/**
+	 * Gets the base output folder used by concordion - copied from ConcordionBuilder.getBaseOutputDir()
+	 * 
+	 * @return base output folder
+	 */
+	private static String getConcordionBaseOutputDir() {
+		String outputPath = System.getProperty("concordion.output.dir");
+
+		if (outputPath == null) {
+			outputPath = new File(System.getProperty("java.io.tmpdir"), "concordion").getAbsolutePath();
+		}
+
+		outputPath = outputPath.replaceAll("\\\\", "/");
+		if (!outputPath.endsWith("/")) {
+			outputPath = outputPath + "/";
+		}
+		return outputPath;
+	}
+
+	private String getPath(String resourcePath) {
+		if (resourcePath.indexOf(".") > 0) {
+			resourcePath = resourcePath.substring(0, resourcePath.indexOf("."));
+		}
+
+		if (resourcePath.startsWith("/") || resourcePath.startsWith("\\")) {
+			resourcePath = resourcePath.substring(1);
+		}
+
+		return resourcePath;
+	}
+
 }

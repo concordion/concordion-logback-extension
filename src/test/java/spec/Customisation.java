@@ -8,4 +8,8 @@ public class Customisation extends BaseFixture {
 		getLogger().debug(LogMarkers.step(), "Example Splitting");
 		getLogger().debug("Example logged");
 	}
+
+	public void printlog() {
+		getLogger().debug("do domething here");
+	}
 }

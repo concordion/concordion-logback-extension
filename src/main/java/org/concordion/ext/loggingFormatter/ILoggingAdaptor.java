@@ -1,5 +1,7 @@
 package org.concordion.ext.loggingFormatter;
 
+import java.io.File;
+
 /**
  * Class to handle setting/removing MDC on per test case basis. This helps us log each test case into it's own log file. 
  * @see <a href="http://logback.qos.ch/manual/appenders.html#SiftingAppender">Sifting Appender</a>
@@ -8,12 +10,17 @@ package org.concordion.ext.loggingFormatter;
 public interface ILoggingAdaptor
 {
 	/**
-	 * Update logger so that logging statements are directed to specified file
+	 * Update logger so that logging statements are directed a file
 	 * 
 	 * @param fileName Full path to the output folder and class (without the file extension) of the current specification
 	 */
-	public void startLogFile(String testPath);
+	public void startLogFile(String resourcePath);
 	
+	/**
+	 * Update logger so that logging statements for a specific example are directed to specified file
+	 * 
+	 * @param fileName Full path to the output folder and class (without the file extension) of the current specification
+	 */
 	public void startLogFile(String testPath, String exampleName);
 
 	/**
@@ -26,20 +33,13 @@ public interface ILoggingAdaptor
 	 * 
 	 * @return true or false
 	 */
-	public boolean doesLogfileExist();
+	public boolean logFileExists();
 	
 	/**
-	 * Gets the key (log file name and path) from MDC and extracts the class name
+	 * Return the file for the currently active log.
 	 * 
-	 * @return name of the log file, if one existed in MDC
+	 * @return the log file, if one exists otherwise null
 	 */
-	public String getLogName();
-	
-	/**
-	 * Gets the key (log file name and path) from MDC
-	 * 
-	 * @return name of the log file, if one existed in MDC
-	 */
-	public String getLogPath();
+	public File getLogFile();
 
 }

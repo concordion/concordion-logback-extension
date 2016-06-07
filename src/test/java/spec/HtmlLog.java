@@ -10,7 +10,6 @@ import org.concordion.ext.loggingFormatter.LogbackAdaptor;
 import org.concordion.logback.LogMarkers;
 import org.slf4j.Marker;
 
-import ch.qos.logback.core.FileAppender;
 import test.concordion.logback.DummyScreenshotTaker;
 
 public class HtmlLog extends BaseFixture {
@@ -109,13 +108,13 @@ public class HtmlLog extends BaseFixture {
 	}
 
 	private String getLogContent() throws IOException {
-		FileAppender<?> fileAppender = LogbackAdaptor.getConfiguredAppender();
+		File file = new LogbackAdaptor().getLogFile();
 		
-		if (fileAppender == null) {
+		if (file == null) {
 			return "";
 		}
 		
-		try (InputStream input = new FileInputStream(new File(fileAppender.getFile()))) {
+		try (InputStream input = new FileInputStream(file)) {
 			return IOUtils.toString(input);
 		}
 	}

@@ -50,56 +50,27 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 	}
 
 ////////////////////////////// Specification Processing Listener //////////////////////////////
-	/**
-	 * Gets the base output folder used by concordion - copied from ConcordionBuilder.getBaseOutputDir()
-	 * 
-	 * @return base output folder 
-	 */
-	private static String getConcordionBaseOutputDir() {
-		String outputPath = System.getProperty("concordion.output.dir");
-		
-		if (outputPath == null) {
-			outputPath = new File(System.getProperty("java.io.tmpdir"), "concordion").getAbsolutePath();
-		}
-
-		outputPath = outputPath.replaceAll("\\\\", "/");
-		if (!outputPath.endsWith("/")) {
-			outputPath = outputPath + "/";
-		}
-		return outputPath;
-	}
-	
 	@Override
 	public void beforeProcessingSpecification(final SpecificationProcessingEvent event) {
-		testPath = getConcordionBaseOutputDir() + getTestPath(event.getResource().getPath());
-		
-		loggingAdaptor.startLogFile(testPath);
-	}
+		testPath = event.getResource().getPath();
 
-	private String getTestPath(String resourcePath) {
-		if (resourcePath.indexOf(".") > 0) {
-			resourcePath = resourcePath.substring(0, resourcePath.indexOf("."));
-		}
-		
-		if (resourcePath.startsWith("/") || resourcePath.startsWith("\\")) {
-			resourcePath = resourcePath.substring(1);
-		}
-		
-		return resourcePath;
+		loggingAdaptor.startLogFile(testPath);
 	}
 
 	@Override
 	public void afterProcessingSpecification(final SpecificationProcessingEvent event) {
 		try {
-			if (loggingAdaptor.doesLogfileExist()) {
-				appendLogFileLinkToFooter(event, createViewer());
+			if (loggingAdaptor.logFileExists()) {
+				appendLogFileLinkToFooter(event, loggingAdaptor.getLogFile());
 			}
-		} finally  {
-			loggingAdaptor.stopLogFile();		
+		} finally {
+			loggingAdaptor.stopLogFile();
 		}
 	}
 
-	private void appendLogFileLinkToFooter(final SpecificationProcessingEvent event, String logURL) {
+	private void appendLogFileLinkToFooter(final SpecificationProcessingEvent event, File logFile) {
+		String logURL = createViewer(logFile);
+
 		Element body = event.getRootElement().getFirstChildElement("body");
 
 		if (body != null) {
@@ -123,37 +94,41 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 		}
 	}
 
-	private String createViewer() {
-		String logName = loggingAdaptor.getLogName();
-		
-		if(logName.isEmpty()) {
-			return "";
-		}
-		
-		String viewerSource = "LogViewer.html";
-		String viewerDestination = logName.replaceFirst(".log", "") + viewerSource;
+	private String createViewer(File logFile) {
+		String logName = logFile.getName();
 
-		if (useLogFileViewer) {			
-			try {
-				// Copy LogViewer.html to Concordion output location
-				String viewerContent = IOUtils.toString(LoggingFormatterSpecificationListener.class.getResourceAsStream(viewerSource));
-				
-				viewerContent = viewerContent.replaceAll("LOG_FILE_NAME", logName);
-				viewerContent = viewerContent.replaceAll("LOG_FILE_CONTENT", Matcher.quoteReplacement(getLogContent(loggingAdaptor.getLogPath() + logName)));			
-				
-				FileUtils.writeStringToFile(new File(loggingAdaptor.getLogPath() + viewerDestination), viewerContent);
-			} catch (IOException e) {
-				LOGGER.error(e.getMessage());
-				viewerDestination = logName;
-			}
-		} else {
-			viewerDestination = logName;
+		if (!useLogFileViewer) {
+			return logName;
 		}
 
-		return viewerDestination;
+		if (logName.toLowerCase().endsWith(".html")) {
+			return logName;
+		}
+
+		int i = logName.lastIndexOf('.');
+		if (i > 0) {
+			logName = logName.substring(i + 1);
+		}
+
+		logName = logName + "LogViewer.html";
+
+		try {
+			// Copy LogViewer.html to Concordion output location
+			String viewerContent = IOUtils.toString(LoggingFormatterSpecificationListener.class.getResourceAsStream("LogViewer.html"));
+
+			viewerContent = viewerContent.replaceAll("LOG_FILE_NAME", logName);
+			viewerContent = viewerContent.replaceAll("LOG_FILE_CONTENT", Matcher.quoteReplacement(getLogContent(logFile)));
+
+			FileUtils.writeStringToFile(new File(logName), viewerContent);
+		} catch (IOException e) {
+			LOGGER.error(e.getMessage());
+			logName = logFile.getName();
+		}
+
+		return logName;
 	}
 	
-	private String getLogContent(String logFile) {
+	private String getLogContent(File logFile) {
 		
 		StringBuilder logContent = new StringBuilder();
 		BufferedReader br = null;
@@ -231,8 +206,8 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 		
 		if (splitBy == Split.EXAMPLE) {
 			try {
-				if (loggingAdaptor.doesLogfileExist()) {
-					appendLogFileLinkToExample(event, loggingAdaptor.getLogName());
+				if (loggingAdaptor.logFileExists()) {
+					appendLogFileLinkToExample(event, loggingAdaptor.getLogFile().getName());
 				}
 			} finally  {
 				loggingAdaptor.stopLogFile();		
