@@ -16,16 +16,20 @@ Options are:
 Note: see documentation on the two log styles for handling of [stack trace](- "printlog()").
 
 
-## [Log Splitting](-)
+## [Splitting Log Files](-)
 
-By default a new log file will be created for each example and a link to the example's log file will be placed on the [top right of the example](- "loginexample()").  Any log statements made outside of an example will be placed in a log file for the specification and linked to from the footer of the specification.
+Log files may be split either by specification or by example.
 
-It is possible to have a single log file for the specification.
+    @Extension
+    private final LoggingFormatterExtension loggingExtension = new LoggingFormatterExtension(false).setSplitBy(Split.SPECIFICATION);
 
-    extension.setSplitBy(Split.SPECIFICATION);
+
+### By Specification
+A link to the specifications log file is placed in the footer.
 
 
-_TODO: Seems that is adding logs to both example and specification logs :-(
+### By Example
+A link to the log file is placed at the [top right](- "assertTrue=splitexample()") of each example - this is the default setting.  If there is no example, or log statements are made outside of an example then a link will also be placed in the footer.  
 
     
 ## [Logging Start and End of Examples](-)
