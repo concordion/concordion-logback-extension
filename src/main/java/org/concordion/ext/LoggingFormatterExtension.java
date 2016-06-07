@@ -75,14 +75,11 @@ public class LoggingFormatterExtension implements ConcordionExtension {
     	/** Do not log exceptions */
     	NONE, 
     	
-    	/** Log exception message */
+		/** Log exception message */
     	EXCEPTION, 
     	
-    	/** Log exception message of the exception and all its causes (Default) */
-    	EXCEPTION_CAUSES, 
-    	
-    	/** Log full stack trace */
-    	EXCEPTION_WITH_STACK_TRACE
+		/** Log exception message of the exception and all its causes (Default) */
+		EXCEPTION_CAUSES
     }
 
 

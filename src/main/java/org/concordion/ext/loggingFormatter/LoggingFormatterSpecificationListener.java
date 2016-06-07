@@ -287,10 +287,6 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 	    	}
     		break;
     		
-    	case EXCEPTION_WITH_STACK_TRACE:
-    		message = cause.getMessage() + "\n" + getStackTrace(cause);
-    		break;
-    		
     	case NONE:
     		return;
     	}
@@ -299,7 +295,7 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
     	message = message.replace("\r\n", "\n");
     	message = message.replace("\n", "\n\t");
     	
-		LOGGER.error(message);
+		LOGGER.error(message, event.getThrowable());
 	}
     
     private String getStackTrace(final Throwable throwable) {

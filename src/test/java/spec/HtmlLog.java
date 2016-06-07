@@ -126,8 +126,4 @@ public class HtmlLog extends BaseFixture {
 		}
 	}
 	
-	public void loginexample() {
-		getLogger().debug(LogMarkers.step(), "Example Splitting");
-		getLogger().debug("Example logged");
-	}
 }

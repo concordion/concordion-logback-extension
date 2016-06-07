@@ -147,5 +147,3 @@ and can be combined with [other markers](- "c:assertTrue=addCombinedHtml()"):
 
 NOTE: When combining markers the data markers (Screenshot, Data, HTML) must be at the top level otherwise they will be ignored.  The htmlStatementMarker can be added at any level.    
 
-## [Log Within 'Example'](-)
-[log](- "loginexample()")

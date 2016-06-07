@@ -2,6 +2,11 @@
 
 Good logging is vital to any application and this holds true for your test automation suites.  These test suites can often perform complex operations on the system under test and when they invariably break you need the logs to help you to understand what the test (and application) has done.
 
+_And a bit about proving what have done... (steal from tool tip blog)._
+
+With this extension in place your test code no longer needs to capture and log exceptions, these are handled automatically.
+
+
 ## Classic Logs
 
 [Classic Logs](ClassicLog.md "c:run") being purely text data have been the staple for many years and are well supported. 
@@ -13,3 +18,7 @@ Good logging is vital to any application and this holds true for your test autom
 ## Tooltip Logs
 
 [Tooltip Logs](ToolTipLog.md "c:run") provide a handy mechanism for providing information back to anyone reading the generated specification without having to drill down into the logs.
+
+## Look and Feel
+
+In addition to the choice between classic and html logs, this extension offers a few other area of [customisation](Customisation.md "c:run"). 

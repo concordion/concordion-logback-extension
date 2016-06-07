@@ -18,3 +18,8 @@ When configured to the the appender named [FILE-PER-TEST](- "c:assertTrue=useApp
 ## Log Viewer
 
 This extension includes a [LogViewer](- "c:assertTrue=useLogViewer()") to make the logs a little friendlier to use and gives the ability to filter the logs by the log level.
+
+
+## TODO
+
+See what to do about logging strack trace or causes and what default should apply.  useing %noop to hide stack trace, causes...
