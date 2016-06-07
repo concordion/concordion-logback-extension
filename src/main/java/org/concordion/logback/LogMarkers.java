@@ -7,8 +7,8 @@ import org.slf4j.helpers.DataMarker;
 import org.slf4j.helpers.ScreenshotMarker;
 
 public class LogMarkers {
-	public static String STEP = "STEP";
-	public static String HTML = "HTML";
+	static String STEP = "STEP";
+	static String HTML = "HTML";
 	
 	private LogMarkers() {}
 	

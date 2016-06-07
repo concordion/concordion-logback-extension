@@ -35,13 +35,13 @@ public class LoggingFormatterExtension implements ConcordionExtension {
 	}
 	
 	/**
-	 * If set to true will add an entry to the log file with the header of the example that is about to be run
+	 * If set to true will log the start and end of each example using the header of the current example if found, or the example name
 	 * 
 	 * @param value Value to set
 	 * @return A self reference
 	 */
-	public LoggingFormatterExtension setLogExampleStartEvent(boolean value) {
-		listener.setLogExample(value);
+	public LoggingFormatterExtension setLogExampleStartAndEnd(boolean value) {
+		listener.setLogExampleStartAndEnd(value);
 		return this;
 	}
 	

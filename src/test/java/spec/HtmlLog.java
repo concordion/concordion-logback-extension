@@ -4,19 +4,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Iterator;
 
 import org.apache.commons.io.IOUtils;
 import org.concordion.ext.loggingFormatter.LogbackAdaptor;
 import org.concordion.logback.LogMarkers;
-import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
 
-import ch.qos.logback.classic.Logger;
-import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.classic.sift.SiftingAppender;
-import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.core.Appender;
 import ch.qos.logback.core.FileAppender;
 import test.concordion.logback.DummyScreenshotTaker;
 
@@ -134,7 +127,7 @@ public class HtmlLog extends BaseFixture {
 	}
 	
 	public void loginexample() {
-		getLogger().debug(LogMarkers.STEP, "Example Splitting");
+		getLogger().debug(LogMarkers.step(), "Example Splitting");
 		getLogger().debug("Example logged");
 	}
 }

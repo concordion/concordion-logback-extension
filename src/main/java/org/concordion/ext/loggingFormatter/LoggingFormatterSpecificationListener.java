@@ -27,13 +27,13 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 	private static final Logger LOGGER = LoggerFactory.getLogger(LoggingFormatterSpecificationListener.class);
 	private ILoggingAdaptor loggingAdaptor;
 	private boolean useLogFileViewer;
-	private boolean logExample = true;
+	private boolean logExampleStartAndEnd = false;
 	private LogLevel logExceptions = LogLevel.EXCEPTION_CAUSES;
 	private String testPath = "";
 	private Split splitBy = Split.EXAMPLE;
 		
-	public void setLogExample(boolean value) {
-		this.logExample = value;
+	public void setLogExampleStartAndEnd(boolean value) {
+		this.logExampleStartAndEnd = value;
 	}
 	
 	public void setLogExceptions(LogLevel value) {
@@ -215,19 +215,17 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 	@Override
 	public void beforeExample(ExampleEvent event) {
 		if (splitBy == Split.EXAMPLE) {
-			String examplePath = testPath + event.getExampleName(); 
-			
-			loggingAdaptor.startLogFile(examplePath);
+			loggingAdaptor.startLogFile(testPath, event.getExampleName());
 		}
 		
-		if (logExample) {
+		if (logExampleStartAndEnd) {
 			LOGGER.info(LogMarkers.step(), "Example: " + getExampleTitle(event.getElement()));
 		}
 	}
 
 	@Override
 	public void afterExample(ExampleEvent event) {
-		if (logExample) {
+		if (logExampleStartAndEnd) {
 			LOGGER.info(LogMarkers.step(), "End Example: " + getExampleTitle(event.getElement()));
 		}
 		

@@ -1,10 +1,7 @@
 package org.concordion.ext.loggingFormatter;
 
 import java.io.File;
-import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
 import java.util.Stack;
 
 import org.slf4j.LoggerFactory;
@@ -26,6 +23,9 @@ import ch.qos.logback.core.util.StatusPrinter;
 public class LogbackAdaptor implements ILoggingAdaptor
 {
 	public static final String TEST_NAME = "testname";
+	public static final String EXAMPLE_SEPERATOR_PREFIX = "[";
+	public static final String EXAMPLE_SEPERATOR_SUFFIX = "]";
+
 	private static Stack<String> testStack = new Stack<String>();
 	
 	/**
@@ -42,10 +42,19 @@ public class LogbackAdaptor implements ILoggingAdaptor
 	 * @param fileName The full path to the required log file
 	 */
 	@Override
-	public void startLogFile(String fileName) {
-		testStack.push(fileName);
+	public void startLogFile(String testPath) {
+		testStack.push(testPath);
+
+		MDC.put(TEST_NAME, testPath);
+	}
+
+	@Override
+	public void startLogFile(String testPath, String exampleName) {
+		String test = testPath + EXAMPLE_SEPERATOR_PREFIX + exampleName + EXAMPLE_SEPERATOR_SUFFIX;
+
+		testStack.push(test);
 		
-		MDC.put(TEST_NAME, fileName);
+		MDC.put(TEST_NAME, test);
 	}
 	
 	/**
@@ -59,10 +68,10 @@ public class LogbackAdaptor implements ILoggingAdaptor
 	public void stopLogFile() {
 		testStack.pop();
 		
-		if(!testStack.isEmpty()) {
-			MDC.put(TEST_NAME, testStack.peek());
-		} else {
+		if (testStack.isEmpty()) {
 			MDC.remove(TEST_NAME);
+		} else {
+			MDC.put(TEST_NAME, testStack.peek());
 		}
 	}
 		
@@ -71,6 +80,7 @@ public class LogbackAdaptor implements ILoggingAdaptor
 		String name = MDC.get(TEST_NAME);
 
 		FileAppender<?> appender = getConfiguredAppender();
+
 		if (appender == null) {
 			return false;
 		}
@@ -87,7 +97,7 @@ public class LogbackAdaptor implements ILoggingAdaptor
 	
 	@Override
 	public String getLogName() {
-		String name = MDC.get(TEST_NAME);
+		// String name = MDC.get(TEST_NAME);
 
 		FileAppender<?> appender = getConfiguredAppender();
 		return new File(appender.getFile()).getName();
@@ -114,6 +124,13 @@ public class LogbackAdaptor implements ILoggingAdaptor
 	
 	/** Finds the first configured appender that we use to create the log file. */
 	public static FileAppender<?> getConfiguredAppender() {
+
+		String currentTest = MDC.get(TEST_NAME);
+
+		if (currentTest == null || currentTest.isEmpty()) {
+			return null;
+		}
+
 		LoggerContext context = (LoggerContext)LoggerFactory.getILoggerFactory();
 		for (Logger logger : context.getLoggerList())
 		{
@@ -122,8 +139,25 @@ public class LogbackAdaptor implements ILoggingAdaptor
 				if (enumElement instanceof SiftingAppender) {
 					SiftingAppender sift = (SiftingAppender)enumElement;
 
+					// if (sift.getDiscriminator() instanceof MDCBasedDiscriminator) {
+					// MDCBasedDiscriminator discriminator = (MDCBasedDiscriminator) sift.getDiscriminator();
+					//
+					// discriminator.getKey().equalsIgnoreCase(TEST_NAME);
+					// }
+
 					if (sift.getName().equals("HTML-FILE-PER-TEST") || sift.getName().equals("FILE-PER-TEST")) {
 						
+						for (Appender<ILoggingEvent> appender : sift.getAppenderTracker().allComponents()) {
+							if (appender instanceof FileAppender) {
+								FileAppender<?> fileAppender = (FileAppender<?>) appender;
+
+								if (fileAppender.getFile().startsWith(currentTest)) {
+									return fileAppender;
+								}
+							}
+						}
+						
+						/*
 						List<Appender<ILoggingEvent>> activeAppenders = (List<Appender<ILoggingEvent>>)sift.getAppenderTracker().allComponents();
 						ListIterator<Appender<ILoggingEvent>> li = activeAppenders.listIterator(activeAppenders.size());
 
@@ -131,10 +165,15 @@ public class LogbackAdaptor implements ILoggingAdaptor
 						while(li.hasPrevious()) {
 							Appender<ILoggingEvent> appender = li.previous();
 							if (appender instanceof FileAppender) {
-								return (FileAppender<?>)appender;
+								FileAppender<?> fileAppender = (FileAppender<?>) appender;
+
+								if (fileAppender.getFile().startsWith(currentTest)) {
+									return fileAppender;
+								}
 							}
 						  
 						}
+						*/
 					}
 				}
 			}

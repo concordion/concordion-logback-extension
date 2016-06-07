@@ -12,8 +12,10 @@ public interface ILoggingAdaptor
 	 * 
 	 * @param fileName Full path to the output folder and class (without the file extension) of the current specification
 	 */
-	public void startLogFile(String fileName);
+	public void startLogFile(String testPath);
 	
+	public void startLogFile(String testPath, String exampleName);
+
 	/**
 	 * Stop directing logging statements to test specific log file
 	 */
@@ -39,4 +41,5 @@ public interface ILoggingAdaptor
 	 * @return name of the log file, if one existed in MDC
 	 */
 	public String getLogPath();
+
 }
