@@ -94,12 +94,12 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
         StringBuilder buf = new StringBuilder();
         startNewTableIfLimitReached(buf);
 
-        if (containsMarker(event, LogMarkers.STEP) || event.getLevel() == stepRecorder.getLevel()) {
-        	appendStepToBuffer(buf, event);
+		if (containsMarker(event, LogMarkers.STEP) || event.getLevel() == stepRecorder.getLevel()) {
+			appendStepToBuffer(buf, event);
         	return buf.toString();
         }
         
-        appendMessageToBuffer(buf, event);
+		appendMessageToBuffer(buf, event);
         
         if (event.getMarker() instanceof ScreenshotMarker) {
 			appendScreenshotToBuffer(buf, (ScreenshotMarker) event.getMarker());
@@ -121,12 +121,12 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
     }
 
 	public void appendStepToBuffer(StringBuilder buf, ILoggingEvent event) {
-    	counter = 0;
+		counter = 0;
 
 		buf.append(LINE_SEPARATOR);
-        buf.append("<tr>");
+		buf.append("<tr class=\"step\">");
         buf.append(LINE_SEPARATOR);
-        buf.append("<td class=\"step\" colspan=\"").append(columnCount + 1).append("\">");
+		buf.append("<td colspan=\"").append(columnCount + 1).append("\">");
         
         if (containsMarker(event, LogMarkers.HTML)) {
 			buf.append(event.getMessage());
@@ -140,11 +140,11 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 	}
 	
 	private void appendMessageToBuffer(StringBuilder buf, ILoggingEvent event) {
-        boolean odd = true;
-        if (((counter++) & 1) == 0) {
-            odd = false;
-        }
-        
+		boolean odd = true;
+		if (((counter++) & 1) == 0) {
+			odd = false;
+		}
+
         String level = event.getLevel().toString().toLowerCase();
 
         buf.append(LINE_SEPARATOR);
@@ -156,7 +156,7 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
             buf.append(" even\">");
         }
         buf.append(LINE_SEPARATOR);
-        buf.append("<td class=\"even\"></td>");
+		buf.append("<td class=\"indent\"></td>");
     
 		Converter<ILoggingEvent> c = head;
 		if (format == Format.COLUMN) {
@@ -204,7 +204,7 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 		buf.append(LINE_SEPARATOR);
 		buf.append("<tr>");
 		buf.append(LINE_SEPARATOR);
-		buf.append("<td></td><td align=\"center\" colspan=\"").append(columnCount).append("\">");
+		buf.append("<td class=\"indent\"></td><td align=\"center\" colspan=\"").append(columnCount).append("\" class=\"data\">");
         
 		try {
 			screenshot.writeScreenshot(screenshotsTakenCount);
@@ -256,11 +256,11 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 		buf.append(LINE_SEPARATOR);
 		buf.append("<tr>");
 		buf.append(LINE_SEPARATOR);
-		buf.append("<td></td><td colspan=\"").append(columnCount).append("\">");
+		buf.append("<td class=\"indent\"></td><td colspan=\"").append(columnCount).append("\" class=\"data\">");
 		
 		try {
-			buf.append("<pre>");
 			buf.append(LINE_SEPARATOR);
+			buf.append("<pre>");
 
 			if (data.escapeData()) {
 				buf.append(Transform.escapeTags(data.getData()));
@@ -268,8 +268,8 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 				buf.append(data.getData());
 			}
 			
-			buf.append(LINE_SEPARATOR);
 			buf.append("</pre>");
+			buf.append(LINE_SEPARATOR);
 		} catch (Exception e) {
 			buf.append(e.getMessage());
 		}
@@ -328,7 +328,7 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 		sbuf.append(LINE_SEPARATOR);
 
 		// Required for screenshot popup
-		sbuf.append("<img id=\"ScreenshotPopup\" class=\"screenshot\"");
+		sbuf.append("<img id=\"ScreenshotPopup\" class=\"screenshot\" />");
 
 		return sbuf.toString();
 	}

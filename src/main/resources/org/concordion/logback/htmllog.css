@@ -1,21 +1,48 @@
 <style type="text/css">
 
-table { margin-left: 2em; margin-right: 2em; border-left: 2px solid #AAA; }
-TD.even, TR.even { background: #FFFFFF; }
-TR.odd { background: #EAEAEA; }
+html {
+   font-family: arial;
+   font-style: normal;
+   font-size: 11pt;
+}
+
+/* set default tab size to 4 characters - no IE support */
+pre {
+    -moz-tab-size:    4; 
+    -o-tab-size:      4; 
+    tab-size:         4; 
+}
+
+table { margin-left: 2em; margin-right: 2em; border-collapse: collapse; border: 1px solid #ddd; }
+TD { padding: .5ex 1ex .5ex 0; border-top: 1px solid #ddd; }
+
+TR.header { font-weight: bold; background: lightyellow; border-bottom: 3px solid #ddd; }
+TR.header TD { padding-top: 8px; padding-bottom: 8px; }
+
+TR.step { font-weight: bold; background: linen }
+TR.step TD { padding-top: 8px; padding-bottom: 4px; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; }
+
+TR.even { background: white; }
+TR.even:hover { background: lightgoldenrodyellow; }
+
+TR.odd { background: whitesmoke; }
+TR.odd:hover { background: lightgoldenrodyellow; }
+
+TD.indent { background: white; border-top: none; border-right: 1px solid #ddd; }
+TD.data { padding: 10px 20px ; background: ivory;  border-top: none !important; }
+TD pre { margin: 0px; }
+
 TR.warn TD.Level, TR.error TD.Level, TR.fatal TD.Level {font-weight: bold; color: #FF4040 }
-TD { padding-right: 1ex; padding-left: 1ex; border-right: 2px solid #AAA; }
-TD.Time, TD.Date { text-align: right; font-family: courier, monospace; font-size: smaller; }
+TD.Time, TD.Date { text-align: right; }
 TD.Thread { text-align: left; }
 TD.Level { text-align: right; }
 TD.Logger { text-align: left; }
-TR.header { background: #596ED5; color: #FFF; font-weight: bold; font-size: larger; }
-TD.Exception { background: #A2AEE8; font-family: courier, monospace;}
-TD.step { background: beige; font-weight: bold; font-size: x-large}
+TD.Exception { background: #A2AEE8; font-family: courier, monospace; }
 
 /* Stack Trace */
 
 .exceptionMessage {
+  border-top: none;
   background-color: #fdd;
   font-family: Courier New, Courier, Monospace;
   font-size: 10pt;
@@ -55,10 +82,6 @@ TD.step { background: beige; font-weight: bold; font-size: x-large}
 
 
 /* Screenshot */
-img {
-	border: 1px solid beige;
-}
-
 img.screenshot {
 	position:absolute;
 	visibility:hidden;
