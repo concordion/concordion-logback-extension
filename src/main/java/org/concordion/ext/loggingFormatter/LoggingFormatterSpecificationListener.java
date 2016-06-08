@@ -11,6 +11,7 @@ import java.util.regex.Matcher;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.concordion.api.Element;
+import org.concordion.api.Resource;
 import org.concordion.api.listener.ExampleEvent;
 import org.concordion.api.listener.ExampleListener;
 import org.concordion.api.listener.SpecificationProcessingEvent;
@@ -23,15 +24,18 @@ import org.concordion.logback.LogMarkers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import nu.xom.Attribute;
+
 public class LoggingFormatterSpecificationListener implements SpecificationProcessingListener, ExampleListener, ThrowableCaughtListener {
 	private static final Logger LOGGER = LoggerFactory.getLogger(LoggingFormatterSpecificationListener.class);
-	private ILoggingAdaptor loggingAdaptor;
-	private boolean useLogFileViewer;
+	private final ILoggingAdaptor loggingAdaptor;
+	private final Resource stylesheetResource;
+	private final boolean useLogFileViewer;
 	private boolean logExampleStartAndEnd = false;
 	private LogLevel logExceptions = LogLevel.EXCEPTION_CAUSES;
 	private String testPath = "";
 	private Split splitBy = Split.EXAMPLE;
-		
+			
 	public void setLogExampleStartAndEnd(boolean value) {
 		this.logExampleStartAndEnd = value;
 	}
@@ -44,8 +48,9 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 		this.splitBy = split;
 	}
 
-	public LoggingFormatterSpecificationListener(ILoggingAdaptor loggingAdaptor, boolean useLogFileViewer) {
+	public LoggingFormatterSpecificationListener(ILoggingAdaptor loggingAdaptor, Resource stylesheetResource, boolean useLogFileViewer) {
 		this.loggingAdaptor = loggingAdaptor;
+		this.stylesheetResource = stylesheetResource;
 		this.useLogFileViewer = useLogFileViewer;
 	}
 
@@ -54,7 +59,7 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 	public void beforeProcessingSpecification(final SpecificationProcessingEvent event) {
 		testPath = event.getResource().getPath();
 
-		loggingAdaptor.startLogFile(testPath);
+		loggingAdaptor.startLogFile(testPath, event.getResource());
 	}
 
 	@Override

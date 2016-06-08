@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Iterator;
 import java.util.Stack;
 
+import org.concordion.api.Resource;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
@@ -43,9 +44,15 @@ public class LogbackAdaptor implements ILoggingAdaptor
 	 * @param fileName The full path to the required log file
 	 */
 	@Override
-	public void startLogFile(String resourcePath) {
+	public void startLogFile(String resourcePath, Resource stylesheetResource) {
 		String path = baseFolder + getPath(resourcePath);
 
+		//TODO plan a. see if can update root sifting appender with styleshee resource
+		//TODO plan b. use MDC to set second value
+		//TODO plan c. use environment property  
+		//LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+		//lc.get
+		
 		testStack.push(path);
 
 		MDC.put(TEST_NAME, path);

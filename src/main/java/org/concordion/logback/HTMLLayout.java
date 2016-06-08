@@ -147,6 +147,8 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 
         String level = event.getLevel().toString().toLowerCase();
 
+        //buf.append("<td class=\"even\"><i class=\"fa fa-fa ").append(Icon.getIcon(event.getLevel())).append("\"></i><i class=\"fa fa-fw\" aria-hidden=\"true\" title=\"Copy to use youtube\">&#xf167</i></td>");
+        
         buf.append(LINE_SEPARATOR);
         buf.append("<tr class=\"");
         buf.append(level);
@@ -156,7 +158,7 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
             buf.append(" even\">");
         }
         buf.append(LINE_SEPARATOR);
-		buf.append("<td class=\"indent\"></td>");
+		buf.append("<td class=\"indent\"><i class=\"fa fa-check-circle-o\"></i></td>");
     
 		Converter<ILoggingEvent> c = head;
 		if (format == Format.COLUMN) {

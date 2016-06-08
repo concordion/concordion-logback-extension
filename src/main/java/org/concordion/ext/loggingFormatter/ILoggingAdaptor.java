@@ -2,6 +2,8 @@ package org.concordion.ext.loggingFormatter;
 
 import java.io.File;
 
+import org.concordion.api.Resource;
+
 /**
  * Class to handle setting/removing MDC on per test case basis. This helps us log each test case into it's own log file. 
  * @see <a href="http://logback.qos.ch/manual/appenders.html#SiftingAppender">Sifting Appender</a>
@@ -14,7 +16,7 @@ public interface ILoggingAdaptor
 	 * 
 	 * @param fileName Full path to the output folder and class (without the file extension) of the current specification
 	 */
-	public void startLogFile(String resourcePath);
+	public void startLogFile(String resourcePath, Resource stylesheetResource);
 	
 	/**
 	 * Update logger so that logging statements for a specific example are directed to specified file
