@@ -17,16 +17,19 @@ public class HtmlLog extends BaseFixture {
 
 	public boolean configuration() throws IOException {
 		getLogger().info(LogMarkers.step(), "Configuration");
-		getLogger().trace("Hello World!");
-		getLogger().debug("Hello World!");
-		getLogger().info("Hello World!");
-		getLogger().warn("Hello World!");
-		getLogger().error("Hello World!");
+		getLogger().trace("Trace");
+		getLogger().debug("Debug");
+		getLogger().info("Info");
+		getLogger().warn("Warn");
+		getLogger().error("Error");
 		
+		getLogger().debug(LogMarkers.screenshot("LoginPage", new DummyScreenshotTaker()), "Clicking 'Login'");
+
 		getLogger().trace(LogMarkers.html(), "Find element {} <span class=\"greyed\">css selector=.test-login-button-register</span>", FUNKY_ARROW);
 		getLogger().trace(LogMarkers.html("TITLE", "if (typeof jQuery === 'undefined') return true; if (jQuery.active != 0) return false; return true;"),
 				"Run JavaScript {} <span class=\"greyed\">true</span>",
 				FUNKY_ARROW);
+
 
 		return getLogContent().contains(">Hello World!</td>");
 	}

@@ -9,9 +9,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
+import org.concordion.ext.loggingFormatter.LogbackAdaptor;
+import org.slf4j.LoggerFactory;
 import org.slf4j.helpers.DataMarker;
 import org.slf4j.helpers.ScreenshotMarker;
 
+import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.PatternLayout;
 import ch.qos.logback.classic.pattern.MDCConverter;
 import ch.qos.logback.classic.spi.ILoggingEvent;
@@ -47,7 +50,8 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 	private int screenshotsTakenCount = 0;
 	private int columnCount;
 	private PatternLayout stringLayout = null;
-
+	private String stylesheet = "";
+	
     /**
      * Constructs a PatternLayout using the DEFAULT_LAYOUT_PATTERN.
      * 
@@ -67,7 +71,20 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 	public void setFormat(String value) {
 		format = Format.valueOf(value);
 	}
-
+	
+	public void setStylesheet(String value) {
+		stylesheet = value;
+	}
+	
+	public boolean hasStylesheet() {
+		if (stylesheet == null || stylesheet.isEmpty()) {
+			LoggerContext context = (LoggerContext)LoggerFactory.getILoggerFactory();
+			stylesheet = context.getProperty(LogbackAdaptor.LAYOUT_STYLESHEET);
+		}
+		
+		return stylesheet != null && !stylesheet.isEmpty();
+	}
+	
     @Override
     public void setPattern(String conversionPattern) {
     	super.setPattern(conversionPattern);
@@ -147,7 +164,7 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 
         String level = event.getLevel().toString().toLowerCase();
 
-        //buf.append("<td class=\"even\"><i class=\"fa fa-fa ").append(Icon.getIcon(event.getLevel())).append("\"></i><i class=\"fa fa-fw\" aria-hidden=\"true\" title=\"Copy to use youtube\">&#xf167</i></td>");
+        //buf.append("<td class=\"even\"><i class=\"fa fa-fa ").append()).append("\"></i><i class=\"fa fa-fw\" aria-hidden=\"true\" title=\"Copy to use youtube\">&#xf167</i></td>");
         
         buf.append(LINE_SEPARATOR);
         buf.append("<tr class=\"");
@@ -158,7 +175,9 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
             buf.append(" even\">");
         }
         buf.append(LINE_SEPARATOR);
-		buf.append("<td class=\"indent\"><i class=\"fa fa-check-circle-o\"></i></td>");
+		buf.append("<td class=\"indent ").append(event.getLevel().toString().toLowerCase()).append("\">");
+		buf.append("<i class=\"").append(Icon.getIcon(event.getLevel())).append("\"></i>");
+		buf.append("</td>");
     
 		Converter<ILoggingEvent> c = head;
 		if (format == Format.COLUMN) {
@@ -318,11 +337,11 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 		sbuf.append(LINE_SEPARATOR);
 		sbuf.append("  <head>");
 		sbuf.append(LINE_SEPARATOR);
-		sbuf.append("    <title>");
-		sbuf.append(title);
-		sbuf.append("</title>");
-		sbuf.append(LINE_SEPARATOR);
-
+		sbuf.append("    <title>").append(title).append("</title>").append(LINE_SEPARATOR);
+		if (hasStylesheet()) {
+			sbuf.append("    <link rel=\"stylesheet\" type=\"text/css\" href=\"").append(stylesheet).append("\"/>").append(LINE_SEPARATOR);
+		}
+		
 		sbuf.append(readFile("htmllog.css"));
 		sbuf.append(readFile("htmllog.js"));
 		// cssBuilder.addCss(sbuf);

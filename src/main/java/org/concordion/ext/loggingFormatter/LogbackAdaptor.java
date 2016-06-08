@@ -23,6 +23,7 @@ import ch.qos.logback.core.util.StatusPrinter;
  */
 public class LogbackAdaptor implements ILoggingAdaptor
 {
+	public static final String LAYOUT_STYLESHEET = "LAYOUT_STYLESHEET";
 	public static final String TEST_NAME = "testname";
 	public static final String EXAMPLE_SEPERATOR_PREFIX = "[";
 	public static final String EXAMPLE_SEPERATOR_SUFFIX = "]";
@@ -44,14 +45,12 @@ public class LogbackAdaptor implements ILoggingAdaptor
 	 * @param fileName The full path to the required log file
 	 */
 	@Override
-	public void startLogFile(String resourcePath, Resource stylesheetResource) {
+	public void startSpecificationLogFile(String resourcePath, String stylesheet) {
 		String path = baseFolder + getPath(resourcePath);
 
-		//TODO plan a. see if can update root sifting appender with styleshee resource
-		//TODO plan b. use MDC to set second value
-		//TODO plan c. use environment property  
-		//LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
-		//lc.get
+		// Add path to css style sheet to logger context for later use
+		LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+		lc.putProperty(LAYOUT_STYLESHEET, stylesheet);
 		
 		testStack.push(path);
 
@@ -59,7 +58,7 @@ public class LogbackAdaptor implements ILoggingAdaptor
 	}
 
 	@Override
-	public void startLogFile(String resourcePath, String exampleName) {
+	public void startExampleLogFile(String resourcePath, String exampleName) {
 		String path = baseFolder + getPath(resourcePath) + EXAMPLE_SEPERATOR_PREFIX + exampleName + EXAMPLE_SEPERATOR_SUFFIX;
 
 		testStack.push(path);

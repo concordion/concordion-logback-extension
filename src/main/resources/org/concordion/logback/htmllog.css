@@ -20,6 +20,7 @@ TR.header { font-weight: bold; background: lightyellow; border-bottom: 3px solid
 TR.header TD { padding-top: 8px; padding-bottom: 8px; }
 
 TR.step { font-weight: bold; background: linen }
+TR.step:hover { background: lightgoldenrodyellow; }
 TR.step TD { padding-top: 8px; padding-bottom: 4px; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; }
 
 TR.even { background: white; }
@@ -28,16 +29,25 @@ TR.even:hover { background: lightgoldenrodyellow; }
 TR.odd { background: whitesmoke; }
 TR.odd:hover { background: lightgoldenrodyellow; }
 
-TD.indent { background: white; border-top: none; border-right: 1px solid #ddd; }
+TD.indent { background: white; border-top: none; border-right: 1px solid #ddd; text-align: center; }
 TD.data { padding: 10px 20px ; background: ivory;  border-top: none !important; }
 TD pre { margin: 0px; }
 
+
+TD.trace { color: silver }
+TD.debug { color: black }
+TD.info { color: darkblue }
+TD.warn { color: orange }
+TD.error, TD.fatal { color: #FF4040 }
+
 TR.warn TD.Level, TR.error TD.Level, TR.fatal TD.Level {font-weight: bold; color: #FF4040 }
+/*
 TD.Time, TD.Date { text-align: right; }
 TD.Thread { text-align: left; }
 TD.Level { text-align: right; }
 TD.Logger { text-align: left; }
 TD.Exception { background: #A2AEE8; font-family: courier, monospace; }
+*/
 
 .greyed { color: #999; }
 

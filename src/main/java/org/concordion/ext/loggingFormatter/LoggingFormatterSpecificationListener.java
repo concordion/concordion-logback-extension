@@ -59,7 +59,7 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 	public void beforeProcessingSpecification(final SpecificationProcessingEvent event) {
 		testPath = event.getResource().getPath();
 
-		loggingAdaptor.startLogFile(testPath, event.getResource());
+		loggingAdaptor.startSpecificationLogFile(testPath, event.getResource().getRelativePath(stylesheetResource));
 	}
 
 	@Override
@@ -195,7 +195,7 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 	@Override
 	public void beforeExample(ExampleEvent event) {
 		if (splitBy == Split.EXAMPLE) {
-			loggingAdaptor.startLogFile(testPath, event.getExampleName());
+			loggingAdaptor.startExampleLogFile(testPath, event.getExampleName());
 		}
 		
 		if (logExampleStartAndEnd) {
