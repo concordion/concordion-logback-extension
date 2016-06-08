@@ -128,7 +128,7 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
         buf.append(LINE_SEPARATOR);
 		buf.append("<td colspan=\"").append(columnCount + 1).append("\">");
         
-        if (containsMarker(event, LogMarkers.HTML)) {
+		if (event.getMarker() instanceof DataMarker) {
 			buf.append(event.getMessage());
 		} else {
 			buf.append(Transform.escapeTags(event.getMessage()));
@@ -176,7 +176,7 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 			
 			String text = stringLayout.doLayout(event);
 
-			if (containsMarker(event, LogMarkers.HTML)) {
+			if (event.getMarker() instanceof DataMarker) {
 				buf.append(text);
 			} else {
 				buf.append(Transform.escapeTags(text));
@@ -191,7 +191,7 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
         buf.append("<td class=\"");
         buf.append(computeConverterName(c));
         buf.append("\">");
-		if (containsMarker(event, LogMarkers.HTML)) {
+		if (event.getMarker() instanceof DataMarker) {
 			buf.append(c.convert(event));
 		} else {
 			buf.append(Transform.escapeTags(c.convert(event)));
@@ -253,6 +253,10 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 	}
 
 	public void appendDataToBuffer(StringBuilder buf, DataMarker data) {
+		if (!data.hasData()) {
+			return;
+		}
+
 		buf.append(LINE_SEPARATOR);
 		buf.append("<tr>");
 		buf.append(LINE_SEPARATOR);
@@ -354,7 +358,7 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
     private void buildHeaderRowForTable(StringBuilder sbuf) {
 		Converter<?> c = head;
         String name;
-        sbuf.append("<tr class=\"header\"><td style=\"width:50px\"></td>");
+		sbuf.append("<tr class=\"header\"><td style=\"width:50px\">Step</td>");
         sbuf.append(LINE_SEPARATOR);
         
         if (format == Format.COLUMN) {

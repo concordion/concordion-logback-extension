@@ -13,7 +13,8 @@ import org.slf4j.Marker;
 import test.concordion.logback.DummyScreenshotTaker;
 
 public class HtmlLog extends BaseFixture {
-	
+	private static final String FUNKY_ARROW = "&#8658;";
+
 	public boolean configuration() throws IOException {
 		getLogger().info(LogMarkers.step(), "Configuration");
 		getLogger().trace("Hello World!");
@@ -22,6 +23,11 @@ public class HtmlLog extends BaseFixture {
 		getLogger().warn("Hello World!");
 		getLogger().error("Hello World!");
 		
+		getLogger().trace(LogMarkers.html(), "Find element {} <span class=\"greyed\">css selector=.test-login-button-register</span>", FUNKY_ARROW);
+		getLogger().trace(LogMarkers.html("TITLE", "if (typeof jQuery === 'undefined') return true; if (jQuery.active != 0) return false; return true;"),
+				"Run JavaScript {} <span class=\"greyed\">true</span>",
+				FUNKY_ARROW);
+
 		return getLogContent().contains(">Hello World!</td>");
 	}
 	
@@ -88,7 +94,7 @@ public class HtmlLog extends BaseFixture {
 	public boolean addHtmlStatement() {
 		getLogger().info(LogMarkers.step(), "HTML Statement");
 		
-		Marker html = LogMarkers.htmlStatementMarker();
+		Marker html = LogMarkers.html();
 		getLogger().debug(html, "Some <b><i>HTML</i></b> data...");
 
 		// TODO How validate?
@@ -99,7 +105,7 @@ public class HtmlLog extends BaseFixture {
 		getLogger().info(LogMarkers.step(), "Combinded HTML and Statement");
 		
 		Marker html = LogMarkers.html("Adding data", "<p>This is some <b><i>HTML</i></b> data...");
-		html.add(LogMarkers.htmlStatementMarker());
+		html.add(LogMarkers.html());
 		
 		getLogger().debug(html, "Some <b><i>Combined HTML Statement</i></b> plus...");
 

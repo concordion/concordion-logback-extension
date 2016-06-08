@@ -21,6 +21,10 @@ public class DataMarker extends BasicMarker {
 		return title;
 	}
 
+	public boolean hasData() {
+		return data != null && !data.isEmpty();
+	}
+
 	public String getData() {
 		return data;
 	}

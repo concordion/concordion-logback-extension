@@ -8,7 +8,6 @@ import org.slf4j.helpers.ScreenshotMarker;
 
 public class LogMarkers {
 	static String STEP = "STEP";
-	static String HTML = "HTML";
 	
 	private LogMarkers() {}
 	
@@ -20,12 +19,12 @@ public class LogMarkers {
 		return new DataMarker(title, data, true);
 	}
 
-	public static DataMarker html(String title, String data) {
-		return new DataMarker(title, data, false);
+	public static DataMarker html() {
+		return new DataMarker(null, null, false);
 	}
 
-	public static Marker htmlStatementMarker() {
-		return MarkerFactory.getMarker(HTML);
+	public static DataMarker html(String title, String data) {
+		return new DataMarker(title, data, false);
 	}
 
 	public static Marker step() {
