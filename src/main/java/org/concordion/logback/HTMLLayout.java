@@ -1,5 +1,7 @@
 package org.concordion.logback;
 
+// TODO: Expand/Collapse button for Data; Copy Text Button for Data; Link = Eye on example.
+
 import static ch.qos.logback.core.CoreConstants.LINE_SEPARATOR;
 
 import java.awt.Dimension;

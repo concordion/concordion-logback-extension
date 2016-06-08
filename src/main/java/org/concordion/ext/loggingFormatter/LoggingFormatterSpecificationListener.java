@@ -1,11 +1,9 @@
 package org.concordion.ext.loggingFormatter;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.regex.Matcher;
 
 import org.apache.commons.io.FileUtils;
@@ -23,8 +21,6 @@ import org.concordion.ext.LoggingFormatterExtension.Split;
 import org.concordion.logback.LogMarkers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import nu.xom.Attribute;
 
 public class LoggingFormatterSpecificationListener implements SpecificationProcessingListener, ExampleListener, ThrowableCaughtListener {
 	private static final Logger LOGGER = LoggerFactory.getLogger(LoggingFormatterSpecificationListener.class);
@@ -276,18 +272,5 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
     	message = message.replace("\n", "\n\t");
     	
 		LOGGER.error(message, event.getThrowable());
-	}
-    
-    private String getStackTrace(final Throwable throwable) {
-		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		final PrintStream printStream = new PrintStream(baos);
-		throwable.printStackTrace(printStream);
-		String exceptionStr = "";
-		try {
-			exceptionStr = baos.toString("UTF-8");
-		} catch (Exception ex) {
-			exceptionStr = "Unavailable";
-		}
-		return exceptionStr;
 	}
 }

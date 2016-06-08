@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.Iterator;
 import java.util.Stack;
 
-import org.concordion.api.Resource;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
