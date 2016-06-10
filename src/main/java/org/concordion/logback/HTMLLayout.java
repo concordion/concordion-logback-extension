@@ -228,6 +228,12 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 		buf.append("<td class=\"indent\"></td><td align=\"center\" colspan=\"").append(columnCount).append("\" class=\"data\">");
         
 		try {
+			// TODO Nigel: should we pass screenshot taker in once via property or every time via Marker?
+			// * I'd like to not pass via marker so less code when log screenshot...
+			// * But what about multiple browsers?
+
+			// ScreenshotTaker taker = LogbackAdaptor.getScreenshotTaker();
+
 			screenshot.writeScreenshot(screenshotsTakenCount);
 			screenshotsTakenCount++;
 

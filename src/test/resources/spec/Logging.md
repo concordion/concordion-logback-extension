@@ -1,10 +1,13 @@
 # Logging
 
-Good logging is vital to any application and this holds true for your test automation suites.  These test suites can often perform complex operations on the system under test and when they invariably break you need the logs to help you to understand what the test (and application) has done.
+While a well written specification can convey the business intent, it can often be hard to understand what the tests are actually doing and as these tests are often written by developers, it may need a leap in faith for testers to trust them. 
 
-_And a bit about proving what have done... (steal from tool tip blog)._
+By allowing the logs to be broken down into easily understood steps and including screenshots and data files this extension aims to:
 
-With this extension in place your test code no longer needs to capture and log exceptions, these are handled automatically.
+* allow testers and business to gain and insight into what our tests are actually doing and increase the level of trust in the tests
+* help developers quickly diagnose issues tests and find performance improvements
+* capture and log exceptions automatically reducing the effort to create logs
+* work seemlessly with other extensions that also provide information such as the Storyboard, Tooltip, and ScreenShotTaker extensions
 
 
 ## Classic Logs

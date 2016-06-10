@@ -16,6 +16,8 @@ public class HtmlLog extends BaseFixture {
 	private static final String FUNKY_ARROW = "&#8658;";
 
 	public boolean configuration() throws IOException {
+		LogbackAdaptor.setScreenshotTaker(new DummyScreenshotTaker());
+
 		getLogger().info(LogMarkers.step(), "Configuration");
 		getLogger().trace("Trace");
 		getLogger().debug("Debug");

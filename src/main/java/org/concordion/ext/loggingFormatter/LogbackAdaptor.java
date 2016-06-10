@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Iterator;
 import java.util.Stack;
 
+import org.concordion.ext.ScreenshotTaker;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
@@ -23,6 +24,8 @@ import ch.qos.logback.core.util.StatusPrinter;
 public class LogbackAdaptor implements ILoggingAdaptor
 {
 	public static final String LAYOUT_STYLESHEET = "LAYOUT_STYLESHEET";
+	public static final String SCREENSHOT_TAKER = "SCREENSHOT_TAKER";
+
 	public static final String TEST_NAME = "testname";
 	public static final String EXAMPLE_SEPERATOR_PREFIX = "[";
 	public static final String EXAMPLE_SEPERATOR_SUFFIX = "]";
@@ -54,6 +57,18 @@ public class LogbackAdaptor implements ILoggingAdaptor
 		testStack.push(path);
 
 		MDC.put(TEST_NAME, path);
+	}
+
+	public static void setScreenshotTaker(ScreenshotTaker screenshotTaker) {
+		LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+
+		lc.putObject(SCREENSHOT_TAKER, screenshotTaker);
+	}
+
+	public static ScreenshotTaker getScreenshotTaker() {
+		LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+
+		return (ScreenshotTaker) lc.getObject(SCREENSHOT_TAKER);
 	}
 
 	@Override
