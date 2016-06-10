@@ -166,8 +166,6 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 
         String level = event.getLevel().toString().toLowerCase();
 
-        //buf.append("<td class=\"even\"><i class=\"fa fa-fa ").append()).append("\"></i><i class=\"fa fa-fw\" aria-hidden=\"true\" title=\"Copy to use youtube\">&#xf167</i></td>");
-        
         buf.append(LINE_SEPARATOR);
         buf.append("<tr class=\"");
         buf.append(level);
@@ -233,6 +231,7 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 			screenshot.writeScreenshot(screenshotsTakenCount);
 			screenshotsTakenCount++;
 
+			buf.append("<a href=\"").append(screenshot.getFileName()).append("\">");
 			buf.append("<img");
 			buf.append(" src=\"").append(screenshot.getFileName()).append("\"");
 			buf.append(" onMouseOver=\"showScreenPopup(this);this.style.cursor='pointer'\"");
@@ -265,6 +264,7 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 			}
 
 			buf.append("/>");
+			buf.append("</a>");
 
 		} catch (Exception e) {
 			buf.append(e.getMessage());
