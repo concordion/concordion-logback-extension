@@ -9,6 +9,8 @@ import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.ext.CLogger;
+import org.slf4j.ext.CLoggerFactory;
 
 import ch.qos.logback.classic.Level;
 
@@ -17,7 +19,7 @@ import ch.qos.logback.classic.Level;
  */
 @RunWith(ConcordionRunner.class)
 public class BaseFixture {
-	private final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
+	private final CLogger logger = CLoggerFactory.getCLogger(this.getClass().getName());
 	private final Logger tooltipLogger = LoggerFactory.getLogger("TOOLTIP_" + this.getClass().getName());
 
 	@Extension private final LoggingTooltipExtension tooltipExtension = new LoggingTooltipExtension(new LogbackLogMessenger(tooltipLogger.getName(), Level.ALL, true, "%msg%n"));
@@ -27,7 +29,7 @@ public class BaseFixture {
 		LogbackAdaptor.logInternalStatus();
 	}
 
-	public Logger getLogger() {
+	public CLogger getLogger() {
 		return logger;
 	}
 

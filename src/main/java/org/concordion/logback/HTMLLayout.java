@@ -13,6 +13,7 @@ import java.util.Map;
 import org.apache.commons.io.IOUtils;
 import org.concordion.ext.loggingFormatter.LogbackAdaptor;
 import org.slf4j.LoggerFactory;
+import org.slf4j.ext.CLogger;
 import org.slf4j.helpers.DataMarker;
 import org.slf4j.helpers.ScreenshotMarker;
 
@@ -113,7 +114,7 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
         StringBuilder buf = new StringBuilder();
         startNewTableIfLimitReached(buf);
 
-		if (containsMarker(event, LogMarkers.STEP) || event.getLevel() == stepRecorder.getLevel()) {
+		if (containsMarker(event, CLogger.STEP_MARKER.getName()) || event.getLevel() == stepRecorder.getLevel()) {
 			appendStepToBuffer(buf, event);
         	return buf.toString();
         }

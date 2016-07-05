@@ -1,4 +1,4 @@
-package org.slf4j.helpers;
+package org.concordion.logback;
 
 import java.awt.Dimension;
 import java.io.File;
@@ -7,19 +7,20 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import org.concordion.ext.ScreenshotTaker;
-import org.slf4j.Marker;
+import org.slf4j.ext.LogRecorder;
 
-public class ScreenshotMarker extends BasicMarker {
-	private static final long serialVersionUID = 9167884710836103981L;
+public class LogScreenshot implements LogRecorder {
+	public static LogScreenshot capture(ScreenshotTaker screenshotTaker, String format, Object... arguments) {
+		return new LogScreenshot(null, screenshotTaker);
+	}
+
 	private final ScreenshotTaker screenshotTaker;
 	private final String title;
 	private String baseFile;
 	private Dimension imageSize;
 	private String fileName;
-	
-	public ScreenshotMarker(String title, ScreenshotTaker screenshotTaker) {
-		super("SCREENSHOT");
 
+	private LogScreenshot(String title, ScreenshotTaker screenshotTaker) {
 		this.title = title;
 		this.screenshotTaker = screenshotTaker;
 	}
@@ -38,20 +39,20 @@ public class ScreenshotMarker extends BasicMarker {
 
 	public void setOutputFolder(String logFile) {
 		int pos = logFile.lastIndexOf('.');
-		
+
 		if (pos > 0) {
 			this.baseFile = logFile.substring(0, pos);
 		} else {
 			this.baseFile = logFile;
 		}
 	}
-	
+
 	public void writeScreenshot(int index) throws IOException {
 		String file = buildFileName(index);
-		
+
 		File screenshot = new File(file);
 		OutputStream outputStream = null;
-		
+
 		try {
 			outputStream = new FileOutputStream(screenshot);
 			this.imageSize = screenshotTaker.writeScreenshotTo(outputStream);
@@ -60,20 +61,16 @@ public class ScreenshotMarker extends BasicMarker {
 				outputStream.close();
 			}
 		}
-		
+
 		this.fileName = screenshot.getName();
 	}
-	
+
 	private String buildFileName(int index) {
-		return String.format("%sScreenShot%s.%s", baseFile, index, screenshotTaker.getFileExtension());		
+		return String.format("%sScreenShot%s.%s", baseFile, index, screenshotTaker.getFileExtension());
 	}
 
 	public String getFileName() {
 		return fileName;
 	}
 
-	public ScreenshotMarker withMarker(Marker marker) {
-		this.add(marker);
-		return this;
-	}
 }
