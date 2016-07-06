@@ -1,14 +1,10 @@
 package org.concordion.logback;
 
-import java.io.IOException;
-
-import org.slf4j.helpers.ScreenshotMarker;
-
-import ch.qos.logback.classic.spi.LoggingEvent;
 import ch.qos.logback.core.FileAppender;
 
 public class HTMLFileAppender<E> extends FileAppender<E> {
 	
+	/*
 	@Override
     protected void writeOut(E event) throws IOException {
         if (event instanceof LoggingEvent) {
@@ -21,4 +17,5 @@ public class HTMLFileAppender<E> extends FileAppender<E> {
         
         super.writeOut(event);
     }
+    */
 }

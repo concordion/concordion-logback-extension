@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import org.concordion.ext.ScreenshotTaker;
+import org.slf4j.Marker;
+import org.slf4j.ext.CLogger;
+import org.slf4j.ext.EventData;
 import org.slf4j.ext.LogRecorder;
 
 public class LogScreenshot implements LogRecorder {
@@ -14,8 +17,8 @@ public class LogScreenshot implements LogRecorder {
 		return new LogScreenshot(null, screenshotTaker);
 	}
 
-	public static LogScreenshot capture(ScreenshotTaker screenshotTaker, String format, Object... arguments) {
-		return new LogScreenshot(null, screenshotTaker);
+	public static LogScreenshot capture(String imagePath) {
+		return new LogScreenshot(imagePath);
 	}
 
 	private final ScreenshotTaker screenshotTaker;
@@ -23,6 +26,13 @@ public class LogScreenshot implements LogRecorder {
 	private String baseFile;
 	private Dimension imageSize;
 	private String fileName;
+
+	private LogScreenshot(String fileName) {
+		this.fileName = fileName;
+
+		this.title = null;
+		this.screenshotTaker = null;
+	}
 
 	private LogScreenshot(String title, ScreenshotTaker screenshotTaker) {
 		this.title = title;
@@ -75,6 +85,16 @@ public class LogScreenshot implements LogRecorder {
 
 	public String getFileName() {
 		return fileName;
+	}
+
+	@Override
+	public Marker getMarker() {
+		return CLogger.SCREENSHOT_MARKER;
+	}
+
+	@Override
+	public EventData getEventData() {
+		return new EventData(fileName);
 	}
 
 }
