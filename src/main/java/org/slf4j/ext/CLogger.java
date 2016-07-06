@@ -24,13 +24,9 @@
  */
 package org.slf4j.ext;
 
-import org.concordion.ext.ScreenshotTaker;
 import org.slf4j.Logger;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
-import org.slf4j.helpers.DataMarker;
-import org.slf4j.helpers.HTMLMarker;
-import org.slf4j.spi.LocationAwareLogger;
 
 /**
  * A utility that provides standard mechanisms for logging certain kinds of
@@ -47,6 +43,7 @@ public class CLogger extends XLogger {
 	public static Marker STEP_MARKER = MarkerFactory.getMarker("STEP");
 	public static Marker SCREENSHOT_MARKER = MarkerFactory.getMarker("SCREENSHOT");
 	public static Marker HTML_MARKER = MarkerFactory.getMarker("HTML");
+	public static Marker DATA_MARKER = MarkerFactory.getMarker("DATA");
 
 
 	/**
@@ -89,50 +86,62 @@ public class CLogger extends XLogger {
 		logger.debug(TOOLTIP_MARKER, format, arguments);
 	}
 
-	public void debug(LogRecorder data) {
+	public void debug(LogRecorder data, String format, Object... arguments) {
+		if (logger.isDebugEnabled(data.getMarker())) {
+			EventData edata = data.getEventData();
 
-	}
+			// TODO How pass event data?
 
-	public void trace(LogRecorder data) {
-
-	}
-
-
-	/**
-	 * Log a screenshot.
-	 * 
-	 */
-	public void screenshot(ScreenshotTaker screenshotTaker, String format, Object... arguments) {
-		if (logger.isDebugEnabled(SCREENSHOT_MARKER)) {
-			// TODO Use EventData to pass screenshot information
-			logger.debug(format, arguments);
+			logger.info(data.getMarker(), format, arguments);
 		}
 	}
 
-	public void html(String html, String format, Object... arguments) {
-		if (logger.isDebugEnabled(HTML_MARKER)) {
-			// TODO Use EventData to pass html information
-			logger.debug(format, arguments);
-		}
+	public void trace(LogRecorder data, String format, Object... arguments) {
+		if (logger.isTraceEnabled(data.getMarker())) {
+			EventData edata = data.getEventData();
 
-	}
+			// TODO How pass event data?
 
-	/**
-	 * Log a screenshot.
-	 * 
-	 */
-	public void html(String format, org.slf4j.event.Level level, String html, Object... arguments) {
-		if (instanceofLAL) {
-			// TODO How get next number of screenshot, and where should I take it?
-			((LocationAwareLogger) logger).log(new HTMLMarker("?", null), FQCN, level.toInt(), format, arguments, null);
+			logger.info(data.getMarker(), format, arguments);
 		}
 	}
 
-	public void data(String format, org.slf4j.event.Level level, String data, Object... arguments) {
-		if (instanceofLAL) {
-			// TODO How get next number of screenshot, and where should I take it?
-			((LocationAwareLogger) logger).log(new DataMarker("?", null), FQCN, level.toInt(), format, arguments, null);
-		}
-	}
+	//
+	// /**
+	// * Log a screenshot.
+	// *
+	// */
+	// public void screenshot(ScreenshotTaker screenshotTaker, String format, Object... arguments) {
+	// if (logger.isDebugEnabled(SCREENSHOT_MARKER)) {
+	// // TODO Use EventData to pass screenshot information
+	// logger.debug(format, arguments);
+	// }
+	// }
+	//
+	// public void html(String html, String format, Object... arguments) {
+	// if (logger.isDebugEnabled(HTML_MARKER)) {
+	// // TODO Use EventData to pass html information
+	// logger.debug(format, arguments);
+	// }
+	//
+	// }
+	//
+	// /**
+	// * Log a screenshot.
+	// *
+	// */
+	// public void html(String format, org.slf4j.event.Level level, String html, Object... arguments) {
+	// if (instanceofLAL) {
+	// // TODO How get next number of screenshot, and where should I take it?
+	// ((LocationAwareLogger) logger).log(new HTMLMarker("?", null), FQCN, level.toInt(), format, arguments, null);
+	// }
+	// }
+	//
+	// public void data(String format, org.slf4j.event.Level level, String data, Object... arguments) {
+	// if (instanceofLAL) {
+	// // TODO How get next number of screenshot, and where should I take it?
+	// ((LocationAwareLogger) logger).log(new DataMarker("?", null), FQCN, level.toInt(), format, arguments, null);
+	// }
+	// }
 
 }

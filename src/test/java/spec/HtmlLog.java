@@ -7,8 +7,8 @@ import java.io.InputStream;
 
 import org.apache.commons.io.IOUtils;
 import org.concordion.ext.loggingFormatter.LogbackAdaptor;
+import org.concordion.logback.LogData;
 import org.concordion.logback.LogHtml;
-import org.concordion.logback.LogScreenshot;
 import org.slf4j.Marker;
 
 import test.concordion.logback.DummyScreenshotTaker;
@@ -31,20 +31,16 @@ public class HtmlLog extends BaseFixture {
 		getLogger().warn("Warn");
 		getLogger().error("Error");
 
-		// THIS ALLOWS FLEXIBILITY AT EXPENSE OF READABILITY
-		getLogger().debug(LogScreenshot.capture(new DummyScreenshotTaker(), "Clicking 'Login'"));
-		// THIS PREVENTS LOGGING AT ERROR AND WARNING LEVELS
-		getLogger().screenshot(new DummyScreenshotTaker(), "Clicking 'Login'");
-
-
-		// THIS ALLOWS FLEXIBILITY AT EXPENSE OF READABILITY
 		getLogger().trace("Find element {} <span class=\"greyed\">css selector=.test-login-button-register</span>", FUNKY_ARROW);
-		getLogger().trace(LogHtml.capture(script, "Run JavaScript {} <span class=\"greyed\">true</span>", FUNKY_ARROW));
+		getLogger().trace(LogData.capture(script), "Run JavaScript {} <span class=\"greyed\">true</span>", FUNKY_ARROW);
+		getLogger().trace(LogHtml.capture("<b>Hello</b>"), "Hello {} World!", FUNKY_ARROW);
 
-		// THIS PREVENTS LOGGING AT ERROR AND WARNING LEVELS
-		getLogger().html(script, "Run JavaScript {} <span class=\"greyed\">true</span>", FUNKY_ARROW);
-
-		// TODO Data
+		// TODO SCEENSHOT
+		// Needs to allow custom screenshot takers (ie use Concordions interface)
+		// Must not know underlying mechanism so really only want path to image and possibly dimensions
+		// Get log message from element (eg Clicking 'Login') with option of override
+		// Highlight element
+		// getLogger().debug(LogScreenshot.capture(new DummyScreenshotTaker(), "Clicking 'Login'"));
 
 		return getLogContent().contains(">Hello World!</td>");
 	}

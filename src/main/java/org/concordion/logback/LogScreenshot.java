@@ -14,6 +14,10 @@ public class LogScreenshot implements LogRecorder {
 		return new LogScreenshot(null, screenshotTaker);
 	}
 
+	public static LogScreenshot capture(ScreenshotTaker screenshotTaker, String format, Object... arguments) {
+		return new LogScreenshot(null, screenshotTaker);
+	}
+
 	private final ScreenshotTaker screenshotTaker;
 	private final String title;
 	private String baseFile;
