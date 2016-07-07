@@ -7,9 +7,7 @@ import java.io.InputStream;
 
 import org.apache.commons.io.IOUtils;
 import org.concordion.ext.loggingFormatter.LogbackAdaptor;
-import org.concordion.logback.LogData;
-import org.concordion.logback.LogHtml;
-import org.slf4j.Marker;
+import org.slf4j.ext.CLogger;
 
 import test.concordion.logback.DummyScreenshotTaker;
 
@@ -23,17 +21,30 @@ public class HtmlLog extends BaseFixture {
 
 		getLogger().progress("Started testing...");
 		getLogger().step("Configuration");
+		//
+		// getLogger().info("Info"); // Was progress, what now???
+		// getLogger().debug("Debug"); // Action
+		// getLogger().trace("Trace"); // Detail on action - such as WebDriver logs
+		//
+		// getLogger().warn("Warn");
+		// getLogger().error("Error");
 
-		getLogger().info("Info"); // Was progress, what now???
-		getLogger().debug("Debug"); // Action
-		getLogger().trace("Trace"); // Detail on action - such as WebDriver logs
+		getLogger().trace(CLogger.HTML_MARKER, "Find element {} <span class=\"greyed\">css selector=.test-login-button-register</span>", FUNKY_ARROW);
+		// getLogger().trace(CLogger.HTML_MARKER, LogData.capture(script), "Run JavaScript {} <span class=\"greyed\">true</span>", FUNKY_ARROW);
 
-		getLogger().warn("Warn");
-		getLogger().error("Error");
+		getLogger()
+				.withHtmlMessage("Find element {} <span class=\"greyed\">css selector=.test-login-button-register</span>", FUNKY_ARROW)
+				.withData(script)
+				.trace();
 
-		getLogger().trace("Find element {} <span class=\"greyed\">css selector=.test-login-button-register</span>", FUNKY_ARROW);
-		getLogger().trace(LogData.capture(script), "Run JavaScript {} <span class=\"greyed\">true</span>", FUNKY_ARROW);
-		getLogger().trace(LogHtml.capture("<b>Hello</b>"), "Hello {} World!", FUNKY_ARROW);
+
+		// getLogger()
+		// .withMessage("Clicking '{}'", login.getText())
+		// .withScreenshot(takeScreenshot(pageObject, login))
+		// .addToStoryboard()
+		// .trace();
+
+		// getLogger().trace(LogHtml.capture("<b>Hello</b>"), "Hello {} World!", FUNKY_ARROW);
 
 		// TODO SCEENSHOT
 		// Needs to allow custom screenshot takers (ie use Concordions interface)
@@ -46,28 +57,28 @@ public class HtmlLog extends BaseFixture {
 	}
 	
 	public boolean throwException() throws IOException {
-		getLogger().step("Exception Handling");
-		try {
-			throw new IllegalStateException("Hello exception handling!");
-		} catch (IllegalStateException e) {
-			getLogger().error("Hello World!", e);
-		}
+		// getLogger().step("Exception Handling");
+		// try {
+		// throw new IllegalStateException("Hello exception handling!");
+		// } catch (IllegalStateException e) {
+		// getLogger().error("Hello World!", e);
+		// }
 		
 		return getLogContent().contains("Hello exception handling!");
 	}
 	
 	public boolean recordStepsUsingLogLevel() {
-		getLogger().step("Step using Log Level");
+		// getLogger().step("Step using Log Level");
 		return true;
 	}
 	
 	public boolean recordStepsUsingStepMarker() {
-		getLogger().step("Step using Step Marker");
+		// getLogger().step("Step using Step Marker");
 		return true;
 	}
 	
 	public boolean addScreenshot() throws IOException {
-		getLogger().step("Screenshot");
+		// getLogger().step("Screenshot");
 		// Marker screenshot = LogMarkers.screenshot("CurrentPage", new DummyScreenshotTaker());
 		//
 		// getLogger().debug(screenshot, "Have taken a screenshot for some reason...");
@@ -77,8 +88,8 @@ public class HtmlLog extends BaseFixture {
 	}
 	
 	public boolean addData() throws IOException {
-		getLogger().step("Text Data");
-		Marker data;
+		// getLogger().step("Text Data");
+		// Marker data;
 		
 		// data = LogMarkers.data("Adding data", "Some TEXT data...\r\nHows it going?");
 		// getLogger().debug(data, "Adding data for some reason...");
@@ -96,7 +107,7 @@ public class HtmlLog extends BaseFixture {
 	}
 
 	public boolean addHtmlData() {
-		getLogger().step("HTML Data");
+		// getLogger().step("HTML Data");
 		
 		// Marker data = LogMarkers.html("Adding data", "<p>This is some <b><i>HTML</i></b> data...");
 		// getLogger().debug(data, "Some <b><i>HTML</i></b> that won't display as HTML plus...");
@@ -106,7 +117,7 @@ public class HtmlLog extends BaseFixture {
 	}
 	
 	public boolean addHtmlStatement() {
-		getLogger().step("HTML Statement");
+		// getLogger().step("HTML Statement");
 		
 		// Marker html = LogMarkers.html();
 		// getLogger().debug(html, "Some <b><i>HTML</i></b> data...");
@@ -116,7 +127,7 @@ public class HtmlLog extends BaseFixture {
 	}
 
 	public boolean addCombinedHtml() {
-		getLogger().step("Combinded HTML and Statement");
+		// getLogger().step("Combinded HTML and Statement");
 		
 		// Marker html = LogMarkers.html("Adding data", "<p>This is some <b><i>HTML</i></b> data...");
 		// html.add(LogMarkers.html());

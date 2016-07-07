@@ -27,6 +27,7 @@ package org.slf4j.ext;
 import org.slf4j.Logger;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
+import org.slf4j.helpers.DataMarker;
 
 /**
  * A utility that provides standard mechanisms for logging certain kinds of
@@ -44,7 +45,7 @@ public class CLogger extends XLogger {
 	public static Marker SCREENSHOT_MARKER = MarkerFactory.getMarker("SCREENSHOT");
 	public static Marker HTML_MARKER = MarkerFactory.getMarker("HTML");
 	public static Marker DATA_MARKER = MarkerFactory.getMarker("DATA");
-
+	public static Marker DATA_RECORDER = MarkerFactory.getMarker("DATA_RECORDER");
 
 	/**
      * Given an underlying logger, construct an XLogger
@@ -76,6 +77,34 @@ public class CLogger extends XLogger {
 		logger.info(STEP_MARKER, format, arguments);
 	}
 
+
+	private Marker marker = null;
+	private String format;
+	private Object[] arguments;
+
+	private void addMarker(Marker reference) {
+		if (marker == null) {
+			marker = reference;
+		} else {
+			marker.add(reference);
+		}
+	}
+	public CLogger withHtmlMessage(String format, Object... arguments) {
+		this.marker = HTML_MARKER;
+		return this;
+	}
+
+	public CLogger withData(String data) {
+		addMarker(new DataMarker(null, data));
+		return this;
+	}
+
+	public void trace() {
+		if (logger.isTraceEnabled(marker)) {
+			logger.trace(marker, format, arguments);
+		}
+	}
+
 	/**
 	 * Logs a tool tip.
 	 * 
@@ -86,24 +115,19 @@ public class CLogger extends XLogger {
 		logger.debug(TOOLTIP_MARKER, format, arguments);
 	}
 
-	public void debug(LogRecorder data, String format, Object... arguments) {
+	public void trace(Marker marker, LogRecorder data, String format, Object... arguments) {
 		if (logger.isDebugEnabled(data.getMarker())) {
-			EventData edata = data.getEventData();
+			Marker logMarker = data.getMarker();
+			if (marker != null) {
+				logMarker.add(marker);
+			}
 
-			// TODO How pass event data?
-
-			logger.info(data.getMarker(), format, arguments);
+			logger.trace(logMarker, format, arguments);
 		}
 	}
 
 	public void trace(LogRecorder data, String format, Object... arguments) {
-		if (logger.isTraceEnabled(data.getMarker())) {
-			EventData edata = data.getEventData();
-
-			// TODO How pass event data?
-
-			logger.info(data.getMarker(), format, arguments);
-		}
+		trace(null, data, format, arguments);
 	}
 
 	//

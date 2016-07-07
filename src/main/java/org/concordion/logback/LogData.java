@@ -26,6 +26,8 @@ public class LogData implements LogRecorder {
 
 	@Override
 	public EventData getEventData() {
+		// Transform.escapeTags(data)
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("data", data);
 

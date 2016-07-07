@@ -2,6 +2,8 @@ package org.slf4j.helpers;
 
 import org.slf4j.Marker;
 
+import ch.qos.logback.core.helpers.Transform;
+
 public class DataMarker extends BasicMarker {
 	private static final long serialVersionUID = 5412731321120168078L;
 	
@@ -24,7 +26,7 @@ public class DataMarker extends BasicMarker {
 	}
 
 	public String getData() {
-		return data;
+		return Transform.escapeTags(data);
 	}
 
 	public DataMarker withMarker(Marker marker) {

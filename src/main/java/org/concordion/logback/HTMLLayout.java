@@ -4,7 +4,6 @@ package org.concordion.logback;
 
 import static ch.qos.logback.core.CoreConstants.LINE_SEPARATOR;
 
-import java.awt.Dimension;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -13,9 +12,9 @@ import java.util.Map;
 import org.apache.commons.io.IOUtils;
 import org.concordion.ext.loggingFormatter.LogbackAdaptor;
 import org.slf4j.LoggerFactory;
+import org.slf4j.Marker;
 import org.slf4j.ext.CLogger;
 import org.slf4j.helpers.DataMarker;
-import org.slf4j.helpers.ScreenshotMarker;
 
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.PatternLayout;
@@ -111,6 +110,10 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
     }
 
     public String doLayout(ILoggingEvent event) {
+		if (containsMarker(event, CLogger.PROGRESS_MARKER)) {
+			return "";
+		}
+
         StringBuilder buf = new StringBuilder();
         startNewTableIfLimitReached(buf);
 
@@ -121,11 +124,11 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
         
 		appendMessageToBuffer(buf, event);
         
-        if (event.getMarker() instanceof ScreenshotMarker) {
-			appendScreenshotToBuffer(buf, (ScreenshotMarker) event.getMarker());
-        } 
+//        if (event.getMarker() instanceof ScreenshotMarker) {
+//			appendScreenshotToBuffer(buf, (ScreenshotMarker) event.getMarker());
+//        } 
         
-        if (event.getMarker() instanceof DataMarker) {
+        if (containsMarker(event, CLogger.DATA_MARKER) event.getMarker() instanceof DataMarker) {
 			appendDataToBuffer(buf, (DataMarker) event.getMarker());
         }
         
@@ -180,10 +183,12 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 		buf.append("<i class=\"").append(Icon.getIcon(event.getLevel())).append("\"></i>");
 		buf.append("</td>");
     
+		boolean escapeTags = !containsMarker(event, CLogger.HTML_MARKER);
+
 		Converter<ILoggingEvent> c = head;
 		if (format == Format.COLUMN) {
 			while (c != null) {
-				appendEventToBuffer(buf, c, event);
+				appendEventToBuffer(buf, c, event, escapeTags);
 				c = c.getNext();
 			}
 		} else {
@@ -198,10 +203,10 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 			
 			String text = stringLayout.doLayout(event);
 
-			if (event.getMarker() instanceof DataMarker) {
-				buf.append(text);
-			} else {
+			if (escapeTags) {
 				buf.append(Transform.escapeTags(text));
+			} else {
+				buf.append(text);
 			}
 			buf.append("</td>");
         }
@@ -209,19 +214,20 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
         buf.append("</tr>");
 	}
 
-	private void appendEventToBuffer(StringBuilder buf, Converter<ILoggingEvent> c, ILoggingEvent event) {
+	private void appendEventToBuffer(StringBuilder buf, Converter<ILoggingEvent> c, ILoggingEvent event, boolean escapeTags) {
         buf.append("<td class=\"");
         buf.append(computeConverterName(c));
         buf.append("\">");
-		if (event.getMarker() instanceof DataMarker) {
-			buf.append(c.convert(event));
-		} else {
+		if (escapeTags) {
 			buf.append(Transform.escapeTags(c.convert(event)));
+		} else {
+			buf.append(c.convert(event));
 		}
         buf.append("</td>");
         buf.append(LINE_SEPARATOR);
     }
 	
+	/*
 	public void appendScreenshotToBuffer(StringBuilder buf, ScreenshotMarker screenshot) {
 		buf.append(LINE_SEPARATOR);
 		buf.append("<tr>");
@@ -281,7 +287,7 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 		buf.append(LINE_SEPARATOR);
 		buf.append("</tr>");
 	}
-
+*/
 	public void appendDataToBuffer(StringBuilder buf, DataMarker data) {
 		if (!data.hasData()) {
 			return;
@@ -296,11 +302,7 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 			buf.append(LINE_SEPARATOR);
 			buf.append("<pre>");
 
-			if (data.escapeData()) {
-				buf.append(Transform.escapeTags(data.getData()));
-			} else {
-				buf.append(data.getData());
-			}
+			buf.append(data.getData());
 			
 			buf.append("</pre>");
 			buf.append(LINE_SEPARATOR);
@@ -412,6 +414,14 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
         sbuf.append("</tr>");
         sbuf.append(LINE_SEPARATOR);
     }
+
+	private boolean containsMarker(ILoggingEvent event, Marker marker) {
+		if (event.getMarker() == null) {
+			return false;
+		}
+
+		return event.getMarker().contains(marker);
+	}
 
 	private boolean containsMarker(ILoggingEvent event, String name) {
 		if (event.getMarker() == null) {

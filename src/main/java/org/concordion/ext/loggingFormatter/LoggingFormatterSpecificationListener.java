@@ -18,12 +18,11 @@ import org.concordion.api.listener.ThrowableCaughtEvent;
 import org.concordion.api.listener.ThrowableCaughtListener;
 import org.concordion.ext.LoggingFormatterExtension.LogLevel;
 import org.concordion.ext.LoggingFormatterExtension.Split;
-import org.concordion.logback.LogMarkers;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.CLogger;
+import org.slf4j.ext.CLoggerFactory;
 
 public class LoggingFormatterSpecificationListener implements SpecificationProcessingListener, ExampleListener, ThrowableCaughtListener {
-	private static final Logger LOGGER = LoggerFactory.getLogger(LoggingFormatterSpecificationListener.class);
+	private static final CLogger LOGGER = CLoggerFactory.getCLogger(LoggingFormatterSpecificationListener.class);
 	private final ILoggingAdaptor loggingAdaptor;
 	private final Resource stylesheetResource;
 	private final boolean useLogFileViewer;
@@ -195,14 +194,14 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 		}
 		
 		if (logExampleStartAndEnd) {
-			LOGGER.info(LogMarkers.step(), "Example: " + getExampleTitle(event.getElement()));
+			LOGGER.step("Example: " + getExampleTitle(event.getElement()));
 		}
 	}
 
 	@Override
 	public void afterExample(ExampleEvent event) {
 		if (logExampleStartAndEnd) {
-			LOGGER.info(LogMarkers.step(), "End Example: " + getExampleTitle(event.getElement()));
+			LOGGER.step("End Example: {}", getExampleTitle(event.getElement()));
 		}
 		
 		if (splitBy == Split.EXAMPLE) {
