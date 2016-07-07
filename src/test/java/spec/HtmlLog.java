@@ -22,26 +22,32 @@ public class HtmlLog extends BaseFixture {
 		getLogger().progress("Started testing...");
 		getLogger().step("Configuration");
 		//
-		// getLogger().info("Info"); // Was progress, what now???
-		// getLogger().debug("Debug"); // Action
-		// getLogger().trace("Trace"); // Detail on action - such as WebDriver logs
-		//
-		// getLogger().warn("Warn");
-		// getLogger().error("Error");
+		getLogger().info("Info"); // Was progress, what now???
+		getLogger().debug("Debug"); // Action
+		getLogger().trace("Trace"); // Detail on action - such as WebDriver logs
 
-		getLogger().trace(CLogger.HTML_MARKER, "Find element {} <span class=\"greyed\">css selector=.test-login-button-register</span>", FUNKY_ARROW);
-		// getLogger().trace(CLogger.HTML_MARKER, LogData.capture(script), "Run JavaScript {} <span class=\"greyed\">true</span>", FUNKY_ARROW);
+		getLogger().warn("Warn");
+		getLogger().error("Error");
 
+		// HTML Formatted Message Option 1
+		getLogger().trace(CLogger.HTML_MESSAGE_MARKER, "Find element {} <span class=\"greyed\">css selector=.test-login-button-register</span>", FUNKY_ARROW);
+
+		// HTML Formatted Message Option 2
+		getLogger().withHtmlMessage("Find element {} <span class=\"greyed\">css selector=.test-login-button-register</span>", FUNKY_ARROW).trace();
+
+		// TEXT Data
 		getLogger()
 				.withHtmlMessage("Run JavaScript {} <span class=\"greyed\">true</span>", FUNKY_ARROW)
 				.withData(script)
 				.trace();
 
+		// HTML Data
 		getLogger()
-				.withMessage("Run JavaScript {} <span class=\"greyed\">true</span>", FUNKY_ARROW)
-				.withData(script)
+				.withMessage("Some HTML")
+				.withHtml("This is <b>BOLD</b>")
 				.trace();
 
+		// SCREENSHOT
 		// getLogger()
 		// .withMessage("Clicking '{}'", login.getText())
 		// .withScreenshot(takeScreenshot(pageObject, login))

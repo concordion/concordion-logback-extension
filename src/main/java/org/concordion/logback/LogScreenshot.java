@@ -8,7 +8,6 @@ import java.io.OutputStream;
 
 import org.concordion.ext.ScreenshotTaker;
 import org.slf4j.Marker;
-import org.slf4j.ext.CLogger;
 import org.slf4j.ext.EventData;
 
 public class LogScreenshot {
@@ -88,7 +87,7 @@ public class LogScreenshot {
 
 //	@Override
 	public Marker getMarker() {
-		return CLogger.SCREENSHOT_MARKER;
+		return null;// CLogger.SCREENSHOT_MARKER;
 	}
 
 //	@Override

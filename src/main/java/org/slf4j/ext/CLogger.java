@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
 import org.slf4j.helpers.DataMarker;
+import org.slf4j.helpers.HtmlMarker;
 import org.slf4j.helpers.MessageFormatter;
 import org.slf4j.spi.LocationAwareLogger;
 
@@ -38,16 +39,13 @@ import org.slf4j.spi.LocationAwareLogger;
  * @author Andrew Sumner
  */
 public class CLogger extends LoggerWrapper {
-	private static final String FQCN = CLogger.class.getName();
-
 	public static Marker TOOLTIP_MARKER = MarkerFactory.getMarker("TOOLTIP");
 
 	public static Marker PROGRESS_MARKER = MarkerFactory.getMarker("PROGRESS");
 	public static Marker STEP_MARKER = MarkerFactory.getMarker("STEP");
-	public static Marker SCREENSHOT_MARKER = MarkerFactory.getMarker("SCREENSHOT");
-	public static Marker HTML_MARKER = MarkerFactory.getMarker("HTML");
+	public static Marker HTML_MESSAGE_MARKER = MarkerFactory.getMarker("HTML");
 	public static Marker DATA_MARKER = MarkerFactory.getMarker("DATA");
-	public static Marker DATA_RECORDER = MarkerFactory.getMarker("DATA_RECORDER");
+
 
 	final String fqcn;
 	
@@ -100,7 +98,7 @@ public class CLogger extends LoggerWrapper {
 	}
 
 	public CLogger withHtmlMessage(String format, Object... arguments) {
-		addMarker(HTML_MARKER);
+		addMarker(HTML_MESSAGE_MARKER);
 		this.format = format;
 		this.arguments = arguments;
 		return this;
@@ -113,7 +111,12 @@ public class CLogger extends LoggerWrapper {
 	}
 
 	public CLogger withData(String data) {
-		addMarker(new DataMarker(null, data));
+		addMarker(new DataMarker(data));
+		return this;
+	}
+
+	public CLogger withHtml(String html) {
+		addMarker(new HtmlMarker(html));
 		return this;
 	}
 

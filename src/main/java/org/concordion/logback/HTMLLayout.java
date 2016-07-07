@@ -15,6 +15,7 @@ import org.concordion.ext.loggingFormatter.LogbackAdaptor;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
 import org.slf4j.ext.CLogger;
+import org.slf4j.helpers.BaseDataMarker;
 import org.slf4j.helpers.DataMarker;
 
 import ch.qos.logback.classic.LoggerContext;
@@ -129,11 +130,10 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 //			appendScreenshotToBuffer(buf, (ScreenshotMarker) event.getMarker());
 //        } 
         
-		//event.getMarker() instanceof DataMarker
         if (containsMarker(event, CLogger.DATA_MARKER)) {
-			appendDataToBuffer(buf, (DataMarker) getMarker(event.getMarker(), CLogger.DATA_MARKER));
+			appendDataToBuffer(buf, (BaseDataMarker<?>) getMarker(event.getMarker(), CLogger.DATA_MARKER));
         }
-        
+
         if (event.getThrowableProxy() != null) {
         	if (throwableRenderer instanceof HTMLThrowableRenderer) {
         		((HTMLThrowableRenderer) throwableRenderer).setColumnCount(columnCount);
@@ -185,7 +185,7 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 		buf.append("<i class=\"").append(Icon.getIcon(event.getLevel())).append("\"></i>");
 		buf.append("</td>");
     
-		boolean escapeTags = !containsMarker(event, CLogger.HTML_MARKER);
+		boolean escapeTags = !containsMarker(event, CLogger.HTML_MESSAGE_MARKER);
 
 		Converter<ILoggingEvent> c = head;
 		if (format == Format.COLUMN) {
@@ -290,7 +290,7 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 		buf.append("</tr>");
 	}
 */
-	public void appendDataToBuffer(StringBuilder buf, DataMarker data) {
+	public void appendDataToBuffer(StringBuilder buf, BaseDataMarker<?> data) {
 		if (!data.hasData()) {
 			return;
 		}
@@ -304,7 +304,7 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 			buf.append(LINE_SEPARATOR);
 			buf.append("<pre>");
 
-			buf.append(data.getData());
+			buf.append(data.getFormattedData());
 			
 			buf.append("</pre>");
 			buf.append(LINE_SEPARATOR);
