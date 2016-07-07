@@ -7,6 +7,7 @@ import static ch.qos.logback.core.CoreConstants.LINE_SEPARATOR;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
@@ -128,8 +129,9 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 //			appendScreenshotToBuffer(buf, (ScreenshotMarker) event.getMarker());
 //        } 
         
-        if (containsMarker(event, CLogger.DATA_MARKER) event.getMarker() instanceof DataMarker) {
-			appendDataToBuffer(buf, (DataMarker) event.getMarker());
+		//event.getMarker() instanceof DataMarker
+        if (containsMarker(event, CLogger.DATA_MARKER)) {
+			appendDataToBuffer(buf, (DataMarker) getMarker(event.getMarker(), CLogger.DATA_MARKER));
         }
         
         if (event.getThrowableProxy() != null) {
@@ -423,6 +425,27 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 		return event.getMarker().contains(marker);
 	}
 
+	private Marker getMarker(Marker reference, Marker search) {
+		if (reference == null) {
+			return null;
+		}
+
+		if (reference.getName().equals(search.getName())) {
+			return reference;
+		}
+		
+		Iterator<Marker> references = reference.iterator();
+		while (references.hasNext()) {
+			Marker found = getMarker(references.next(), search);
+			
+			if (found != null) {
+				return found;
+			}
+		}
+		
+		return null;
+	}
+	
 	private boolean containsMarker(ILoggingEvent event, String name) {
 		if (event.getMarker() == null) {
 			return false;

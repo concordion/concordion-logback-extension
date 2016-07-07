@@ -10,9 +10,8 @@ import org.concordion.ext.ScreenshotTaker;
 import org.slf4j.Marker;
 import org.slf4j.ext.CLogger;
 import org.slf4j.ext.EventData;
-import org.slf4j.ext.LogRecorder;
 
-public class LogScreenshot implements LogRecorder {
+public class LogScreenshot {
 	public static LogScreenshot capture(ScreenshotTaker screenshotTaker, String format, Object... arguments) {
 		return new LogScreenshot(null, screenshotTaker);
 	}
@@ -87,12 +86,12 @@ public class LogScreenshot implements LogRecorder {
 		return fileName;
 	}
 
-	@Override
+//	@Override
 	public Marker getMarker() {
 		return CLogger.SCREENSHOT_MARKER;
 	}
 
-	@Override
+//	@Override
 	public EventData getEventData() {
 		return new EventData(fileName);
 	}

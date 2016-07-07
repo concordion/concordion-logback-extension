@@ -33,10 +33,14 @@ public class HtmlLog extends BaseFixture {
 		// getLogger().trace(CLogger.HTML_MARKER, LogData.capture(script), "Run JavaScript {} <span class=\"greyed\">true</span>", FUNKY_ARROW);
 
 		getLogger()
-				.withHtmlMessage("Find element {} <span class=\"greyed\">css selector=.test-login-button-register</span>", FUNKY_ARROW)
+				.withHtmlMessage("Run JavaScript {} <span class=\"greyed\">true</span>", FUNKY_ARROW)
 				.withData(script)
 				.trace();
 
+		getLogger()
+				.withMessage("Run JavaScript {} <span class=\"greyed\">true</span>", FUNKY_ARROW)
+				.withData(script)
+				.trace();
 
 		// getLogger()
 		// .withMessage("Clicking '{}'", login.getText())

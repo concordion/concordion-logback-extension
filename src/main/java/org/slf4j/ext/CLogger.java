@@ -28,6 +28,8 @@ import org.slf4j.Logger;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
 import org.slf4j.helpers.DataMarker;
+import org.slf4j.helpers.MessageFormatter;
+import org.slf4j.spi.LocationAwareLogger;
 
 /**
  * A utility that provides standard mechanisms for logging certain kinds of
@@ -35,7 +37,7 @@ import org.slf4j.helpers.DataMarker;
  * 
  * @author Andrew Sumner
  */
-public class CLogger extends XLogger {
+public class CLogger extends LoggerWrapper {
 	private static final String FQCN = CLogger.class.getName();
 
 	public static Marker TOOLTIP_MARKER = MarkerFactory.getMarker("TOOLTIP");
@@ -47,21 +49,27 @@ public class CLogger extends XLogger {
 	public static Marker DATA_MARKER = MarkerFactory.getMarker("DATA");
 	public static Marker DATA_RECORDER = MarkerFactory.getMarker("DATA_RECORDER");
 
+	final String fqcn;
+	
 	/**
-     * Given an underlying logger, construct an XLogger
-     * 
-     * @param logger
-     *          underlying logger
-     */
-    public CLogger(Logger logger) {
-        super(logger);
-    }
+	 * Given an underlying logger, construct an XLogger
+	 * 
+	 * @param logger
+	 *            underlying logger
+	 */
+	public CLogger(Logger logger) {
+		super(logger, LoggerWrapper.class.getName());
+		
+		fqcn = CLogger.class.getName();
+	}
 
 	/**
 	 * Logs progress of test suite to console - not added to log file.
 	 * 
-	 * @param format the format string
-	 * @param arguments a list of arguments
+	 * @param format
+	 *            the format string
+	 * @param arguments
+	 *            a list of arguments
 	 */
 	public void progress(String format, Object... arguments) {
 		logger.info(PROGRESS_MARKER, format, arguments);
@@ -70,13 +78,14 @@ public class CLogger extends XLogger {
 	/**
 	 * Logs a step.
 	 * 
-	 * @param format the format string
-	 * @param arguments a list of arguments
+	 * @param format
+	 *            the format string
+	 * @param arguments
+	 *            a list of arguments
 	 */
 	public void step(String format, Object... arguments) {
 		logger.info(STEP_MARKER, format, arguments);
 	}
-
 
 	private Marker marker = null;
 	private String format;
@@ -89,8 +98,17 @@ public class CLogger extends XLogger {
 			marker.add(reference);
 		}
 	}
+
 	public CLogger withHtmlMessage(String format, Object... arguments) {
-		this.marker = HTML_MARKER;
+		addMarker(HTML_MARKER);
+		this.format = format;
+		this.arguments = arguments;
+		return this;
+	}
+
+	public CLogger withMessage(String format, Object... arguments) {
+		this.format = format;
+		this.arguments = arguments;
 		return this;
 	}
 
@@ -100,34 +118,38 @@ public class CLogger extends XLogger {
 	}
 
 	public void trace() {
-		if (logger.isTraceEnabled(marker)) {
-			logger.trace(marker, format, arguments);
-		}
+        trace(marker, format, arguments);
+		reset();
+	}
+
+	@Override
+	public void trace(Marker marker, String format, Object... args) {
+        if (!logger.isTraceEnabled(marker))
+            return;
+        if (instanceofLAL) {
+            String formattedMessage = MessageFormatter.arrayFormat(format, args).getMessage();
+            ((LocationAwareLogger) logger).log(marker, fqcn, LocationAwareLogger.TRACE_INT, formattedMessage, args, null);
+        } else {
+            logger.trace(marker, format, args);
+        }
+    }
+	
+	private void reset() {
+		this.marker = null;
+		this.format = null;
+		this.arguments = null;
 	}
 
 	/**
 	 * Logs a tool tip.
 	 * 
-	 * @param format the format string
-	 * @param arguments a list of arguments
+	 * @param format
+	 *            the format string
+	 * @param arguments
+	 *            a list of arguments
 	 */
 	public void tooltip(String format, Object... arguments) {
-		logger.debug(TOOLTIP_MARKER, format, arguments);
-	}
-
-	public void trace(Marker marker, LogRecorder data, String format, Object... arguments) {
-		if (logger.isDebugEnabled(data.getMarker())) {
-			Marker logMarker = data.getMarker();
-			if (marker != null) {
-				logMarker.add(marker);
-			}
-
-			logger.trace(logMarker, format, arguments);
-		}
-	}
-
-	public void trace(LogRecorder data, String format, Object... arguments) {
-		trace(null, data, format, arguments);
+		debug(TOOLTIP_MARKER, format, arguments);
 	}
 
 	//
@@ -135,7 +157,8 @@ public class CLogger extends XLogger {
 	// * Log a screenshot.
 	// *
 	// */
-	// public void screenshot(ScreenshotTaker screenshotTaker, String format, Object... arguments) {
+	// public void screenshot(ScreenshotTaker screenshotTaker, String format,
+	// Object... arguments) {
 	// if (logger.isDebugEnabled(SCREENSHOT_MARKER)) {
 	// // TODO Use EventData to pass screenshot information
 	// logger.debug(format, arguments);
@@ -154,17 +177,21 @@ public class CLogger extends XLogger {
 	// * Log a screenshot.
 	// *
 	// */
-	// public void html(String format, org.slf4j.event.Level level, String html, Object... arguments) {
+	// public void html(String format, org.slf4j.event.Level level, String html,
+	// Object... arguments) {
 	// if (instanceofLAL) {
 	// // TODO How get next number of screenshot, and where should I take it?
-	// ((LocationAwareLogger) logger).log(new HTMLMarker("?", null), FQCN, level.toInt(), format, arguments, null);
+	// ((LocationAwareLogger) logger).log(new HTMLMarker("?", null), FQCN,
+	// level.toInt(), format, arguments, null);
 	// }
 	// }
 	//
-	// public void data(String format, org.slf4j.event.Level level, String data, Object... arguments) {
+	// public void data(String format, org.slf4j.event.Level level, String data,
+	// Object... arguments) {
 	// if (instanceofLAL) {
 	// // TODO How get next number of screenshot, and where should I take it?
-	// ((LocationAwareLogger) logger).log(new DataMarker("?", null), FQCN, level.toInt(), format, arguments, null);
+	// ((LocationAwareLogger) logger).log(new DataMarker("?", null), FQCN,
+	// level.toInt(), format, arguments, null);
 	// }
 	// }
 
