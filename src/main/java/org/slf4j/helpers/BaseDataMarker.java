@@ -6,7 +6,7 @@ import org.slf4j.ext.CLogger;
 public abstract class BaseDataMarker<T> extends BasicMarker {
 	private static final long serialVersionUID = 8750307001902436743L;
 
-	protected final String data;
+	protected String data;
 
 	public BaseDataMarker(String data) {
 		super(CLogger.DATA_MARKER.getName());
@@ -15,6 +15,8 @@ public abstract class BaseDataMarker<T> extends BasicMarker {
 	}
 
 	public abstract String getFormattedData();
+
+	public abstract void prepareData();
 
 	@SuppressWarnings("unchecked")
 	public T withMarker(Marker marker) {

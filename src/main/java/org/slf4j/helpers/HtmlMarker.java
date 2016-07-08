@@ -11,4 +11,9 @@ public class HtmlMarker extends BaseDataMarker<HtmlMarker> {
 	public String getFormattedData() {
 		return data;
 	}
+
+	@Override
+	public void prepareData() {
+
+	}
 }

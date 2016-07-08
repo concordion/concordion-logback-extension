@@ -51,7 +51,6 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
     private IThrowableRenderer<ILoggingEvent> throwableRenderer;
     private StepRecorder stepRecorder = StepRecorder.STEP_MARKER;
 	private Format format = Format.COLUMN;
-	private int screenshotsTakenCount = 0;
 	private int columnCount;
 	private PatternLayout stringLayout = null;
 	private String stylesheet = "";
@@ -125,10 +124,6 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
         }
         
 		appendMessageToBuffer(buf, event);
-        
-//        if (event.getMarker() instanceof ScreenshotMarker) {
-//			appendScreenshotToBuffer(buf, (ScreenshotMarker) event.getMarker());
-//        } 
         
         if (containsMarker(event, CLogger.DATA_MARKER)) {
 			appendDataToBuffer(buf, (BaseDataMarker<?>) getMarker(event.getMarker(), CLogger.DATA_MARKER));
@@ -229,67 +224,6 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
         buf.append(LINE_SEPARATOR);
     }
 	
-	/*
-	public void appendScreenshotToBuffer(StringBuilder buf, ScreenshotMarker screenshot) {
-		buf.append(LINE_SEPARATOR);
-		buf.append("<tr>");
-		buf.append(LINE_SEPARATOR);
-		buf.append("<td class=\"indent\"></td><td align=\"center\" colspan=\"").append(columnCount).append("\" class=\"data\">");
-        
-		try {
-			// TODO Nigel: should we pass screenshot taker in once via property or every time via Marker?
-			// * I'd like to not pass via marker so less code when log screenshot...
-			// * But what about multiple browsers?
-
-			// ScreenshotTaker taker = LogbackAdaptor.getScreenshotTaker();
-
-			screenshot.writeScreenshot(screenshotsTakenCount);
-			screenshotsTakenCount++;
-
-			buf.append("<a href=\"").append(screenshot.getFileName()).append("\">");
-			buf.append("<img");
-			buf.append(" src=\"").append(screenshot.getFileName()).append("\"");
-			buf.append(" onMouseOver=\"showScreenPopup(this);this.style.cursor='pointer'\"");
-			buf.append(" onMouseOut=\"hideScreenPopup();this.style.cursor='default'\"");
-
-			Dimension imageSize = screenshot.getImageSize();
-
-			if (imageSize.width * 1.15 > imageSize.height) {
-				int displaySize = 350;
-
-				if (imageSize.width < displaySize) {
-					displaySize = imageSize.width;
-				}
-
-				buf.append(" width=\"").append(displaySize).append("px\" ");
-				buf.append(" class=\"");
-				buf.append("sizewidth");
-				buf.append("\"");
-			} else {
-				int displaySize = 200;
-
-				if (imageSize.height < displaySize) {
-					displaySize = imageSize.height;
-				}
-
-				buf.append(" height=\"").append(displaySize).append("px\" ");
-				buf.append(" class=\"");
-				buf.append("sizeheight");
-				buf.append("\"");
-			}
-
-			buf.append("/>");
-			buf.append("</a>");
-
-		} catch (Exception e) {
-			buf.append(e.getMessage());
-		}
-
-		buf.append("</td>");
-		buf.append(LINE_SEPARATOR);
-		buf.append("</tr>");
-	}
-*/
 	public void appendDataToBuffer(StringBuilder buf, BaseDataMarker<?> data) {
 		if (!data.hasData()) {
 			return;

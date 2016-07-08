@@ -24,12 +24,18 @@
  */
 package org.slf4j.ext;
 
+import java.io.File;
+import java.util.Iterator;
+
+import org.concordion.ext.ScreenshotTaker;
 import org.slf4j.Logger;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
+import org.slf4j.helpers.BaseDataMarker;
 import org.slf4j.helpers.DataMarker;
 import org.slf4j.helpers.HtmlMarker;
 import org.slf4j.helpers.MessageFormatter;
+import org.slf4j.helpers.ScreenshotMarker;
 import org.slf4j.spi.LocationAwareLogger;
 
 /**
@@ -120,15 +126,25 @@ public class CLogger extends LoggerWrapper {
 		return this;
 	}
 
+	public CLogger withScreenshot(File logFile, ScreenshotTaker screenshotTaker) {
+		addMarker(new ScreenshotMarker(logFile.getPath(), screenshotTaker));
+		return this;
+	}
+
 	public void trace() {
         trace(marker, format, arguments);
 		reset();
 	}
 
+	// Overridden so can set FQCN so location aware logging (Class and LineNumber) will work
 	@Override
 	public void trace(Marker marker, String format, Object... args) {
-        if (!logger.isTraceEnabled(marker))
+		if (!logger.isTraceEnabled(marker)) {
             return;
+		}
+
+		prepareData(marker);
+
         if (instanceofLAL) {
             String formattedMessage = MessageFormatter.arrayFormat(format, args).getMessage();
             ((LocationAwareLogger) logger).log(marker, fqcn, LocationAwareLogger.TRACE_INT, formattedMessage, args, null);
@@ -137,6 +153,21 @@ public class CLogger extends LoggerWrapper {
         }
     }
 	
+	private void prepareData(Marker reference) {
+		if (reference == null) {
+			return;
+		}
+
+		if (reference.getName().equals(DATA_MARKER.getName())) {
+			((BaseDataMarker<?>) reference).prepareData();
+		}
+
+		Iterator<Marker> references = reference.iterator();
+		while (references.hasNext()) {
+			prepareData(references.next());
+		}
+	}
+
 	private void reset() {
 		this.marker = null;
 		this.format = null;

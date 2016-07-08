@@ -120,6 +120,16 @@ public class LogbackAdaptor implements ILoggingAdaptor
 		return new File(appender.getFile());
 	}
 
+	public static File getLogFile2() {
+		FileAppender<?> appender = getConfiguredAppender();
+
+		if (appender == null) {
+			return null;
+		}
+
+		return new File(appender.getFile());
+	}
+
 	/** Finds the first appender matching the MDC value. */
 	private static FileAppender<?> getConfiguredAppender() {
 
