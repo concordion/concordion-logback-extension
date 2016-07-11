@@ -1,4 +1,4 @@
-package org.concordion.logback;
+package ch.qos.logback.ext.html;
 
 // TODO: Expand/Collapse button for Data; Copy Text Button for Data; Link = Eye on example.
 
@@ -14,7 +14,7 @@ import org.apache.commons.io.IOUtils;
 import org.concordion.ext.loggingFormatter.LogbackAdaptor;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
-import org.slf4j.ext.CLogger;
+import org.slf4j.ext.ReportLogger;
 import org.slf4j.helpers.BaseDataMarker;
 import org.slf4j.helpers.DataMarker;
 
@@ -111,22 +111,22 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
     }
 
     public String doLayout(ILoggingEvent event) {
-		if (containsMarker(event, CLogger.PROGRESS_MARKER)) {
+		if (containsMarker(event, ReportLogger.PROGRESS_MARKER)) {
 			return "";
 		}
 
         StringBuilder buf = new StringBuilder();
         startNewTableIfLimitReached(buf);
 
-		if (containsMarker(event, CLogger.STEP_MARKER.getName()) || event.getLevel() == stepRecorder.getLevel()) {
+		if (containsMarker(event, ReportLogger.STEP_MARKER.getName()) || event.getLevel() == stepRecorder.getLevel()) {
 			appendStepToBuffer(buf, event);
         	return buf.toString();
         }
         
 		appendMessageToBuffer(buf, event);
         
-        if (containsMarker(event, CLogger.DATA_MARKER)) {
-			appendDataToBuffer(buf, (BaseDataMarker<?>) getMarker(event.getMarker(), CLogger.DATA_MARKER));
+        if (containsMarker(event, ReportLogger.DATA_MARKER)) {
+			appendDataToBuffer(buf, (BaseDataMarker<?>) getMarker(event.getMarker(), ReportLogger.DATA_MARKER));
         }
 
         if (event.getThrowableProxy() != null) {
@@ -180,7 +180,7 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 		buf.append("<i class=\"").append(Icon.getIcon(event.getLevel())).append("\"></i>");
 		buf.append("</td>");
     
-		boolean escapeTags = !containsMarker(event, CLogger.HTML_MESSAGE_MARKER);
+		boolean escapeTags = !containsMarker(event, ReportLogger.HTML_MESSAGE_MARKER);
 
 		Converter<ILoggingEvent> c = head;
 		if (format == Format.COLUMN) {

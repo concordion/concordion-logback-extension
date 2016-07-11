@@ -18,11 +18,11 @@ import org.concordion.api.listener.ThrowableCaughtEvent;
 import org.concordion.api.listener.ThrowableCaughtListener;
 import org.concordion.ext.LoggingFormatterExtension.LogLevel;
 import org.concordion.ext.LoggingFormatterExtension.Split;
-import org.slf4j.ext.CLogger;
-import org.slf4j.ext.CLoggerFactory;
+import org.slf4j.ext.ReportLogger;
+import org.slf4j.ext.ReportLoggerFactory;
 
 public class LoggingFormatterSpecificationListener implements SpecificationProcessingListener, ExampleListener, ThrowableCaughtListener {
-	private static final CLogger LOGGER = CLoggerFactory.getCLogger(LoggingFormatterSpecificationListener.class);
+	private static final ReportLogger LOGGER = ReportLoggerFactory.getCLogger(LoggingFormatterSpecificationListener.class);
 	private final ILoggingAdaptor loggingAdaptor;
 	private final Resource stylesheetResource;
 	private final boolean useLogFileViewer;

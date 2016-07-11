@@ -7,7 +7,7 @@ import java.io.InputStream;
 
 import org.apache.commons.io.IOUtils;
 import org.concordion.ext.loggingFormatter.LogbackAdaptor;
-import org.slf4j.ext.CLogger;
+import org.slf4j.ext.ReportLogger;
 
 import test.concordion.logback.DummyScreenshotTaker;
 
@@ -30,7 +30,7 @@ public class HtmlLog extends BaseFixture {
 		getLogger().error("Error");
 
 		// HTML Formatted Message Option 1
-		getLogger().trace(CLogger.HTML_MESSAGE_MARKER, "Find element {} <span class=\"greyed\">css selector=.test-login-button-register</span>", FUNKY_ARROW);
+		getLogger().trace(ReportLogger.HTML_MESSAGE_MARKER, "Find element {} <span class=\"greyed\">css selector=.test-login-button-register</span>", FUNKY_ARROW);
 
 		// HTML Formatted Message Option 2
 		getLogger().withHtmlMessage("Find element {} <span class=\"greyed\">css selector=.test-login-button-register</span>", FUNKY_ARROW).trace();

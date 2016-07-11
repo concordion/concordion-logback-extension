@@ -1,4 +1,4 @@
-package org.concordion.logback;
+package ch.qos.logback.ext.html;
 
 import ch.qos.logback.classic.Level;
 

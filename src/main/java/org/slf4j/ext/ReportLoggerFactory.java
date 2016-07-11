@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 /**
  * 
  * This class is essentially a wrapper around an
- * {@link LoggerFactory} producing {@link CLogger} instances.
+ * {@link LoggerFactory} producing {@link ReportLogger} instances.
  * 
  * <p>
  * Contrary to {@link LoggerFactory#getLogger(String)} method of
@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
  * @author Ralph Goers
  * @author Ceki G&uuml;lc&uuml;
  */
-public class CLoggerFactory {
+public class ReportLoggerFactory {
 
     /**
 	 * Get an CLogger instance by name.
@@ -49,8 +49,8 @@ public class CLoggerFactory {
 	 * @param name
 	 * @return CLogger instance
 	 */
-	public static CLogger getCLogger(String name) {
-		return new CLogger(LoggerFactory.getLogger(name));
+	public static ReportLogger getCLogger(String name) {
+		return new ReportLogger(LoggerFactory.getLogger(name));
     }
 
     /**
@@ -60,7 +60,7 @@ public class CLoggerFactory {
 	 * @param clazz
 	 * @return CLogger instance by name
 	 */
-	public static CLogger getCLogger(Class<?> clazz) {
+	public static ReportLogger getCLogger(Class<?> clazz) {
 		return getCLogger(clazz.getName());
     }
 }

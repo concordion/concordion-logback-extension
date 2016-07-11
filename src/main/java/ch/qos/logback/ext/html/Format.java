@@ -1,4 +1,4 @@
-package org.concordion.logback;
+package ch.qos.logback.ext.html;
 
 public enum Format {
 	/** Elements from Log pattern split into columns, string literals not supported */

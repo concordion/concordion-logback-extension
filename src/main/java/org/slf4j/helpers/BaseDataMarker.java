@@ -1,7 +1,7 @@
 package org.slf4j.helpers;
 
 import org.slf4j.Marker;
-import org.slf4j.ext.CLogger;
+import org.slf4j.ext.ReportLogger;
 
 public abstract class BaseDataMarker<T> extends BasicMarker {
 	private static final long serialVersionUID = 8750307001902436743L;
@@ -9,7 +9,7 @@ public abstract class BaseDataMarker<T> extends BasicMarker {
 	protected String data;
 
 	public BaseDataMarker(String data) {
-		super(CLogger.DATA_MARKER.getName());
+		super(ReportLogger.DATA_MARKER.getName());
 
 		this.data = data;
 	}

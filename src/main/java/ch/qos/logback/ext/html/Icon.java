@@ -1,4 +1,4 @@
-package org.concordion.logback;
+package ch.qos.logback.ext.html;
 
 import java.util.HashMap;
 import java.util.Map;

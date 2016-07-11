@@ -44,7 +44,7 @@ import org.slf4j.spi.LocationAwareLogger;
  * 
  * @author Andrew Sumner
  */
-public class CLogger extends LoggerWrapper {
+public class ReportLogger extends LoggerWrapper {
 	public static Marker TOOLTIP_MARKER = MarkerFactory.getMarker("TOOLTIP");
 
 	public static Marker PROGRESS_MARKER = MarkerFactory.getMarker("PROGRESS");
@@ -53,7 +53,7 @@ public class CLogger extends LoggerWrapper {
 	public static Marker DATA_MARKER = MarkerFactory.getMarker("DATA");
 
 
-	final String fqcn;
+	final String reportLoggerFQCN;
 	
 	/**
 	 * Given an underlying logger, construct an XLogger
@@ -61,10 +61,10 @@ public class CLogger extends LoggerWrapper {
 	 * @param logger
 	 *            underlying logger
 	 */
-	public CLogger(Logger logger) {
+	public ReportLogger(Logger logger) {
 		super(logger, LoggerWrapper.class.getName());
 		
-		fqcn = CLogger.class.getName();
+		reportLoggerFQCN = ReportLogger.class.getName();
 	}
 
 	/**
@@ -103,56 +103,51 @@ public class CLogger extends LoggerWrapper {
 		}
 	}
 
-	public CLogger withHtmlMessage(String format, Object... arguments) {
+	public ReportLogger withHtmlMessage(String format, Object... arguments) {
 		addMarker(HTML_MESSAGE_MARKER);
 		this.format = format;
 		this.arguments = arguments;
 		return this;
 	}
 
-	public CLogger withMessage(String format, Object... arguments) {
+	public ReportLogger withMessage(String format, Object... arguments) {
 		this.format = format;
 		this.arguments = arguments;
 		return this;
 	}
 
-	public CLogger withData(String data) {
+	public ReportLogger withData(String data) {
 		addMarker(new DataMarker(data));
 		return this;
 	}
 
-	public CLogger withHtml(String html) {
+	public ReportLogger withHtml(String html) {
 		addMarker(new HtmlMarker(html));
 		return this;
 	}
 
-	public CLogger withScreenshot(File logFile, ScreenshotTaker screenshotTaker) {
+	public ReportLogger withScreenshot(File logFile, ScreenshotTaker screenshotTaker) {
 		addMarker(new ScreenshotMarker(logFile.getPath(), screenshotTaker));
 		return this;
 	}
 
 	public void trace() {
-        trace(marker, format, arguments);
-		reset();
-	}
-
-	// Overridden so can set FQCN so location aware logging (Class and LineNumber) will work
-	@Override
-	public void trace(Marker marker, String format, Object... args) {
 		if (!logger.isTraceEnabled(marker)) {
             return;
 		}
-
+		
 		prepareData(marker);
-
-        if (instanceofLAL) {
-            String formattedMessage = MessageFormatter.arrayFormat(format, args).getMessage();
-            ((LocationAwareLogger) logger).log(marker, fqcn, LocationAwareLogger.TRACE_INT, formattedMessage, args, null);
+		
+		if (instanceofLAL) {
+			String formattedMessage = MessageFormatter.arrayFormat(format, arguments).getMessage();
+			((LocationAwareLogger) logger).log(marker, reportLoggerFQCN, LocationAwareLogger.TRACE_INT, formattedMessage, arguments, null);
         } else {
-            logger.trace(marker, format, args);
+			logger.trace(marker, format, arguments);
         }
-    }
-	
+		
+		reset();
+	}
+
 	private void prepareData(Marker reference) {
 		if (reference == null) {
 			return;
@@ -185,48 +180,4 @@ public class CLogger extends LoggerWrapper {
 	public void tooltip(String format, Object... arguments) {
 		debug(TOOLTIP_MARKER, format, arguments);
 	}
-
-	//
-	// /**
-	// * Log a screenshot.
-	// *
-	// */
-	// public void screenshot(ScreenshotTaker screenshotTaker, String format,
-	// Object... arguments) {
-	// if (logger.isDebugEnabled(SCREENSHOT_MARKER)) {
-	// // TODO Use EventData to pass screenshot information
-	// logger.debug(format, arguments);
-	// }
-	// }
-	//
-	// public void html(String html, String format, Object... arguments) {
-	// if (logger.isDebugEnabled(HTML_MARKER)) {
-	// // TODO Use EventData to pass html information
-	// logger.debug(format, arguments);
-	// }
-	//
-	// }
-	//
-	// /**
-	// * Log a screenshot.
-	// *
-	// */
-	// public void html(String format, org.slf4j.event.Level level, String html,
-	// Object... arguments) {
-	// if (instanceofLAL) {
-	// // TODO How get next number of screenshot, and where should I take it?
-	// ((LocationAwareLogger) logger).log(new HTMLMarker("?", null), FQCN,
-	// level.toInt(), format, arguments, null);
-	// }
-	// }
-	//
-	// public void data(String format, org.slf4j.event.Level level, String data,
-	// Object... arguments) {
-	// if (instanceofLAL) {
-	// // TODO How get next number of screenshot, and where should I take it?
-	// ((LocationAwareLogger) logger).log(new DataMarker("?", null), FQCN,
-	// level.toInt(), format, arguments, null);
-	// }
-	// }
-
 }

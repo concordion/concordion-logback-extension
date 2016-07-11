@@ -1,4 +1,4 @@
-package org.concordion.logback;
+package ch.qos.logback.ext.html;
 
 /**
  * Logback: the reliable, generic, fast and flexible logging framework.
