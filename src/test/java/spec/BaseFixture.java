@@ -19,7 +19,7 @@ import ch.qos.logback.classic.Level;
  */
 @RunWith(ConcordionRunner.class)
 public class BaseFixture {
-	private final ReportLogger logger = ReportLoggerFactory.getCLogger(this.getClass().getName());
+	private final ReportLogger logger = ReportLoggerFactory.getReportLogger(this.getClass().getName());
 	private final Logger tooltipLogger = LoggerFactory.getLogger("TOOLTIP_" + this.getClass().getName());
 
 	@Extension private final LoggingTooltipExtension tooltipExtension = new LoggingTooltipExtension(new LogbackLogMessenger(tooltipLogger.getName(), Level.ALL, true, "%msg%n"));

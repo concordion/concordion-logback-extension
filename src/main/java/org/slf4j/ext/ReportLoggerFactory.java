@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
  * 
  * <p>
  * Contrary to {@link LoggerFactory#getLogger(String)} method of
- * {@link LoggerFactory}, each call to {@link #getCLogger(String)}
+ * {@link LoggerFactory}, each call to {@link #getReportLogger(String)}
  * produces a new instance of <code>CLogger</code>. This should not matter
  * because an <code>CLogger</code> instance does not have any state beyond that of
  * the {@link org.slf4j.Logger Logger} instance it wraps.
@@ -49,7 +49,7 @@ public class ReportLoggerFactory {
 	 * @param name
 	 * @return CLogger instance
 	 */
-	public static ReportLogger getCLogger(String name) {
+	public static ReportLogger getReportLogger(String name) {
 		return new ReportLogger(LoggerFactory.getLogger(name));
     }
 
@@ -61,6 +61,6 @@ public class ReportLoggerFactory {
 	 * @return CLogger instance by name
 	 */
 	public static ReportLogger getCLogger(Class<?> clazz) {
-		return getCLogger(clazz.getName());
+		return getReportLogger(clazz.getName());
     }
 }
