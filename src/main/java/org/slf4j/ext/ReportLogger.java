@@ -148,6 +148,74 @@ public class ReportLogger extends LoggerWrapper {
 		reset();
 	}
 
+	public void debug() {
+		if (!logger.isDebugEnabled(marker)) {
+			return;
+		}
+
+		prepareData(marker);
+
+		if (instanceofLAL) {
+			String formattedMessage = MessageFormatter.arrayFormat(format, arguments).getMessage();
+			((LocationAwareLogger) logger).log(marker, reportLoggerFQCN, LocationAwareLogger.DEBUG_INT, formattedMessage, arguments, null);
+		} else {
+			logger.debug(marker, format, arguments);
+		}
+
+		reset();
+	}
+
+	public void info() {
+		if (!logger.isInfoEnabled(marker)) {
+			return;
+		}
+
+		prepareData(marker);
+
+		if (instanceofLAL) {
+			String formattedMessage = MessageFormatter.arrayFormat(format, arguments).getMessage();
+			((LocationAwareLogger) logger).log(marker, reportLoggerFQCN, LocationAwareLogger.INFO_INT, formattedMessage, arguments, null);
+		} else {
+			logger.info(marker, format, arguments);
+		}
+
+		reset();
+	}
+
+	public void warn() {
+		if (!logger.isWarnEnabled(marker)) {
+			return;
+		}
+
+		prepareData(marker);
+
+		if (instanceofLAL) {
+			String formattedMessage = MessageFormatter.arrayFormat(format, arguments).getMessage();
+			((LocationAwareLogger) logger).log(marker, reportLoggerFQCN, LocationAwareLogger.WARN_INT, formattedMessage, arguments, null);
+		} else {
+			logger.warn(marker, format, arguments);
+		}
+
+		reset();
+	}
+
+	public void error() {
+		if (!logger.isErrorEnabled(marker)) {
+			return;
+		}
+
+		prepareData(marker);
+
+		if (instanceofLAL) {
+			String formattedMessage = MessageFormatter.arrayFormat(format, arguments).getMessage();
+			((LocationAwareLogger) logger).log(marker, reportLoggerFQCN, LocationAwareLogger.ERROR_INT, formattedMessage, arguments, null);
+		} else {
+			logger.error(marker, format, arguments);
+		}
+
+		reset();
+	}
+
 	private void prepareData(Marker reference) {
 		if (reference == null) {
 			return;
