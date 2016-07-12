@@ -1,3 +1,5 @@
+//TODO NIGEL: When doing fluent style log message should we return a different class as this will let you call incorrect commands and will not work as expected.   
+
 /**
  * Copyright (c) 2004-2011 QOS.ch
  * All rights reserved.

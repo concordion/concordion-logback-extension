@@ -5,7 +5,7 @@ import com.relevantcodes.extentreports.ExtentReports;
 
 public class ExtentManager {
 	private static ExtentReports extent;
-	private final static String FILE_PATH = "Extent.html";
+	private static final String FILE_PATH = "Extent.html";
 
 	private ExtentManager() {
 	}
