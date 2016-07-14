@@ -4,6 +4,7 @@ package org.concordion.ext;
 import org.concordion.api.Resource;
 import org.concordion.api.extension.ConcordionExtender;
 import org.concordion.api.extension.ConcordionExtension;
+import org.concordion.ext.loggingFormatter.ILoggingAdaptor;
 import org.concordion.ext.loggingFormatter.LogbackAdaptor;
 import org.concordion.ext.loggingFormatter.LoggingFormatterSpecificationListener;
 
@@ -21,13 +22,28 @@ public class LoggingFormatterExtension implements ConcordionExtension {
 	}
 	
 	/**
-	 * Constructor
-	 * @param useLogFileViewer 
-	 * 			Flag whether to show raw log file (false) or present the log file inside a log file viewer (true, default).
+	 * Constructor - defaults to using LogbackAdaptor.
+	 * 
+	 * @param useLogFileViewer
+	 *            Flag whether to show raw log file (false) or present the log file inside a log file viewer (true, default).
 	 */
 	public LoggingFormatterExtension(boolean useLogFileViewer) {
+		this(new LogbackAdaptor(), useLogFileViewer);
+	}
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param loggingAdaptor Custom logging adaptor
+	 * @param useLogFileViewer Flag whether to show raw log file (false) or present the log file inside a log file viewer (true, default).
+	 */
+	public LoggingFormatterExtension(ILoggingAdaptor loggingAdaptor, boolean useLogFileViewer) {
 		stylesheetResource = new Resource("/font-awesome/css/font-awesome.css");
-		listener = new LoggingFormatterSpecificationListener(new LogbackAdaptor(), stylesheetResource, useLogFileViewer);
+		listener = new LoggingFormatterSpecificationListener(loggingAdaptor, stylesheetResource, useLogFileViewer);
+	}
+
+	public ILoggingAdaptor getLoggingAdaptor() {
+		return listener.getLoggingAdaptor();
 	}
 
 	@Override

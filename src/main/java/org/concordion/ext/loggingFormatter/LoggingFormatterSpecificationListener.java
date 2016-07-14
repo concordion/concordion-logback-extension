@@ -27,7 +27,7 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 	private final Resource stylesheetResource;
 	private final boolean useLogFileViewer;
 	private boolean logExampleStartAndEnd = false;
-	private LogLevel logExceptions = LogLevel.EXCEPTION_CAUSES;
+	private LogLevel logExceptions = LogLevel.EXCEPTION;
 	private String testPath = "";
 	private Split splitBy = Split.EXAMPLE;
 			
@@ -41,6 +41,10 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 
 	public void setSplitBy(Split split) {
 		this.splitBy = split;
+	}
+
+	public ILoggingAdaptor getLoggingAdaptor() {
+		return this.loggingAdaptor;
 	}
 
 	public LoggingFormatterSpecificationListener(ILoggingAdaptor loggingAdaptor, Resource stylesheetResource, boolean useLogFileViewer) {

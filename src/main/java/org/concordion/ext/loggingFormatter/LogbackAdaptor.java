@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.Iterator;
 import java.util.Stack;
 
-import org.concordion.ext.ScreenshotTaker;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
@@ -59,18 +58,6 @@ public class LogbackAdaptor implements ILoggingAdaptor
 		MDC.put(TEST_NAME, path);
 	}
 
-	public static void setScreenshotTaker(ScreenshotTaker screenshotTaker) {
-		LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
-
-		lc.putObject(SCREENSHOT_TAKER, screenshotTaker);
-	}
-
-	public static ScreenshotTaker getScreenshotTaker() {
-		LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
-
-		return (ScreenshotTaker) lc.getObject(SCREENSHOT_TAKER);
-	}
-
 	@Override
 	public void startExampleLogFile(String resourcePath, String exampleName) {
 		String path = baseFolder + getPath(resourcePath) + EXAMPLE_SEPERATOR_PREFIX + exampleName + EXAMPLE_SEPERATOR_SUFFIX;
@@ -111,16 +98,6 @@ public class LogbackAdaptor implements ILoggingAdaptor
 
 	@Override
 	public File getLogFile() {
-		FileAppender<?> appender = getConfiguredAppender();
-
-		if (appender == null) {
-			return null;
-		}
-
-		return new File(appender.getFile());
-	}
-
-	public static File getLogFile2() {
 		FileAppender<?> appender = getConfiguredAppender();
 
 		if (appender == null) {

@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.commons.io.IOUtils;
-import org.concordion.ext.loggingFormatter.LogbackAdaptor;
 import org.slf4j.ext.ReportLogger;
 
 import test.concordion.logback.DummyScreenshotTaker;
@@ -16,8 +15,12 @@ public class HtmlLog extends BaseFixture {
 
 	public boolean configuration() throws IOException {
 		String script = "if (typeof jQuery === 'undefined') return true; if (jQuery.active != 0) return false; return true;";
+
+		// if (true) {
+		// throw new IllegalStateException("Hello exception handling!");
+		// }
 		
-		LogbackAdaptor.setScreenshotTaker(new DummyScreenshotTaker());
+		// LogbackAdaptor.setScreenshotTaker(new DummyScreenshotTaker());
 
 		getLogger().progress("This won't appear in the HTML report...");
 		getLogger().step("This is a step");
@@ -50,7 +53,7 @@ public class HtmlLog extends BaseFixture {
 		// Screenshot
 		getLogger().with()
 				.message("Clicking 'Login'")
-				.screenshot(LogbackAdaptor.getLogFile2(), new DummyScreenshotTaker())
+				.screenshot(getLoggingAdaptor().getLogFile(), new DummyScreenshotTaker())
 				// .addToStoryboard()
 				.trace();
 
@@ -147,7 +150,7 @@ public class HtmlLog extends BaseFixture {
 	}
 
 	private String getLogContent() throws IOException {
-		File file = new LogbackAdaptor().getLogFile();
+		File file = getLoggingAdaptor().getLogFile();
 		
 		if (file == null) {
 			return "";

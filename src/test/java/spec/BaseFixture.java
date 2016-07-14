@@ -4,6 +4,7 @@ import org.concordion.api.extension.Extension;
 import org.concordion.ext.LogbackLogMessenger;
 import org.concordion.ext.LoggingFormatterExtension;
 import org.concordion.ext.LoggingTooltipExtension;
+import org.concordion.ext.loggingFormatter.ILoggingAdaptor;
 import org.concordion.ext.loggingFormatter.LogbackAdaptor;
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.runner.RunWith;
@@ -23,7 +24,7 @@ public class BaseFixture {
 	private final Logger tooltipLogger = LoggerFactory.getLogger("TOOLTIP_" + this.getClass().getName());
 
 	@Extension private final LoggingTooltipExtension tooltipExtension = new LoggingTooltipExtension(new LogbackLogMessenger(tooltipLogger.getName(), Level.ALL, true, "%msg%n"));
-	@Extension private final LoggingFormatterExtension loggingExtension = new LoggingFormatterExtension(false);
+	@Extension private final LoggingFormatterExtension loggingExtension = new LoggingFormatterExtension(true);
 	
 	static {
 		LogbackAdaptor.logInternalStatus();
@@ -31,6 +32,10 @@ public class BaseFixture {
 
 	public ReportLogger getLogger() {
 		return logger;
+	}
+
+	public ILoggingAdaptor getLoggingAdaptor() {
+		return loggingExtension.getLoggingAdaptor();
 	}
 
 	public void addConcordionTooltip(final String message) {
