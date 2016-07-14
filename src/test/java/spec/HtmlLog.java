@@ -15,6 +15,9 @@ public class HtmlLog extends BaseFixture {
 	private static final String FUNKY_ARROW = "&#8658;";
 
 	public boolean configuration() throws IOException {
+		if (true) {
+			throw new IllegalStateException("Hello exception handling #2!");
+		}
 		String script = "if (typeof jQuery === 'undefined') return true; if (jQuery.active != 0) return false; return true;";
 		
 		LogbackAdaptor.setScreenshotTaker(new DummyScreenshotTaker());

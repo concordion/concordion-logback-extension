@@ -216,7 +216,7 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
         buf.append(computeConverterName(c));
         buf.append("\">");
 		if (escapeTags) {
-			buf.append(Transform.escapeTags(c.convert(event)));
+			buf.append(TransformText.escapeText(Transform.escapeTags(c.convert(event))));
 		} else {
 			buf.append(c.convert(event));
 		}
