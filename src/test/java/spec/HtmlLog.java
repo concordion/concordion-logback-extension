@@ -33,29 +33,28 @@ public class HtmlLog extends BaseFixture {
 		getLogger().trace(ReportLogger.HTML_MESSAGE_MARKER, "Find element {} <span class=\"greyed\">css selector=.test-login-button-register</span>", FUNKY_ARROW);
 
 		// HTML Formatted Message Option 2
-		getLogger().withHtmlMessage("Find element {} <span class=\"greyed\">css selector=.test-login-button-register</span>", FUNKY_ARROW).trace();
+		getLogger().with().htmlMessage("Find element {} <span class=\"greyed\">css selector=.test-login-button-register</span>", FUNKY_ARROW).trace();
 
 		// TEXT Data
-		getLogger()
-				.withHtmlMessage("Run JavaScript {} <span class=\"greyed\">true</span>", FUNKY_ARROW)
-				.withData(script)
+		getLogger().with()
+				.htmlMessage("Run JavaScript {} <span class=\"greyed\">true</span>", FUNKY_ARROW)
+				.data(script)
 				.trace();
 
 		// HTML Data
-		getLogger()
-				.withMessage("Some HTML")
-				.withHtml("This is <b>BOLD</b>")
+		getLogger().with()
+				.message("Some HTML")
+				.html("This is <b>BOLD</b>")
 				.trace();
 
 		// Screenshot
-		getLogger()
-				.withMessage("Clicking 'Login'")
-				.withScreenshot(LogbackAdaptor.getLogFile2(), new DummyScreenshotTaker())
+		getLogger().with()
+				.message("Clicking 'Login'")
+				.screenshot(LogbackAdaptor.getLogFile2(), new DummyScreenshotTaker())
 				// .addToStoryboard()
 				.trace();
 
 		// Exception
-		// TODO Can I get LocationAwareLogger to record line/class where exception occurred rather than where doing the logging? and should I?
 		try {
 			throw new IllegalStateException("Hello exception handling!");
 		} catch (IllegalStateException e) {

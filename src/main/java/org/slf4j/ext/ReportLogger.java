@@ -26,19 +26,9 @@
  */
 package org.slf4j.ext;
 
-import java.io.File;
-import java.util.Iterator;
-
-import org.concordion.ext.ScreenshotTaker;
 import org.slf4j.Logger;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
-import org.slf4j.helpers.BaseDataMarker;
-import org.slf4j.helpers.DataMarker;
-import org.slf4j.helpers.HtmlMarker;
-import org.slf4j.helpers.MessageFormatter;
-import org.slf4j.helpers.ScreenshotMarker;
-import org.slf4j.spi.LocationAwareLogger;
 
 /**
  * A utility that provides standard mechanisms for logging certain kinds of
@@ -54,9 +44,6 @@ public class ReportLogger extends LoggerWrapper {
 	public static Marker HTML_MESSAGE_MARKER = MarkerFactory.getMarker("HTML");
 	public static Marker DATA_MARKER = MarkerFactory.getMarker("DATA");
 
-	// The fully qualified class name of the logger instance
-	private final String reportLoggerFQCN;
-	
 	/**
 	 * Given an underlying logger, construct an XLogger
 	 * 
@@ -65,8 +52,6 @@ public class ReportLogger extends LoggerWrapper {
 	 */
 	public ReportLogger(Logger logger) {
 		super(logger, LoggerWrapper.class.getName());
-		
-		reportLoggerFQCN = ReportLogger.class.getName();
 	}
 
 	/**
@@ -93,150 +78,13 @@ public class ReportLogger extends LoggerWrapper {
 		logger.info(STEP_MARKER, format, arguments);
 	}
 
-	private Marker marker = null;
-	private String format;
-	private Object[] arguments;
-
-	private void addMarker(Marker reference) {
-		if (marker == null) {
-			marker = reference;
-		} else {
-			marker.add(reference);
-		}
-	}
-
-	public ReportLogger withHtmlMessage(String format, Object... arguments) {
-		addMarker(HTML_MESSAGE_MARKER);
-		this.format = format;
-		this.arguments = arguments;
-		return this;
-	}
-
-	public ReportLogger withMessage(String format, Object... arguments) {
-		this.format = format;
-		this.arguments = arguments;
-		return this;
-	}
-
-	public ReportLogger withData(String data) {
-		addMarker(new DataMarker(data));
-		return this;
-	}
-
-	public ReportLogger withHtml(String html) {
-		addMarker(new HtmlMarker(html));
-		return this;
-	}
-
-	public ReportLogger withScreenshot(File logFile, ScreenshotTaker screenshotTaker) {
-		addMarker(new ScreenshotMarker(logFile.getPath(), screenshotTaker));
-		return this;
-	}
-
-	public void trace() {
-		if (!logger.isTraceEnabled(marker)) {
-            return;
-		}
-		
-		prepareData(marker);
-		
-		if (instanceofLAL) {
-			String formattedMessage = MessageFormatter.arrayFormat(format, arguments).getMessage();
-			((LocationAwareLogger) logger).log(marker, reportLoggerFQCN, LocationAwareLogger.TRACE_INT, formattedMessage, arguments, null);
-        } else {
-			logger.trace(marker, format, arguments);
-        }
-		
-		reset();
-	}
-
-	public void debug() {
-		if (!logger.isDebugEnabled(marker)) {
-			return;
-		}
-
-		prepareData(marker);
-
-		if (instanceofLAL) {
-			String formattedMessage = MessageFormatter.arrayFormat(format, arguments).getMessage();
-			((LocationAwareLogger) logger).log(marker, reportLoggerFQCN, LocationAwareLogger.DEBUG_INT, formattedMessage, arguments, null);
-		} else {
-			logger.debug(marker, format, arguments);
-		}
-
-		reset();
-	}
-
-	public void info() {
-		if (!logger.isInfoEnabled(marker)) {
-			return;
-		}
-
-		prepareData(marker);
-
-		if (instanceofLAL) {
-			String formattedMessage = MessageFormatter.arrayFormat(format, arguments).getMessage();
-			((LocationAwareLogger) logger).log(marker, reportLoggerFQCN, LocationAwareLogger.INFO_INT, formattedMessage, arguments, null);
-		} else {
-			logger.info(marker, format, arguments);
-		}
-
-		reset();
-	}
-
-	public void warn() {
-		if (!logger.isWarnEnabled(marker)) {
-			return;
-		}
-
-		prepareData(marker);
-
-		if (instanceofLAL) {
-			String formattedMessage = MessageFormatter.arrayFormat(format, arguments).getMessage();
-			((LocationAwareLogger) logger).log(marker, reportLoggerFQCN, LocationAwareLogger.WARN_INT, formattedMessage, arguments, null);
-		} else {
-			logger.warn(marker, format, arguments);
-		}
-
-		reset();
-	}
-
-	public void error() {
-		if (!logger.isErrorEnabled(marker)) {
-			return;
-		}
-
-		prepareData(marker);
-
-		if (instanceofLAL) {
-			String formattedMessage = MessageFormatter.arrayFormat(format, arguments).getMessage();
-			((LocationAwareLogger) logger).log(marker, reportLoggerFQCN, LocationAwareLogger.ERROR_INT, formattedMessage, arguments, null);
-		} else {
-			logger.error(marker, format, arguments);
-		}
-
-		reset();
-	}
-
-	private void prepareData(Marker reference) {
-		if (reference == null) {
-			return;
-		}
-
-		if (reference.getName().equals(DATA_MARKER.getName())) {
-			((BaseDataMarker<?>) reference).prepareData();
-		}
-
-		Iterator<Marker> references = reference.iterator();
-		while (references.hasNext()) {
-			prepareData(references.next());
-		}
-	}
-
-	private void reset() {
-		this.marker = null;
-		this.format = null;
-		this.arguments = null;
+	/**
+	 * Access custom reporting methods such as data, html, and screenshots.
+	 * 
+	 * @return A FluentLogger
+	 */
+	public FluentLogger with() {
+		return new FluentLogger(logger, instanceofLAL);
 	}
 
 	/**
