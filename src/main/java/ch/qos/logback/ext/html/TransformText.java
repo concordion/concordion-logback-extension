@@ -7,7 +7,7 @@ package ch.qos.logback.ext.html;
  */
 public class TransformText {
 	/**
-	 * This method takes a String which may contain special charactgers (ie, \t, \r, \n)
+	 * This method takes a String which may contain special characters (ie, \t, \r, \n)
 	 * and replaces these with the appropriate html tags
 	 * 
 	 * @param input
@@ -22,7 +22,7 @@ public class TransformText {
 	}
 
 	/**
-	 * This method takes a StringBuilder which may contain special charactgers (ie, \t, \r, \n)
+	 * This method takes a StringBuilder which may contain special characters (ie, \t, \r, \n)
 	 * and replaces these with the appropriate html tags.
 	 * 
 	 * @param buf StringBuffer to transform
