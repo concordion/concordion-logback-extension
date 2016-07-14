@@ -54,8 +54,8 @@ public class ReportLogger extends LoggerWrapper {
 	public static Marker HTML_MESSAGE_MARKER = MarkerFactory.getMarker("HTML");
 	public static Marker DATA_MARKER = MarkerFactory.getMarker("DATA");
 
-
-	final String reportLoggerFQCN;
+	// The fully qualified class name of the logger instance
+	private final String reportLoggerFQCN;
 	
 	/**
 	 * Given an underlying logger, construct an XLogger

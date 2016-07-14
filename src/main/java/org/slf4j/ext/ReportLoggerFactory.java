@@ -38,29 +38,28 @@ import org.slf4j.LoggerFactory;
  * because an <code>CLogger</code> instance does not have any state beyond that of
  * the {@link org.slf4j.Logger Logger} instance it wraps.
  * 
- * @author Ralph Goers
- * @author Ceki G&uuml;lc&uuml;
+ * @author Andrew Sumner
  */
 public class ReportLoggerFactory {
 
     /**
-	 * Get an CLogger instance by name.
+	 * Get an ReportLogger instance by name.
 	 * 
 	 * @param name
-	 * @return CLogger instance
+	 * @return ReportLogger instance
 	 */
 	public static ReportLogger getReportLogger(String name) {
 		return new ReportLogger(LoggerFactory.getLogger(name));
     }
 
     /**
-	 * Get a new CLogger instance by class. The returned CLogger
+	 * Get a new ReportLogger instance by class. The returned CLogger
 	 * will be named after the class.
 	 * 
 	 * @param clazz
-	 * @return CLogger instance by name
+	 * @return ReportLogger instance by name
 	 */
-	public static ReportLogger getCLogger(Class<?> clazz) {
+	public static ReportLogger getReportLogger(Class<?> clazz) {
 		return getReportLogger(clazz.getName());
     }
 }

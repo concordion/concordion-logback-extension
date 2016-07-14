@@ -68,7 +68,7 @@ public class HtmlLog extends BaseFixture {
 	public boolean throwException() throws IOException {
 		// getLogger().step("Exception Handling");
 		// try {
-		// throw new IllegalStateException("Hello exception handling!");
+		// throw new IllegalStateException("Hello exception handling #2!");
 		// } catch (IllegalStateException e) {
 		// getLogger().error("Hello World!", e);
 		// }

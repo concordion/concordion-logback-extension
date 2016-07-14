@@ -22,7 +22,7 @@ import org.slf4j.ext.ReportLogger;
 import org.slf4j.ext.ReportLoggerFactory;
 
 public class LoggingFormatterSpecificationListener implements SpecificationProcessingListener, ExampleListener, ThrowableCaughtListener {
-	private static final ReportLogger LOGGER = ReportLoggerFactory.getCLogger(LoggingFormatterSpecificationListener.class);
+	private static final ReportLogger LOGGER = ReportLoggerFactory.getReportLogger(LoggingFormatterSpecificationListener.class);
 	private final ILoggingAdaptor loggingAdaptor;
 	private final Resource stylesheetResource;
 	private final boolean useLogFileViewer;
@@ -252,13 +252,15 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
     		break;
     		
     	case EXCEPTION_CAUSES:
-    		while (cause != null) {
+			Throwable priorCause = cause;
+
+			while (priorCause != null) {
     			if (!message.isEmpty()) {
     				 message += "\n\n";
     			}
     			
-    			message += cause.getMessage();
-	    		cause = cause.getCause();
+				message += priorCause.getMessage();
+				priorCause = priorCause.getCause();
 	    	}
     		break;
     		
@@ -270,6 +272,6 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
     	message = message.replace("\r\n", "\n");
     	message = message.replace("\n", "\n\t");
     	
-		LOGGER.error(message, event.getThrowable());
+		LOGGER.error(message, cause);
 	}
 }
