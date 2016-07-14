@@ -28,12 +28,11 @@ public class HTMLThrowableRenderer implements IThrowableRenderer<ILoggingEvent> 
 	private int exceptionCount = 0;
 
     public void render(StringBuilder sbuf, ILoggingEvent event) {
-		exceptionCount++;
-
 		IThrowableProxy tp = event.getThrowableProxy();
 		// sbuf.append("<tr><td></td><td class=\"Exception\" colspan=\"").append(columnCount).append("\">");
 		sbuf.append("<tr><td class=\"indent\"></td><td class=\"exceptionMessage\" colspan=\"").append(columnCount).append("\">");
         while (tp != null) {
+			exceptionCount++;
             render(sbuf, tp);
             tp = tp.getCause();
         }
