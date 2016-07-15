@@ -1,8 +1,14 @@
 # HTML Logs
 
-Plain text logs supply a lot of useful information but it can take time to trawl though to find the information you want.
+Plain text logs supply a lot of useful information but it can take time to trawl though to find the information you want and the context of what is being logged is often lacking.
 
-This custom layout and appender for the [LogBack Logger](http://logback.qos.ch) will combine your logs with screenshots, data and stack trace and present the information in an easy to digest fashion.
+The goals of the HTML based logs are to:
+* Integrate with current logging with minimal changes – ie stick with an SLF4J based logging interface and provide a Logback implementation
+* Allow adding text based data, html data, screenshots, and exceptions easily
+* Provide a platform to integrate with other extensions such as tooltip, storyboard and log screenshot on error so there is a common interface for interacting with these extensions
+* Support 'location aware' logging so class and line number information can be included in the logs 
+
+The implementation is based around [SLF4J Extensions](http://www.slf4j.org/extensions.html) and provides a custom layout and appender for [LogBack Logger](http://logback.qos.ch).
 
 Advanced logging features such as recording steps, screenshots and data, are enabled by the use of [Markers](http://www.slf4j.org/apidocs/org/slf4j/Marker.html) (there is some more information on markers buried in the LogBack manuals chapter on [filters](http://logback.qos.ch/manual/filters.html)).  
 
