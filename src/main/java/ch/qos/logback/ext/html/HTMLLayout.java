@@ -20,6 +20,7 @@ import org.slf4j.helpers.DataMarker;
 
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.PatternLayout;
+import ch.qos.logback.classic.pattern.DateConverter;
 import ch.qos.logback.classic.pattern.MDCConverter;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.helpers.Transform;
@@ -269,9 +270,20 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
             } else {
                 return "MDC";
             }
-        } else {
-            return super.computeConverterName(c);
-        }
+		} else if (c instanceof DateConverter) {
+			// Check if format contains only time related date pattern
+			// * http://logback.qos.ch/manual/layouts.html
+			// * http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
+			String option = ((DateConverter) c).getFirstOption();
+			if (option != null) {
+				option = option.replaceAll("[ HmsS:.,kKzZXa]", "");
+				if (option.isEmpty()) {
+					return "Time";
+				}
+			}
+		}
+
+		return super.computeConverterName(c);
     }
 
     @Override
