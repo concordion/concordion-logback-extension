@@ -42,6 +42,22 @@ public class FluentLogger {
 		addMarker(ReportLogger.HTML_MESSAGE_MARKER);
 		this.format = format;
 		this.arguments = arguments;
+
+		// Tried the following to ensure console gets nicely formatted message, but came unstuck with HtmlLayout reading correct message
+		/*
+		addMarker(new HtmlMessageMarker(format, arguments));
+
+		// Remove HTML tags
+		this.format = format.replaceAll("<.*?>", "");
+		this.arguments = arguments;
+
+		for (int i = 0; i < this.arguments.length; i++) {
+			if (this.arguments[i] instanceof String) {
+				this.arguments[i] = StringEscapeUtils.unescapeHtml4((String) this.arguments[i]);
+			}
+		}
+		*/
+		
 		return this;
 	}
 
