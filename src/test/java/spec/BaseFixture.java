@@ -14,6 +14,7 @@ import org.slf4j.ext.ReportLogger;
 import org.slf4j.ext.ReportLoggerFactory;
 
 import ch.qos.logback.classic.Level;
+import test.concordion.logback.ExampleLogListener;
 
 /**
  * A base class for Google search tests that opens up the Google site at the Google search page, and closes the browser once the test is complete.
@@ -24,7 +25,8 @@ public class BaseFixture {
 	private final Logger tooltipLogger = LoggerFactory.getLogger("TOOLTIP_" + this.getClass().getName());
 
 	@Extension private final LoggingTooltipExtension tooltipExtension = new LoggingTooltipExtension(new LogbackLogMessenger(tooltipLogger.getName(), Level.ALL, true, "%msg%n"));
-	@Extension private final LoggingFormatterExtension loggingExtension = new LoggingFormatterExtension(true);
+	@Extension private final LoggingFormatterExtension loggingExtension = new LoggingFormatterExtension()
+			.registerListener(new ExampleLogListener());
 	
 	static {
 		LogbackAdaptor.logInternalStatus();

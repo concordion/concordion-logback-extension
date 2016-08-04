@@ -7,6 +7,14 @@ import org.concordion.api.extension.ConcordionExtension;
 import org.concordion.ext.loggingFormatter.ILoggingAdaptor;
 import org.concordion.ext.loggingFormatter.LogbackAdaptor;
 import org.concordion.ext.loggingFormatter.LoggingFormatterSpecificationListener;
+import org.slf4j.LoggerFactory;
+
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.spi.FilterAttachable;
+import test.concordion.logback.LoggingListener;
+import test.concordion.logback.MarkerFilter;
 
 /**
  * Formats the footer of the Concordion specification to show a link to the log file that has been created for this test.<br><br>
@@ -113,5 +121,19 @@ public class LoggingFormatterExtension implements ConcordionExtension {
 		EXCEPTION_CAUSES
     }
 
+	public LoggingFormatterExtension registerListener(LoggingListener listener) {
+		if (listener instanceof FilterAttachable<?>) {
+			MarkerFilter filter = new MarkerFilter(listener.getFilterMarkers());
+			((FilterAttachable<ILoggingEvent>) listener).addFilter(filter);
+		}
 
+		listener.start();
+
+		Logger logger = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+		logger.addAppender(listener);
+		logger.setLevel(Level.ALL);
+		logger.setAdditive(true);
+
+		return this;
+	}
 }

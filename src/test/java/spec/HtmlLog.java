@@ -9,6 +9,8 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.ext.ReportLogger;
 
 import test.concordion.logback.DummyScreenshotTaker;
+import test.concordion.logback.PageHelper;
+import test.concordion.logback.StoryboardMarkerFactory;
 
 public class HtmlLog extends BaseFixture {
 	private static final String FUNKY_ARROW = "&#8658;";
@@ -54,8 +56,17 @@ public class HtmlLog extends BaseFixture {
 		getLogger().with()
 				.message("Clicking 'Login'")
 				.screenshot(getLoggingAdaptor().getLogFile(), new DummyScreenshotTaker())
-				// .addToStoryboard()
 				.trace();
+
+		// Integration with other extensions
+		getLogger().with()
+				.marker(StoryboardMarkerFactory.container("Doing Stuff"))
+				.trace();
+
+		// Location Aware Logging
+		PageHelper helper = new PageHelper();
+
+		helper.captureScreenshot(getLoggingAdaptor());
 
 		// Exception
 		try {
@@ -167,4 +178,6 @@ public class HtmlLog extends BaseFixture {
 		}
 	}
 	
+
+
 }
