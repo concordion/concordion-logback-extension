@@ -103,7 +103,7 @@ public class FluentLogger {
 			return;
 		}
 
-		prepareData(marker);
+		prepare();
 
 		if (instanceofLAL) {
 			((LocationAwareLogger) logger).log(marker, getFQCN(), LocationAwareLogger.TRACE_INT, getFormattedMessage(), arguments, null);
@@ -119,7 +119,7 @@ public class FluentLogger {
 			return;
 		}
 
-		prepareData(marker);
+		prepare();
 
 		if (instanceofLAL) {
 			((LocationAwareLogger) logger).log(marker, getFQCN(), LocationAwareLogger.DEBUG_INT, getFormattedMessage(), arguments, null);
@@ -135,7 +135,7 @@ public class FluentLogger {
 			return;
 		}
 
-		prepareData(marker);
+		prepare();
 
 		if (instanceofLAL) {
 			((LocationAwareLogger) logger).log(marker, getFQCN(), LocationAwareLogger.INFO_INT, getFormattedMessage(), arguments, null);
@@ -151,7 +151,7 @@ public class FluentLogger {
 			return;
 		}
 
-		prepareData(marker);
+		prepare();
 
 		if (instanceofLAL) {
 			((LocationAwareLogger) logger).log(marker, getFQCN(), LocationAwareLogger.WARN_INT, getFormattedMessage(), arguments, null);
@@ -167,7 +167,7 @@ public class FluentLogger {
 			return;
 		}
 
-		prepareData(marker);
+		prepare();
 
 		if (instanceofLAL) {
 			((LocationAwareLogger) logger).log(marker, getFQCN(), LocationAwareLogger.ERROR_INT, getFormattedMessage(), arguments, null);
@@ -178,7 +178,17 @@ public class FluentLogger {
 		reset();
 	}
 
+	private void prepare() {
+		if (format == null) {
+			// Tell logger to ignore lines with no message - we're probably just wanting to notify an extension of some event
+			addMarker(ReportLogger.PROGRESS_MARKER);
+		}
+
+		prepareData(marker);
+	}
+
 	private void prepareData(Marker reference) {
+
 		if (reference == null) {
 			return;
 		}
