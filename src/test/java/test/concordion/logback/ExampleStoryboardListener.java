@@ -5,13 +5,19 @@ import java.io.IOException;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
 
-public class ExampleLogListener extends LoggingListener {
+public class ExampleStoryboardListener extends LoggingListener {
 	ByteArrayOutputStream stream = new ByteArrayOutputStream();
 
 	@Override
 	protected void append(ILoggingEvent event) {
 		try {
-			stream.write(event.getFormattedMessage().getBytes());
+			if (event.getMarker().contains("STORYBOARD_SCREENSHOT")) {
+				stream.write("FOUND MARKER STORYBOARD_SCREENSHOT".getBytes());
+			}
+
+			if (event.getMarker().contains("STORYBOARD_CONTAINER")) {
+				stream.write("FOUND MARKER STORYBOARD_CONTAINER".getBytes());
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -20,7 +26,7 @@ public class ExampleLogListener extends LoggingListener {
 
 	@Override
 	public String[] getFilterMarkers() {
-		return null;
+		return new String[] { "STORYBOARD" };
 	}
 
 	public String getStreamContent() {

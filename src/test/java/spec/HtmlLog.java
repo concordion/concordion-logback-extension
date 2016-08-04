@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.commons.io.IOUtils;
+import org.junit.Assert;
 import org.slf4j.ext.ReportLogger;
 
 import test.concordion.logback.DummyScreenshotTaker;
@@ -53,15 +54,24 @@ public class HtmlLog extends BaseFixture {
 				.trace();
 
 		// Screenshot
+		exampleLogListener.resetStream();
+
 		getLogger().with()
 				.message("Clicking 'Login'")
 				.screenshot(getLoggingAdaptor().getLogFile(), new DummyScreenshotTaker())
 				.trace();
 
+		Assert.assertTrue(exampleLogListener.getStreamContent().contains("Clicking 'Login'"));
+
 		// Integration with other extensions
+
+		Assert.assertEquals("", exampleStoryboardListener.getStreamContent());
+
 		getLogger().with()
 				.marker(StoryboardMarkerFactory.container("Doing Stuff"))
 				.trace();
+
+		Assert.assertEquals("FOUND MARKER STORYBOARD_CONTAINER", exampleStoryboardListener.getStreamContent());
 
 		// Location Aware Logging
 		PageHelper helper = new PageHelper();

@@ -123,8 +123,10 @@ public class LoggingFormatterExtension implements ConcordionExtension {
 
 	public LoggingFormatterExtension registerListener(LoggingListener listener) {
 		if (listener instanceof FilterAttachable<?>) {
-			MarkerFilter filter = new MarkerFilter(listener.getFilterMarkers());
-			((FilterAttachable<ILoggingEvent>) listener).addFilter(filter);
+			if (listener.getFilterMarkers() != null) {
+				MarkerFilter filter = new MarkerFilter(listener.getFilterMarkers());
+				((FilterAttachable<ILoggingEvent>) listener).addFilter(filter);
+			}
 		}
 
 		listener.start();
