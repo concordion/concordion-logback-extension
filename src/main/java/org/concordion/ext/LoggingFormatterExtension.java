@@ -25,18 +25,14 @@ public class LoggingFormatterExtension implements ConcordionExtension {
 	private final LoggingFormatterSpecificationListener listener;
 	private final Resource stylesheetResource;
 	
-	public LoggingFormatterExtension() {
-		this(true);
-	}
-	
 	/**
 	 * Constructor - defaults to using LogbackAdaptor.
 	 * 
 	 * @param useLogFileViewer
 	 *            Flag whether to show raw log file (false) or present the log file inside a log file viewer (true, default).
 	 */
-	public LoggingFormatterExtension(boolean useLogFileViewer) {
-		this(new LogbackAdaptor(), useLogFileViewer);
+	public LoggingFormatterExtension() {
+		this(new LogbackAdaptor());
 	}
 
 	/**
@@ -45,9 +41,9 @@ public class LoggingFormatterExtension implements ConcordionExtension {
 	 * @param loggingAdaptor Custom logging adaptor
 	 * @param useLogFileViewer Flag whether to show raw log file (false) or present the log file inside a log file viewer (true, default).
 	 */
-	public LoggingFormatterExtension(ILoggingAdaptor loggingAdaptor, boolean useLogFileViewer) {
+	public LoggingFormatterExtension(ILoggingAdaptor loggingAdaptor) {
 		stylesheetResource = new Resource("/font-awesome/css/font-awesome.css");
-		listener = new LoggingFormatterSpecificationListener(loggingAdaptor, stylesheetResource, useLogFileViewer);
+		listener = new LoggingFormatterSpecificationListener(loggingAdaptor, stylesheetResource);
 	}
 
 	public ILoggingAdaptor getLoggingAdaptor() {
@@ -74,53 +70,21 @@ public class LoggingFormatterExtension implements ConcordionExtension {
 	}
 	
 	/**
-	 * If set to true will log the start and end of each example using the header of the current example if found, or the example name
-	 * 
-	 * @param value Value to set
+	 * If set to true will show the an html based log file view of the classic test logs, this setting will be ignored if using the HTML Log.
+	 *  
+	 * @param useLogFileViewer Value to set
 	 * @return A self reference
 	 */
-	public LoggingFormatterExtension setLogExampleStartAndEnd(boolean value) {
-		listener.setLogExampleStartAndEnd(value);
+	public LoggingFormatterExtension setUseLogFileViewer(boolean useLogFileViewer) {
+		listener.setUseLogFileViewer(useLogFileViewer);
 		return this;
 	}
 	
 	/**
-	 * If set to true will log any exceptions not handled by the test fixture
-	 * 
-	 * @param value Value to set
+	 * Registers listeners for other extensions to listen in on log messages. 
+	 * @param listener Log listener to register
 	 * @return A self reference
 	 */
-	public LoggingFormatterExtension setLogExceptions(LogLevel value) {
-		listener.setLogExceptions(value);
-		return this;
-	}
-	    
-	/**
-	 * How to split the logs.
-	 * 
-	 * @param split Setting
-	 * @return A self reference
-	 */
-	public LoggingFormatterExtension setSplitBy(Split split) {
-		listener.setSplitBy(split);
-		return this;
-	}
-
-	public enum Split {
-		EXAMPLE, SPECIFICATION;
-	}
-
-    public enum LogLevel {
-    	/** Do not log exceptions */
-    	NONE, 
-    	
-		/** Log exception message */
-    	EXCEPTION, 
-    	
-		/** Log exception message of the exception and all its causes (Default) */
-		EXCEPTION_CAUSES
-    }
-
 	public LoggingFormatterExtension registerListener(LoggingListener listener) {
 		if (listener instanceof FilterAttachable<?>) {
 			if (listener.getFilterMarkers() != null) {

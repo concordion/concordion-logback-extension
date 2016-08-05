@@ -16,8 +16,6 @@ import org.concordion.api.listener.SpecificationProcessingEvent;
 import org.concordion.api.listener.SpecificationProcessingListener;
 import org.concordion.api.listener.ThrowableCaughtEvent;
 import org.concordion.api.listener.ThrowableCaughtListener;
-import org.concordion.ext.LoggingFormatterExtension.LogLevel;
-import org.concordion.ext.LoggingFormatterExtension.Split;
 import org.slf4j.ext.ReportLogger;
 import org.slf4j.ext.ReportLoggerFactory;
 
@@ -25,32 +23,20 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 	private static final ReportLogger LOGGER = ReportLoggerFactory.getReportLogger(LoggingFormatterSpecificationListener.class);
 	private final ILoggingAdaptor loggingAdaptor;
 	private final Resource stylesheetResource;
-	private final boolean useLogFileViewer;
-	private boolean logExampleStartAndEnd = false;
-	private LogLevel logExceptions = LogLevel.EXCEPTION;
+	private boolean useLogFileViewer = false;
 	private String testPath = "";
-	private Split splitBy = Split.EXAMPLE;
 			
-	public void setLogExampleStartAndEnd(boolean value) {
-		this.logExampleStartAndEnd = value;
+	public void setUseLogFileViewer(boolean useLogFileViewer) {
+		this.useLogFileViewer = useLogFileViewer;
 	}
 	
-	public void setLogExceptions(LogLevel value) {
-		this.logExceptions = value;
-	}
-
-	public void setSplitBy(Split split) {
-		this.splitBy = split;
-	}
-
 	public ILoggingAdaptor getLoggingAdaptor() {
 		return this.loggingAdaptor;
 	}
 
-	public LoggingFormatterSpecificationListener(ILoggingAdaptor loggingAdaptor, Resource stylesheetResource, boolean useLogFileViewer) {
+	public LoggingFormatterSpecificationListener(ILoggingAdaptor loggingAdaptor, Resource stylesheetResource) {
 		this.loggingAdaptor = loggingAdaptor;
 		this.stylesheetResource = stylesheetResource;
-		this.useLogFileViewer = useLogFileViewer;
 	}
 
 ////////////////////////////// Specification Processing Listener //////////////////////////////
@@ -193,29 +179,19 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 
 	@Override
 	public void beforeExample(ExampleEvent event) {
-		if (splitBy == Split.EXAMPLE) {
-			loggingAdaptor.startExampleLogFile(testPath, event.getExampleName());
-		}
+		loggingAdaptor.startExampleLogFile(testPath, event.getExampleName());
 		
-		if (logExampleStartAndEnd) {
-			LOGGER.step("Example: " + getExampleTitle(event.getElement()));
-		}
+		LOGGER.step("Example: " + event.getExampleName());
 	}
 
 	@Override
 	public void afterExample(ExampleEvent event) {
-		if (logExampleStartAndEnd) {
-			LOGGER.step("End Example: {}", getExampleTitle(event.getElement()));
-		}
-		
-		if (splitBy == Split.EXAMPLE) {
-			try {
-				if (loggingAdaptor.logFileExists()) {
-					appendLogFileLinkToExample(event, loggingAdaptor.getLogFile().getName());
-				}
-			} finally  {
-				loggingAdaptor.stopLogFile();		
+		try {
+			if (loggingAdaptor.logFileExists()) {
+				appendLogFileLinkToExample(event, loggingAdaptor.getLogFile().getName());
 			}
+		} finally  {
+			loggingAdaptor.stopLogFile();		
 		}
 	}
 	
@@ -248,30 +224,8 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 	@Override
 	public void throwableCaught(ThrowableCaughtEvent event) {
 		String message = "";
-    	Throwable cause = event.getThrowable();
+		Throwable cause = event.getThrowable();
 
-    	switch (logExceptions) {
-    	case EXCEPTION:
-    		message = cause.getMessage();
-    		break;
-    		
-    	case EXCEPTION_CAUSES:
-			Throwable priorCause = cause;
-
-			while (priorCause != null) {
-    			if (!message.isEmpty()) {
-    				 message += "\n\n";
-    			}
-    			
-				message += priorCause.getMessage();
-				priorCause = priorCause.getCause();
-	    	}
-    		break;
-    		
-    	case NONE:
-    		return;
-    	}
-    	
     	// Indent multi-line errors to make it easier to scan the log
     	message = message.replace("\r\n", "\n");
     	message = message.replace("\n", "\n\t");

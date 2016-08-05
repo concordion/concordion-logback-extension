@@ -1,7 +1,6 @@
 # Configuration
 
 ## Configuration Files
----
 
 The extension comes with an example set of logback configuration files to use:
 
@@ -13,35 +12,15 @@ The extension comes with an example set of logback configuration files to use:
 
 These must be placed in the class path of your project, eg in the src/test/resources folder. 
 
-### Message Layout
+## Registering the extension
 
-The content of the log messages are specified using a conversion pattern. For more information about this the patterns please refer to the online manual at <http://logback.qos.ch/manual/layouts.html#PatternLayout>.
+Like all Concordion extensions the logging extension can be registered with an annotation on the test (or ancestor) class:
 
-
-### Log Type
-
-Configuring to use the classic text logs is a simple matter of adding the appender <appender-ref ref="FILE-PER-TEST" /> to the logback-jenkins.xml and logback-test.xml files.
-
-Further customisation, such as the format of the log statement can be done in logback-include.xml.
+	@Extensions(LoggingFormatterExtension.class)
 
 
-## Extension Configuration
----
+However it is likely that you'll want to customise the extension so more often you'll register the extension manually: 
+ 
+    @Extension 
+    private final LoggingFormatterExtension loggingExtension = new LoggingFormatterExtension()
 
-### 
-
-
-## Integration With other Extensions
-@Extension private final LoggingFormatterExtension loggingExtension = new LoggingFormatterExtension()
-			.registerListener(exampleLogListener)
-			.registerListener(exampleStoryboardListener);
-			
-			
-			
-			
-			
-
-## General Usage Notes
----
-
-* Don't bother catching exceptions and logging them - this will do it for you.  Ideally just allow exceptions to propagate up the stack and allow this extension to catch and log the exception - unless you need to catch the exception and do something.

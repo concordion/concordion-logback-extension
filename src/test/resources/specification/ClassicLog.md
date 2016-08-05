@@ -1,10 +1,11 @@
 # Classic Logs
 
-If text based logs are enough for you then this ones for you.
+If all you need are simple text based logs then this ones for you.
 
-The primary purpose of this extension is the ability to have a separate log per test and place a link to the log in the specification footer.
+The primary purpose of this extension becomes the ability to have a separate log per test (or example) and place a link to the log in the specification.
 
 ## Appender Configuration
+---
 
 Configuring to use the classic text logs is a simple matter of adding the appender to the logback-jenkins.xml and logback-test.xml files as follows:
 
@@ -25,13 +26,26 @@ To customise the log messages edit logback-include.xml and update the pattern:
 	</appender>
 	
 ## Usage
-When configured to the the appender named [FILE-PER-TEST](- "c:assertTrue=useAppender(#TEXT)") the specification gets a link to the log file in the [footer](- "c:assertTrue=hasLinkInFooter()"). 
+---
+
+Using the logger is as simple as declaring the logger and logging away:
+
+    import org.slf4j.Logger;
+    import org.slf4j.LoggerFactory;
+    
+    public class Test {
+        private static final Logger LOGGER = LoggerFactory.getLogger(Test.class);
+        
+        public void logSomething() {
+            LOGGER.debug("Log {}", "a value");
+        }
+    }
 
 ## Log Viewer
 
-This extension includes a [LogViewer](- "c:assertTrue=useLogViewer()") to make the logs a little friendlier to use and gives the ability to filter the logs by the log level.
+This extension includes a [LogViewer](- "c:assertTrue=useLogViewer()") to make the logs a little friendlier to use and gives the ability to filter the logs by the log level.  
 
+This is ignored if using the HTML Logs.
 
-## TODO
-
-See what to do about logging strack trace or causes and what default should apply.  useing %noop to hide stack trace, causes...
+    @Extension 
+    private final LoggingFormatterExtension loggingExtension = new LoggingFormatterExtension().setUseLogViewer(true);

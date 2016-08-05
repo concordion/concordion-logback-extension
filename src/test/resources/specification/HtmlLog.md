@@ -3,12 +3,12 @@
 Plain text logs supply a lot of useful information but it can take time to trawl though to find the information you want and the context of what is being logged is often lacking.
 
 The goals of the HTML based logs are to:
-* Integrate with current logging with minimal changes - ie stick with an SLF4J based logging interface and provide a Logback implementation
 * Allow adding text based data, html data, screenshots, and exceptions easily
-* Provide a platform to integrate with other extensions such as tooltip, storyboard and log screenshot on error so there is a common interface for interacting with these extensions
+* Integrate with logging framework with minimal changes - ie stick with an SLF4J based logging interface and provide a Logback implementation
+* Provide a platform to integrate with other extensions such as tooltip, storyboard and screenshot giving is a common interface for interacting with these extensions
 * Support 'location aware' logging so class and line number information can be included in the logs 
 
-The implementation is based around [SLF4J Extensions](http://www.slf4j.org/extensions.html) and provides a custom layout and appender for [LogBack Logger](http://logback.qos.ch).
+The implementation is based around [SLF4J Extensions](http://slf4j.org/extensions.html) and provides a custom layout and appender for [LogBack Logger](http://logback.qos.ch).
 
 Advanced logging features such as recording steps, screenshots and data, are enabled by the use of [Markers](http://www.slf4j.org/apidocs/org/slf4j/Marker.html) (there is some more information on markers buried in the LogBack manuals chapter on [filters](http://logback.qos.ch/manual/filters.html)).  
 
@@ -25,7 +25,7 @@ See [Configuration](Configuration.md) for more information.
 
 ## Log Message Format
 
-To customise the log messages edit logback-include.xml and update the pattern with the desired conversion words:
+To customise the log messages edit logback-include.xml and update the [pattern](http://logback.qos.ch/manual/layouts.html#ClassicPatternLayout) with the desired conversion words:
 
 Conversion words should not add exception information to the message (eg %exception, %throwable, %rootException, etc) as this information is automatically appended by HTMLLayout in a new table row below the logging statement.
 
@@ -79,23 +79,46 @@ Configuration is done in logback-include.xml by updating the value of the step r
 ## Usage
 ---
 
+While you can continue to use the standard logger to log to the HTML log file, to use the new features you will need to the ReportLogger.
 
+    import org.slf4j.ext.ReportLogger;
+    import org.slf4j.ext.ReportLoggerFactory;
 
-### Screenshots
+    public class Test {
+        private static final ReportLogger LOGGER = ReportLoggerFactory.getReportLogger(Test.class);
+        
+        public void logSomething() {
+            LOGGER.debug("Log {}", "a value");
+        }
+    }
+     
+The report logger provides a fluent api for advanced logging features.
 
-Screenshots can be [included](- "c:assertTrue=addScreenshot()") using the following:
+### HTML Messages
+This will add a log entry in the HTML log with a bold font. 
 
-    Marker screenshot = LogMarkers.screenshotMarker(title, screenshotTaker);
-	getLogger().debug(screenshot, "Clicking the 'Login' button");
+    LOGGER.with()
+    	.htmlMessage("<b>This is bold</b>")
+    	.trace();
 
+### HTML Data
+Custom HTML can be included and rendered as [html](- "c:assertTrue=addHtmlData()"):
+
+    LOGGER.with()
+		.message("Some html will be included below")
+		.html("This is <b>BOLD</b>")
+		.trace();
+				
 ### Text Based Data
+Text based data such as CSV, XML and JSON can be [included](- "c:assertTrue=addData()") and any reserved html characters such as '<' will be escaped.
 
-Text based data such as CSV, XML and JSON can be [included](- "c:assertTrue=addData()") using the following:
-
-    Marker data = LogMarkers.dataMarker(title, data);
-    getLogger().debug(data, "Sending SOAP request");
+    LOGGER.with()
+		.message("Sending SOAP request")
+		.data("<soapenv>...</soapenv>")
+		.trace();
    
-TODO: Display XML just like Internet Explorer
+
+TODO: Display XML just like Internet Explorer?
 
 * http://www.geekzilla.co.uk/ViewD245BBE0-2EAB-44C0-9119-8038467926EE.htm
 * http://www.codeproject.com/Articles/24299/XML-String-Browser-just-like-Internet-Explorer-usi
@@ -112,40 +135,35 @@ need to figure out which ones to use - will need to look at extent reports
 
 clone https://github.com/anshooarora/extentreports and search for fa-check-circle-o
 
-### HTML Based Data
 
-Custom HTML can be included as [data](- "c:assertTrue=addHtmlData()"):
+### Screenshots
+Screenshots can be [included](- "c:assertTrue=addScreenshot()") using the following:
 
-    Marker data = LogMarkers.htmlMarker(title, "<p>Some <b><i>HTML</i></b></p>", true);
-    getLogger().debug(data, "Sending HTML request");
-
-or in the [log statement](- "c:assertTrue=addHtmlStatement()"):
-
-    Marker data = LogMarkers.htmlStatement();
-    getLogger().debug(data, "Sending HTML request");
-
-and can be combined with [other markers](- "c:assertTrue=addCombinedHtml()"):
-  
-    Marker html = LogMarkers.htmlMarker("Adding data", "<p>This is some <b><i>HTML</i></b> data...");
-    html.add(LogMarkers.htmlStatementMarker());
-		
-    getLogger().debug(html, "Some <b><i>Combined HTML Statement</i></b> plus...");
-
-NOTE: When combining markers the data markers (Screenshot, Data, HTML) must be at the top level otherwise they will be ignored.  The htmlStatementMarker can be added at any level.    
+    LOGGER.with()
+		.message("Clicking 'Login'")
+		.screenshot(getLoggingAdaptor().getLogFile(), new DummyScreenshotTaker())
+		.trace();
 
 
 ### Exceptions
-
 Exceptions are formatted within a [collapsible section](- "c:assertTrue=throwException()") that presents the error message by default but will allow the user to drill down into the stack trace.  
 
-    try {
-        int i = 1 / 0;
-    } catch (Exception e) {
-        LOGGER.error("Something when wrong", e);
-    }
-
+    LOGGER.error("Something when wrong", new Exception("me"));
     
-### Location Aware
-Something here...
+    
+### Location Aware Logging
+All log statements show the location and line number of the class and line number where the logging statement was called.  By setting the locationAwareParent() to the current class then the location of any the log statement will appear to be the calling method.
 
+    Helper.writeLog("hello");
+		
+	public class Helper {
+		private static final ReportLogger LOGGER = ReportLoggerFactory.getReportLogger(PageHelper.class);
+
+		public static writeLog(String message) {
+			logger.with()
+				.message(message)
+				.locationAwareParent(Helper.class)
+				.trace();
+		}
+    }
     

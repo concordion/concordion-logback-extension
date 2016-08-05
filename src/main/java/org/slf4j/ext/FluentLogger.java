@@ -98,6 +98,11 @@ public class FluentLogger {
 		return this;
 	}
 
+	public FluentLogger locationAwareParent(Class<?> currentClass) {
+		overrideFQCN = currentClass.getName();
+		return this;
+	}
+	
 	public void trace() {
 		if (!logger.isTraceEnabled(marker)) {
 			return;

@@ -1,5 +1,7 @@
 # Logging
 
+The initial requirements behind building this extension where to support the parallel runner and allow and create a single log file per test and link to that log file within the specification for ease of access.
+
 While a well written specification can convey the business intent, it can often be hard to understand what the tests are actually doing and as these tests are often written by developers, it may need a leap in faith for testers to trust them. 
 
 By allowing the logs to be broken down into easily understood steps and including screenshots and data files this extension aims to:
@@ -9,23 +11,29 @@ By allowing the logs to be broken down into easily understood steps and includin
 * capture and log exceptions automatically reducing the effort to create logs
 * work seemlessly with other extensions that also provide information such as the Storyboard, Tooltip, and ScreenShotTaker extensions
 
+The implementation uses [SLF4J](http://slf4j.org) to provide a standard logging interface a logging implementation using [LogBack](http://logback.qos.ch) because of its ability to split logs into separate logs per test.
 
-## Classic Logs
 
-[Classic Logs](ClassicLog.md "c:run") being purely text data have been the staple for many years and are well supported. 
+## Getting Started
 
-## HTML Logs
+Before you can use the logging framework a small amount of [configuration](Configuration.md "c:run") is required.
 
-[HTML Logs](HtmlLog.md "c:run") are a step up from text logs and are able to provide the information in a more digestible format can document what your test is doing especially when they include screenshots and data to back up what the test has done.
+Your next decision is the type of logging that you'd like, you options here are to go for either:
+
+* [Classic Text Logs](ClassicLog.md "c:run") - these have been the staple for many years  
+* [HTML Logs](HtmlLog.md "c:run") - provide the information in a more digestible format and can include screenshots and other data to back up what the test has done
+
+It is easy to switch between the two so feel free to experiment.
 
 ## Tooltip Logs
 
 [Tooltip Logs](ToolTipLog.md "c:run") provide a handy mechanism for providing information back to anyone reading the generated specification without having to drill down into the logs.
 
-## Look and Feel
 
-In addition to the choice between classic and html logs, this extension offers a few other area of [customisation](Customisation.md "c:run").
+## Integration With Other Extensions
 
-## Configuration
+This extension provides a mechanism for other extensions to [integrate](Integration.md "c:run") with the log files, for example sharing screenshots.
 
-Before you can use the logging framework some [configuration](Configuration.md "c:run") files must be included in your project.  
+## General Usage Notes
+
+* Don't bother catching exceptions and logging them - this will do it for you.  Ideally just allow exceptions to propagate up the stack and allow this extension to catch and log the exception - unless you need to catch the exception and do something.
