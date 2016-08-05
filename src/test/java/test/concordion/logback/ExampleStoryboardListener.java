@@ -19,7 +19,6 @@ public class ExampleStoryboardListener extends LoggingListener {
 				stream.write("FOUND MARKER STORYBOARD_CONTAINER".getBytes());
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

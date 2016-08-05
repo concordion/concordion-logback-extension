@@ -83,6 +83,7 @@ public class FluentLogger {
 		return this;
 	}
 
+	// TODO Tidy screenshot api to make easier to use
 	public FluentLogger screenshot(File logFile, ScreenshotTaker screenshotTaker) {
 		addMarker(new ScreenshotMarker(logFile.getPath(), screenshotTaker));
 		return this;
