@@ -1,15 +1,28 @@
 package specification;
 
+import test.concordion.logback.DummyScreenshotTaker;
+import test.concordion.logback.StoryboardMarkerFactory;
+
 public class Integration extends BaseFixture {
 
-	public boolean splitexample() {
-		getLogger().step("Example Splitting");
-		getLogger().debug("Example logged");
+	// Integration with other extensions
+	public boolean integration()  {
+		if (!exampleStoryboardListener.getStreamContent().isEmpty()) {
+			return false;
+		}
 
-		return true;
-	}
+		getLogger().with()
+				.marker(StoryboardMarkerFactory.container("Doing Stuff"))
+				.trace();
+		
+		getLogger().with()
+			.marker(StoryboardMarkerFactory.storyboard("DummyPage"))
+			.screenshot(getLoggingAdaptor().getLogFile(), new DummyScreenshotTaker())
+			.trace();
 
-	public void printlog() {
-		getLogger().debug("do domething here");
+		String log = exampleStoryboardListener.getStreamContent();
+		
+		return log.contains("FOUND MARKER STORYBOARD_CONTAINER") &&
+		 		log.contains("FOUND MARKER STORYBOARD_SCREENSHOT");
 	}
 }

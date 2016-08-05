@@ -11,7 +11,7 @@ public class ExampleStoryboardListener extends LoggingListener {
 	@Override
 	protected void append(ILoggingEvent event) {
 		try {
-			if (event.getMarker().contains("STORYBOARD_SCREENSHOT")) {
+			if (event.getMarker().contains("DATA")) {
 				stream.write("FOUND MARKER STORYBOARD_SCREENSHOT".getBytes());
 			}
 

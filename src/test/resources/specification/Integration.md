@@ -1,7 +1,8 @@
 # Configuration
 
 ## Integration With other Extensions
-@Extension private final LoggingFormatterExtension loggingExtension = new LoggingFormatterExtension()
-			.registerListener(exampleLogListener)
-			.registerListener(exampleStoryboardListener);
+The logging extension allows listeners to be registered to allow other extensions to monitor and [react to log entries](- "c:assertTrue=integration()") when a specific marker is encountered.
+
+    @Extension private final LoggingFormatterExtension loggingExtension = new LoggingFormatterExtension()
+			.registerListener(new ExampleStoryboardListener());
 

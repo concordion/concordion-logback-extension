@@ -2,11 +2,11 @@ package specification;
 
 public class ClassicLog extends BaseFixture {
 	
-	public boolean useAppender(String appender) {
+	public boolean canUseClassicLogger() {
 		return false;
 	}
 
-	public boolean hasLinkInFooter() {
+	public boolean hasLinkToLogFile() {
 		return false;
 	}
 

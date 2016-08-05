@@ -3,12 +3,13 @@
 Plain text logs supply a lot of useful information but it can take time to trawl though to find the information you want and the context of what is being logged is often lacking.
 
 The goals of the HTML based logs are to:
+
 * Allow adding text based data, html data, screenshots, and exceptions easily
 * Integrate with logging framework with minimal changes - ie stick with an SLF4J based logging interface and provide a Logback implementation
 * Provide a platform to integrate with other extensions such as tooltip, storyboard and screenshot giving is a common interface for interacting with these extensions
 * Support 'location aware' logging so class and line number information can be included in the logs 
 
-The implementation is based around [SLF4J Extensions](http://slf4j.org/extensions.html) and provides a custom layout and appender for [LogBack Logger](http://logback.qos.ch).
+The implementation is based around [SLF4J Extensions](http://slf4j.org/extensions.html) and provides a custom [layout](http://logback.qos.ch/manual/layouts.html) and [appender](http://logback.qos.ch/manual/appenders.html) for the LogBack logging framework.
 
 Advanced logging features such as recording steps, screenshots and data, are enabled by the use of [Markers](http://www.slf4j.org/apidocs/org/slf4j/Marker.html) (there is some more information on markers buried in the LogBack manuals chapter on [filters](http://logback.qos.ch/manual/filters.html)).  
 
@@ -79,7 +80,7 @@ Configuration is done in logback-include.xml by updating the value of the step r
 ## Usage
 ---
 
-While you can continue to use the standard logger to log to the HTML log file, to use the new features you will need to the ReportLogger.
+While you can continue to use the standard logger to log to the HTML log file, to use the new features you will need to [use the ReportLogger](- "c:assertTrue=canUseReportLogger()").
 
     import org.slf4j.ext.ReportLogger;
     import org.slf4j.ext.ReportLoggerFactory;
@@ -92,10 +93,10 @@ While you can continue to use the standard logger to log to the HTML log file, t
         }
     }
      
-The report logger provides a fluent api for advanced logging features.
+The report logger provides a fluent api for advanced logging features. 
 
 ### HTML Messages
-This will add a log entry in the HTML log with a bold font. 
+This will add a log entry in the HTML log with a [bold font](- "c:assertTrue=addHtmlMessage()"). 
 
     LOGGER.with()
     	.htmlMessage("<b>This is bold</b>")
@@ -152,7 +153,7 @@ Exceptions are formatted within a [collapsible section](- "c:assertTrue=throwExc
     
     
 ### Location Aware Logging
-All log statements show the location and line number of the class and line number where the logging statement was called.  By setting the locationAwareParent() to the current class then the location of any the log statement will appear to be the calling method.
+All log statements show the location and line number of the class and line number where the logging statement was called.  By setting the locationAwareParent() to the current class then the location of any the log statement will [appear to be the calling method](- "c:assertTrue=locationAware()").
 
     Helper.writeLog("hello");
 		
