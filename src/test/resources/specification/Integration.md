@@ -6,3 +6,4 @@ The logging extension allows listeners to be registered to allow other extension
     @Extension private final LoggingFormatterExtension loggingExtension = new LoggingFormatterExtension()
 			.registerListener(new ExampleStoryboardListener());
 
+These listeners will work with when tests run in [parallel](- "c:assertTrue=parallel()"). 
