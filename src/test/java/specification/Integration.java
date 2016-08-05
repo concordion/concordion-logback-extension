@@ -9,6 +9,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import org.concordion.api.Resource;
+
+import test.concordion.TestRig;
 import test.concordion.logback.DummyScreenshotTaker;
 import test.concordion.logback.StoryboardMarkerFactory;
 
@@ -36,6 +39,7 @@ public class Integration extends BaseFixture {
 	}
 	
 	public boolean parallel() throws InterruptedException, ExecutionException {
+		exampleLogListener.resetStream();
 		exampleStoryboardListener.resetStream();
 
 		//TODO Nigel - how would I duplicate parallel runner extension so that can run these 2 tests 
@@ -49,10 +53,9 @@ public class Integration extends BaseFixture {
 
 		try {
 			List<Future<String>> results = executor.invokeAll(tests);
-			 
-			if (!exampleStoryboardListener.getStreamContent().isEmpty()) {
-				return false;
-			}
+						
+			String logListener = exampleLogListener.getStreamContent();
+			String sbListener = exampleStoryboardListener.getStreamContent();
 			
 			for (Future<String> future : results) {
 				if (!future.get().equals("FOUND MARKER STORYBOARD_CONTAINER")) {
@@ -81,8 +84,29 @@ public class Integration extends BaseFixture {
 
 		@Override
 		public String call() throws Exception {
-			getLogger().with().marker(StoryboardMarkerFactory.container("Worker " + index + " on thread " + Thread.currentThread().getName()));
+			TestRig rig = new TestRig();
+			rig.withFixture(this);
+			rig.withResource(new Resource("/org/concordion/ext/resource/tooltip.css"), "");
+			rig.withResource(new Resource("/org/concordion/ext/resource/bubble.gif"), "");
+			rig.withResource(new Resource("/org/concordion/ext/resource/bubble_filler.gif"), "");
+			rig.withResource(new Resource("/org/concordion/ext/resource/i16.png"), "");
+			rig.withResource(new Resource("/font-awesome-4.6.3/css/font-awesome.css"), "");
+			rig.withResource(new Resource("/font-awesome-4.6.3/fonts/fontawesome-webfont.eot"), "");
+			rig.withResource(new Resource("/font-awesome-4.6.3/fonts/fontawesome-webfont.svg"), "");
+			rig.withResource(new Resource("/font-awesome-4.6.3/fonts/fontawesome-webfont.ttf"), "");
+			rig.withResource(new Resource("/font-awesome-4.6.3/fonts/fontawesome-webfont.woff"), "");
+			rig.withResource(new Resource("/font-awesome-4.6.3/fonts/fontawesome-webfont.woff2"), "");
+			rig.withResource(new Resource("/font-awesome-4.6.3/fonts/FontAwesome.otf"), "");
+			
+			rig.processFragment("<span concordion:execute=\"writelog()\" />");
+			
 			return toString();
 		}
+		
+		public void writelog() {
+			getLogger().debug("Stuff");
+			getLogger().with().marker(StoryboardMarkerFactory.container("Worker " + index + " on thread " + Thread.currentThread().getName())).trace();
+		}
+
 	}
 }
