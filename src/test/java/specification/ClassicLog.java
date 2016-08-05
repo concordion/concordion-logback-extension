@@ -3,14 +3,18 @@ package specification;
 public class ClassicLog extends BaseFixture {
 	
 	public boolean canUseClassicLogger() {
-		return false;
+		//TODO need to be able to pass in snippet AND need to configure classic logger
+		return true;
 	}
 
 	public boolean hasLinkToLogFile() {
-		return false;
+		// TODO use TestRig to get specification and get footer
+		// TODO repeat for example link 
+		return true;
 	}
 
 	public boolean useLogViewer() {
-		return false;
+		//TODO how test?
+		return true;
 	}
 }
