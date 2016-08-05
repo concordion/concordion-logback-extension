@@ -47,18 +47,22 @@ public class Integration extends BaseFixture {
 		
 		ExecutorService executor = Executors.newFixedThreadPool(tests.size());
 
-		List<Future<String>> results = executor.invokeAll(tests);
-		 
-		for (Future<String> future : results) {
-			if (future.get().equals("FOUND MARKER STORYBOARD_CONTAINER")) {
+		try {
+			List<Future<String>> results = executor.invokeAll(tests);
+			 
+			if (!exampleStoryboardListener.getStreamContent().isEmpty()) {
 				return false;
 			}
+			
+			for (Future<String> future : results) {
+				if (!future.get().equals("FOUND MARKER STORYBOARD_CONTAINER")) {
+					return false;
+				}
+			}
+		} finally {
+			executor.shutdown();
+			exampleStoryboardListener.resetStream();
 		}
-		
-		executor.shutdown();
-		
-		exampleStoryboardListener.resetStream();
-		
 		
 		return true;
 	}
