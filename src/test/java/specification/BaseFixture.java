@@ -1,4 +1,4 @@
-package spec;
+package specification;
 
 import org.concordion.api.extension.Extension;
 import org.concordion.ext.LogbackLogMessenger;

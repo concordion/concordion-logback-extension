@@ -6,13 +6,25 @@ The primary purpose of this extension is the ability to have a separate log per 
 
 ## Appender Configuration
 
-The extension comes with an example set of logback configuration files to use.  
+Configuring to use the classic text logs is a simple matter of adding the appender to the logback-jenkins.xml and logback-test.xml files as follows:
 
-Configuring to use the classic text logs is a simple matter of adding the appender <appender-ref ref="FILE-PER-TEST" /> to the logback-jenkins.xml and logback-test.xml files.
+    <appender-ref ref="FILE-PER-TEST" />
 
-Further customisation, such as the format of the log statement can be done in logback-include.xml.
+See [Configuration](Configuration.md) for more information.
 
-## Write to Log
+
+## Log Message Format
+To customise the log messages edit logback-include.xml and update the pattern:
+
+    <appender name="FILE-PER-TEST" class="ch.qos.logback.classic.sift.SiftingAppender">
+		...		
+				<layout class="ch.qos.logback.classic.PatternLayout">
+ 					<pattern>%d{dd-MM-yyyy HH:mm:ss.SSS} %-5level %logger{36} - %msg%n</pattern> 
+				</layout>
+		...
+	</appender>
+	
+## Usage
 When configured to the the appender named [FILE-PER-TEST](- "c:assertTrue=useAppender(#TEXT)") the specification gets a link to the log file in the [footer](- "c:assertTrue=hasLinkInFooter()"). 
 
 ## Log Viewer

@@ -24,4 +24,8 @@ By allowing the logs to be broken down into easily understood steps and includin
 
 ## Look and Feel
 
-In addition to the choice between classic and html logs, this extension offers a few other area of [customisation](Customisation.md "c:run"). 
+In addition to the choice between classic and html logs, this extension offers a few other area of [customisation](Customisation.md "c:run").
+
+## Configuration
+
+Before you can use the logging framework some [configuration](Configuration.md "c:run") files must be included in your project.  

@@ -72,28 +72,40 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 		stepRecorder = StepRecorder.valueOf(value);
 	}
 
+	public String getStepRecorder() {
+		return stepRecorder.name();
+	}
+
 	public void setFormat(String value) {
 		format = Format.valueOf(value);
 	}
 	
+	public String getFormat() {
+		return format.name();
+	}
+
 	public void setStylesheet(String value) {
 		stylesheet = value;
 	}
-	
+
+	public String getStylesheet() {
+		return stylesheet;
+	}
+
 	public boolean hasStylesheet() {
 		if (stylesheet == null || stylesheet.isEmpty()) {
-			LoggerContext context = (LoggerContext)LoggerFactory.getILoggerFactory();
+			LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
 			stylesheet = context.getProperty(LogbackAdaptor.LAYOUT_STYLESHEET);
 		}
-		
+
 		return stylesheet != null && !stylesheet.isEmpty();
 	}
-	
+
     @Override
     public void setPattern(String conversionPattern) {
     	super.setPattern(conversionPattern);
     	columnCount = getColumnCount();
-    };
+	}
     
     @Override
     public void start() {
@@ -194,7 +206,7 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 			
 			if (stringLayout == null) {
 				stringLayout = new PatternLayout();
-				stringLayout.setPattern("%nopex" + this.getPattern());
+				stringLayout.setPattern(this.getPattern());
 				stringLayout.setContext(this.getContext());
 				stringLayout.start();
 			}

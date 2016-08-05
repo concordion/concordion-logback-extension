@@ -1,14 +1,26 @@
-package spec;
+package specification;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Iterator;
 
 import org.apache.commons.io.IOUtils;
+import org.concordion.api.BeforeSpecification;
 import org.junit.Assert;
+import org.slf4j.LoggerFactory;
 import org.slf4j.ext.ReportLogger;
 
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.sift.SiftingAppender;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.Appender;
+import ch.qos.logback.core.FileAppender;
+import ch.qos.logback.core.encoder.LayoutWrappingEncoder;
+import ch.qos.logback.ext.html.Format;
+import ch.qos.logback.ext.html.HTMLLayout;
 import test.concordion.logback.DummyScreenshotTaker;
 import test.concordion.logback.PageHelper;
 import test.concordion.logback.StoryboardMarkerFactory;
@@ -16,7 +28,122 @@ import test.concordion.logback.StoryboardMarkerFactory;
 public class HtmlLog extends BaseFixture {
 	private static final String FUNKY_ARROW = "&#8658;";
 
-	public boolean configuration() throws IOException {
+	@BeforeSpecification
+	private final void beforeSpecification() {
+		// Force the logger to create the various appenders and layouts required for these tests
+		getLogger().debug("nothing");
+	}
+
+	private Logger getRootLogger() {
+		LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
+		return context.getLogger(Logger.ROOT_LOGGER_NAME);
+	}
+
+	private SiftingAppender getHtmlFilePerTestSiftingAppender() {
+		Logger logger = getRootLogger();
+
+		for (Iterator<Appender<ILoggingEvent>> index = logger.iteratorForAppenders(); index.hasNext();) {
+			Appender<ILoggingEvent> appender = index.next();
+
+			if (appender instanceof SiftingAppender) {
+				if (appender.getName().equals("HTML-FILE-PER-TEST")) {
+					return (SiftingAppender) appender;
+				}
+			}
+		}
+
+		throw new IllegalStateException("HTML-FILE-PER-TEST sifting appender is not configured");
+	}
+
+	private FileAppender<?> getHtmlFileAppender() {
+		SiftingAppender siftingAppender = getHtmlFilePerTestSiftingAppender();
+
+		for (Appender<ILoggingEvent> appender : siftingAppender.getAppenderTracker().allComponents()) {
+			if (appender instanceof FileAppender) {
+				return (FileAppender<?>) appender;
+			}
+		}
+
+		throw new IllegalStateException("HTML-FILE-PER-TEST file appender is not configured");
+	}
+
+	private HTMLLayout getHtmlLayout() {
+		FileAppender<?> fileAppender = getHtmlFileAppender();
+
+		if (fileAppender.getEncoder() instanceof LayoutWrappingEncoder<?> == false) {
+			throw new IllegalStateException("HTML-FILE-PER-TEST layout is not configured");
+		}
+
+		LayoutWrappingEncoder<?> encoder = (LayoutWrappingEncoder<?>) fileAppender.getEncoder();
+
+		if (encoder.getLayout() instanceof HTMLLayout == false) {
+			throw new IllegalStateException("HTML-FILE-PER-TEST layout is not configured");
+		}
+
+		return (HTMLLayout) encoder.getLayout();
+	}
+
+	private void copy(HTMLLayout src, HTMLLayout dest) {
+		src.setStylesheet(dest.getStylesheet());
+		src.setFormat(dest.getFormat());
+		src.setPattern(dest.getPattern());
+		src.setStepRecorder(dest.getStepRecorder());
+	}
+
+	private HTMLLayout backupLayout(HTMLLayout orig) {
+		HTMLLayout backup = new HTMLLayout();
+		copy(orig, backup);
+
+		return backup;
+	}
+
+	private void restoreLayout(HTMLLayout backup, HTMLLayout orig) {
+		copy(backup, orig);
+	}
+
+	/** HTML-FILE-PER-TEST appender is attached to the root logger */
+	public boolean isHtmlAppenderConfigured() {
+		return getHtmlFilePerTestSiftingAppender() != null;
+	}
+
+	public boolean multiColumnLayout() {
+		HTMLLayout layout = getHtmlLayout();
+		HTMLLayout backup = backupLayout(layout);
+
+		layout.setFormat(Format.COLUMN.name());
+		layout.setPattern("%date{HH:mm:ss.SSS}%message%file%line");
+
+		exampleLogListener.setLayout(layout);
+		exampleLogListener.resetStream();
+
+		getLogger().debug("multiColumnLayout example");
+		
+		exampleLogListener.setLayout(null);
+		restoreLayout(backup, layout);
+
+		return exampleLogListener.getStreamContent().contains("<td class=\"Message\">multiColumnLayout example</td>");
+	}
+
+
+	public boolean singleColumnLayout() {
+		HTMLLayout layout = getHtmlLayout();
+		HTMLLayout backup = backupLayout(layout);
+
+		layout.setFormat(Format.STRING.name());
+		layout.setPattern("%message %file");
+
+		exampleLogListener.setLayout(layout);
+		exampleLogListener.resetStream();
+
+		getLogger().debug("singleColumnLayout example");
+
+		exampleLogListener.setLayout(null);
+		restoreLayout(backup, layout);
+
+		return exampleLogListener.getStreamContent().contains("<td>singleColumnLayout example HtmlLog.java</td>");
+	}
+
+	public boolean configuration2() throws IOException {
 		String script = "if (typeof jQuery === 'undefined') return true; if (jQuery.active != 0) return false; return true;";
 
 		// if (true) {

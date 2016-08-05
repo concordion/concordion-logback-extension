@@ -1,4 +1,4 @@
-package spec;
+package specification;
 
 public class ClassicLog extends BaseFixture {
 	

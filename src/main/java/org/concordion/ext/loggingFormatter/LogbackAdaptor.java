@@ -23,7 +23,7 @@ import ch.qos.logback.core.util.StatusPrinter;
 public class LogbackAdaptor implements ILoggingAdaptor
 {
 	public static final String LAYOUT_STYLESHEET = "LAYOUT_STYLESHEET";
-	public static final String SCREENSHOT_TAKER = "SCREENSHOT_TAKER";
+	// public static final String SCREENSHOT_TAKER = "SCREENSHOT_TAKER";
 
 	public static final String TEST_NAME = "testname";
 	public static final String EXAMPLE_SEPERATOR_PREFIX = "[";

@@ -3,7 +3,7 @@ package demo;
 import org.concordion.api.AfterSpecification;
 import org.concordion.api.BeforeSpecification;
 
-import spec.BaseFixture;
+import specification.BaseFixture;
 
 /**
  * A fixture class for the LoggingDemo.html specification.

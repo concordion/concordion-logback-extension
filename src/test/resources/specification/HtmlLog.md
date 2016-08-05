@@ -3,7 +3,7 @@
 Plain text logs supply a lot of useful information but it can take time to trawl though to find the information you want and the context of what is being logged is often lacking.
 
 The goals of the HTML based logs are to:
-* Integrate with current logging with minimal changes – ie stick with an SLF4J based logging interface and provide a Logback implementation
+* Integrate with current logging with minimal changes - ie stick with an SLF4J based logging interface and provide a Logback implementation
 * Allow adding text based data, html data, screenshots, and exceptions easily
 * Provide a platform to integrate with other extensions such as tooltip, storyboard and log screenshot on error so there is a common interface for interacting with these extensions
 * Support 'location aware' logging so class and line number information can be included in the logs 
@@ -13,37 +13,38 @@ The implementation is based around [SLF4J Extensions](http://www.slf4j.org/exten
 Advanced logging features such as recording steps, screenshots and data, are enabled by the use of [Markers](http://www.slf4j.org/apidocs/org/slf4j/Marker.html) (there is some more information on markers buried in the LogBack manuals chapter on [filters](http://logback.qos.ch/manual/filters.html)).  
 
 
-## Appender Configuration
+## Configuration File
+---
 
-The extension comes with an example set of logback configuration files to use.  
+Configuring to use the HTML logs is a simple matter of [adding the appender](- "c:assertTrue=isHtmlAppenderConfigured()") to the logback-jenkins.xml and logback-test.xml files as follows:
 
-Configuring to use the HTML logs is a simple matter of [adding the appender](- "c:assertTrue=configuration()") `<appender-ref ref="HTML-FILE-PER-TEST" />` to the logback-jenkins.xml and logback-test.xml files.
+    <appender-ref ref="HTML-FILE-PER-TEST" /> 
 
-Further customisation, such as the format of the log statements and columns shown can also be configured in logback-include.xml.
+See [Configuration](Configuration.md) for more information.
 
 
-## Column Configuration
+## Log Message Format
 
-The content of the table columns are specified using a conversion pattern. For more information about this layout, please refer to the online manual at <http://logback.qos.ch/manual/layouts.html#ClassicHTMLLayout>.
+To customise the log messages edit logback-include.xml and update the pattern with the desired conversion words:
 
-There is a choice between two different layout formats:
+Conversion words should not add exception information to the message (eg %exception, %throwable, %rootException, etc) as this information is automatically appended by HTMLLayout in a new table row below the logging statement.
 
-### Multiple Column Layout
+There is a choice between two different layout formats, multi-column or single-column modes.  The is specified by updating the format property for the HTMLLayout:
 
-Each conversion word in the layout pattern will be shown in a separate column.  Any literals (including spaces) will result in an extra column being added, so don't include spaces or other characters in your pattern.
+**&#8658; Multiple Column Layout**
 
-The "nopex/nopexception" conversion word is ignored in this setting.
+Each conversion word in the layout pattern will be shown in a [separate column](- "c:assertTrue=multiColumnLayout()").  
+
+One notable exception about the use of PatternLayout with HTMLLayout is that conversion words should not be separated by space characters or more generally by literal text. Each specifier found in the pattern will result in a separate column. Likewise a separate column will be generated for each block of literal text found in the pattern, potentially wasting valuable real-estate on your screen.
 
     <layout class="org.concordion.logback.HTMLLayout">
       <format>COLUMN</format>
       <pattern>%date{HH:mm:ss.SSS}%message%file%line</pattern>
     </layout>
 
-### Single Column Layout
+**&#8658; Single Column Layout**
 
-Each conversion word in the layout pattern will be shown in a single column.  This is much like your traditional log pattern except displayed in a table.
-
-The "nopex/nopexception" conversion word is automatically added in this setting.
+The log message as defined by the layout pattern will be shown in a [single column](- "c:assertTrue=singleColumnLayout()").  This is much like your traditional log pattern except displayed in a table.
 
     <layout class="org.concordion.logback.HTMLLayout">
       <format>STRING</format>
@@ -51,7 +52,7 @@ The "nopex/nopexception" conversion word is automatically added in this setting.
     </layout>
 
 
-## Grouping Log Statements
+### Grouping Log Statements
 
 A test often involves a series of steps to complete a task.  This extension provides two mechanisms to group log statements under a step.  
 
@@ -73,27 +74,21 @@ Configuration is done in logback-include.xml by updating the value of the step r
 
     // Using a step marker will always work, regardless of the setting of the StepRecorder property
     LOGGER.info(HTMLLogMarkers.step(), "My step here");
-`
-
-## Exceptions
-
-Exceptions are formatted within a [collapsible section](- "c:assertTrue=throwException()") that presents the error message by default but will allow the user to drill down into the stack trace.  
-
-    try {
-        int i = 1 / 0;
-    } catch (Exception e) {
-        LOGGER.error("Something when wrong", e);
-    }
 
 
-## Screenshots
+## Usage
+---
+
+
+
+### Screenshots
 
 Screenshots can be [included](- "c:assertTrue=addScreenshot()") using the following:
 
     Marker screenshot = LogMarkers.screenshotMarker(title, screenshotTaker);
 	getLogger().debug(screenshot, "Clicking the 'Login' button");
 
-## Text Based Data
+### Text Based Data
 
 Text based data such as CSV, XML and JSON can be [included](- "c:assertTrue=addData()") using the following:
 
@@ -117,7 +112,7 @@ need to figure out which ones to use - will need to look at extent reports
 
 clone https://github.com/anshooarora/extentreports and search for fa-check-circle-o
 
-## HTML Based Data
+### HTML Based Data
 
 Custom HTML can be included as [data](- "c:assertTrue=addHtmlData()"):
 
@@ -138,3 +133,19 @@ and can be combined with [other markers](- "c:assertTrue=addCombinedHtml()"):
 
 NOTE: When combining markers the data markers (Screenshot, Data, HTML) must be at the top level otherwise they will be ignored.  The htmlStatementMarker can be added at any level.    
 
+
+### Exceptions
+
+Exceptions are formatted within a [collapsible section](- "c:assertTrue=throwException()") that presents the error message by default but will allow the user to drill down into the stack trace.  
+
+    try {
+        int i = 1 / 0;
+    } catch (Exception e) {
+        LOGGER.error("Something when wrong", e);
+    }
+
+    
+### Location Aware
+Something here...
+
+    

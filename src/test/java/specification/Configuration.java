@@ -1,6 +1,6 @@
-package spec;
+package specification;
 
-public class Customisation extends BaseFixture {
+public class Configuration extends BaseFixture {
 
 	public boolean splitexample() {
 		getLogger().step("Example Splitting");

@@ -1,13 +1,14 @@
 <included>
 
-<!-- java.util.logging.SimpleFormatter.format= [%1$tc]: %2$s: %4$s: %5$s%n -->
+	<!-- Console Logger -->
 	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
 		<!-- encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
 		<encoder>
-			<pattern>%d{dd-MM-yyyy HH:mm:ss.SSS} %-5level %logger{36} - %msg%n</pattern>
+			<pattern>%xThrowable%d{dd-MM-yyyy HH:mm:ss.SSS} %-5level %logger{36} - %msg%n</pattern>
 		</encoder>
 	</appender>
 
+	<!-- Console Logger: info Level and above only -->
 	<appender name="STDOUT-INFO" class="ch.qos.logback.core.ConsoleAppender">
 		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
 			<level>INFO</level>			
@@ -50,10 +51,7 @@
 				
 				<encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
 					<layout class="ch.qos.logback.ext.html.HTMLLayout">
-						<stylesheet>${LAYOUT_STYLESHEET}</stylesheet>
 						<format>COLUMN</format> 					<!-- Options: STRING, COLUMN -->
-						<!--  <pattern>%date{HH:mm:ss.SSS}%logger{30}%level%message%file%class%method%line</pattern> -->
-						<!-- <pattern>%date{HH:mm:ss.SSS} [%file:%line] %message</pattern>  -->
 						<pattern>%message%date{HH:mm:ss.SSS}%file%line</pattern>
 						<stepRecorder>STEP_MARKER</stepRecorder> 	<!-- Options: STEP_MARKER, INFO_LOG_LEVEL, DEBUG_LOG_LEVEL -->
 					</layout>
