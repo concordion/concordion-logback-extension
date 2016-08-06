@@ -8,13 +8,18 @@ import org.concordion.ext.loggingFormatter.ILoggingAdaptor;
 import org.concordion.ext.loggingFormatter.LogbackAdaptor;
 import org.concordion.ext.loggingFormatter.LoggingFormatterSpecificationListener;
 import org.slf4j.LoggerFactory;
+import org.slf4j.Marker;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.classic.turbo.MDCFilter;
+import ch.qos.logback.classic.turbo.TurboFilter;
 import ch.qos.logback.core.spi.FilterAttachable;
+import ch.qos.logback.core.spi.FilterReply;
+import ch.qos.logback.core.spi.LifeCycle;
 import test.concordion.logback.LoggingListener;
-import test.concordion.logback.MarkerFilter;
+import test.concordion.logback.LogFilter;
 
 /**
  * Formats the footer of the Concordion specification to show a link to the log file that has been created for this test.<br><br>
@@ -82,21 +87,26 @@ public class LoggingFormatterExtension implements ConcordionExtension {
 	
 	/**
 	 * Registers listeners for other extensions to listen in on log messages. 
-	 * @param listener Log listener to register
+	 * @param logListener Log listener to register
 	 * @return A self reference
 	 */
-	public LoggingFormatterExtension registerListener(LoggingListener listener) {
-		if (listener instanceof FilterAttachable<?>) {
-			if (listener.getFilterMarkers() != null) {
-				MarkerFilter filter = new MarkerFilter(listener.getFilterMarkers());
-				((FilterAttachable<ILoggingEvent>) listener).addFilter(filter);
+	public LoggingFormatterExtension registerListener(LoggingListener logListener) {
+		if (logListener instanceof FilterAttachable<?>) {
+			LogFilter filter = new LogFilter(logListener.getFilterMarkers());
+			
+			if (logListener.getFilterMarkers() != null) {
+				((FilterAttachable<ILoggingEvent>) logListener).addFilter(filter);
 			}
+			
+			filter.setMDCKey(listener.getLoggingAdaptor().getMDCKey());
+			filter.setMDCValue(listener.getLoggingAdaptor().getMDCValue());
+			
 		}
 
-		listener.start();
+		logListener.start();
 
 		Logger logger = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
-		logger.addAppender(listener);
+		logger.addAppender(logListener);
 		logger.setLevel(Level.ALL);
 		logger.setAdditive(true);
 

@@ -42,4 +42,8 @@ public interface ILoggingAdaptor
 	 */
 	public File getLogFile();
 
+	public String getMDCKey();
+
+	public String getMDCValue();
+
 }
