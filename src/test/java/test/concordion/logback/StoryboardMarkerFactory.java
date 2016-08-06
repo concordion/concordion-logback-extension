@@ -1,6 +1,5 @@
 package test.concordion.logback;
 
-import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
 
 public class StoryboardMarkerFactory {

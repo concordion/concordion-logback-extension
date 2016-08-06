@@ -41,9 +41,4 @@ public interface ILoggingAdaptor
 	 * @return the log file, if one exists otherwise null
 	 */
 	public File getLogFile();
-
-	public String getMDCKey();
-
-	public String getMDCValue();
-
 }

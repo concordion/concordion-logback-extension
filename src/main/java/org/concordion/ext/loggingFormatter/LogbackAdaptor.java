@@ -178,15 +178,4 @@ public class LogbackAdaptor implements ILoggingAdaptor
 
 		return resourcePath;
 	}
-
-	@Override
-	public String getMDCKey() {
-		return TEST_NAME;
-	}
-
-	@Override
-	public String getMDCValue() {
-		return MDC.get(TEST_NAME);
-	}
-
 }

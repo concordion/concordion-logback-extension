@@ -1,7 +1,5 @@
 package test.concordion.logback;
 
-import java.util.Iterator;
-
 import org.slf4j.Marker;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;

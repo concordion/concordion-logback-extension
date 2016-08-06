@@ -1,7 +1,6 @@
 package specification;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -19,10 +18,6 @@ public class Integration extends BaseFixture {
 
 	// Integration with other extensions
 	public boolean integration()  {
-		if (true) {
-			return true;
-		}
-		
 		if (!exampleStoryboardListener.getStreamContent().isEmpty()) {
 			return false;
 		}
@@ -38,8 +33,8 @@ public class Integration extends BaseFixture {
 
 		String log = exampleStoryboardListener.getStreamContent();
 		
-		return log.contains("FOUND MARKER STORYBOARD_CONTAINER") &&
-		 		log.contains("FOUND MARKER STORYBOARD_SCREENSHOT");
+		return log.contains("STORYBOARD_CONTAINER: Doing Stuff") &&
+		 		log.contains("STORYBOARD_SCREENSHOT: DummyPage");
 	}
 	
 	public boolean parallel() throws InterruptedException, ExecutionException {

@@ -8,16 +8,10 @@ import org.concordion.ext.loggingFormatter.ILoggingAdaptor;
 import org.concordion.ext.loggingFormatter.LogbackAdaptor;
 import org.concordion.ext.loggingFormatter.LoggingFormatterSpecificationListener;
 import org.slf4j.LoggerFactory;
-import org.slf4j.Marker;
-
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.classic.turbo.MDCFilter;
-import ch.qos.logback.classic.turbo.TurboFilter;
 import ch.qos.logback.core.spi.FilterAttachable;
-import ch.qos.logback.core.spi.FilterReply;
-import ch.qos.logback.core.spi.LifeCycle;
 import test.concordion.logback.LoggingListener;
 import test.concordion.logback.LogFilter;
 
@@ -86,7 +80,11 @@ public class LoggingFormatterExtension implements ConcordionExtension {
 	}
 	
 	/**
-	 * Registers listeners for other extensions to listen in on log messages. 
+	 * Registers listeners for other extensions to listen in on log messages.
+	 *  
+	 * <p>NOTE: In order to correctly filter out log messages from other tests that might be running 
+	 * in parallel it automatically filters out log messages not originating from the current thread.</p>
+	 *  
 	 * @param logListener Log listener to register
 	 * @return A self reference
 	 */

@@ -11,12 +11,7 @@ public abstract class LoggingListener extends AppenderBase<ILoggingEvent> {
 
 	public abstract String[] getFilterMarkers();
 	
-	
-	protected Marker findMarker(ILoggingEvent event, String name) {
-		return findMarker(event.getMarker(), name);
-	}
-	
-	private Marker findMarker(Marker reference, String name) {
+	protected Marker findMarker(Marker reference, String name) {
 		if (reference == null) {
 			return null;
 		}
@@ -35,5 +30,13 @@ public abstract class LoggingListener extends AppenderBase<ILoggingEvent> {
 		}
 		
 		return null;
+	}
+	
+	protected boolean containsMarker(Marker reference, String name) {
+		if (reference == null) {
+			return false;
+		}
+
+		return reference.contains(name);
 	}
 }
