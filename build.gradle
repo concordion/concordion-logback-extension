@@ -31,6 +31,7 @@ sourceSets {
 
 test.dependsOn cleanTest
 test {
+    exclude 'specification/BaseFixture.class'
 	systemProperties['concordion.output.dir'] = "$reporting.baseDir/spec"
 	outputs.upToDateWhen { false } // force it to run even if test code hasn't changed
 	testLogging {
