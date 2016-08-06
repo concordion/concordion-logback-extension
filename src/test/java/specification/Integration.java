@@ -59,12 +59,16 @@ public class Integration extends BaseFixture {
 			List<Future<WorkerThread>> results = executor.invokeAll(tests);
 						
 			String logListener = exampleLogListener.getStreamContent();
-			if (!logListener.equals("Master on thread " + Thread.currentThread().getName())) {
+			String expected = "Master on thread " + Thread.currentThread().getName();
+			if (!logListener.equals(expected)) {
+				logFailure(expected, logListener);
 				result = false;
 			}
 			
 			String sbListener = exampleStoryboardListener.getStreamContent();
-			if (!sbListener.equals("STORYBOARD_CONTAINER: Master on thread main")) {
+			expected = "STORYBOARD_CONTAINER: Master on thread " + Thread.currentThread().getName();
+			if (!sbListener.equals(expected)) {
+				logFailure(expected, logListener);
 				result = false;
 			}
 			
@@ -72,12 +76,16 @@ public class Integration extends BaseFixture {
 				String futureLog = future.get().logListenerContent;
 				String futureStorybord = future.get().storyboardListenerContent;
 				String message = "Worker " + future.get().index + " on thread " + future.get().thread;
+				expected = message;
 				
-				if (!futureLog.equals(message)) {
+				if (!futureLog.equals(expected)) {
+					logFailure(expected, logListener);
 					result = false;
 				}
 
-				if (!futureStorybord.equals("STORYBOARD_CONTAINER: " + message)) {
+				expected = "STORYBOARD_CONTAINER: " + message;
+				if (!futureStorybord.equals(expected)) {
+					logFailure(expected, logListener);
 					result = false;
 				}
 			}
@@ -89,6 +97,10 @@ public class Integration extends BaseFixture {
 		return result;
 	}
 	
+	private void logFailure(String expected, String actual) {
+		getLogger().error("Actual result not equal to expected: [Expected]: {}, [Actual]: {}", expected, actual);
+	}
+
 	public class WorkerThread implements Callable<WorkerThread> {
 		final int index;
 		String thread;
