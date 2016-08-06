@@ -92,15 +92,13 @@ public class LoggingFormatterExtension implements ConcordionExtension {
 	 */
 	public LoggingFormatterExtension registerListener(LoggingListener logListener) {
 		if (logListener instanceof FilterAttachable<?>) {
-			LogFilter filter = new LogFilter(logListener.getFilterMarkers());
+			LogFilter filter = new LogFilter();
 			
-			if (logListener.getFilterMarkers() != null) {
-				((FilterAttachable<ILoggingEvent>) logListener).addFilter(filter);
-			}
+			filter.setFilterMarkers(logListener.getFilterMarkers());
+			filter.setThread(Thread.currentThread().getName());
+			filter.start();
 			
-			filter.setMDCKey(listener.getLoggingAdaptor().getMDCKey());
-			filter.setMDCValue(listener.getLoggingAdaptor().getMDCValue());
-			
+			((FilterAttachable<ILoggingEvent>) logListener).addFilter(filter);
 		}
 
 		logListener.start();

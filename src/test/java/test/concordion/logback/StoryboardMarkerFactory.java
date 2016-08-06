@@ -8,19 +8,16 @@ public class StoryboardMarkerFactory {
 	// 1. Would need to support additional properties such as result.
 	// 2. How do data? Screenshot is logged to separate file, data is embedded in log file...
 
-	private static final Marker STORYBOARD = MarkerFactory.getMarker("STORYBOARD");
-
 	public static StoryboardMarker storyboard(String title) {
-		StoryboardMarker marker = new StoryboardMarker("STORYBOARD_DETAIL", title);
-		marker.add(STORYBOARD);
+		StoryboardMarker marker = new StoryboardMarker("STORYBOARD", title);
 
 		return marker;
 	}
 	
 	public static StoryboardMarker container(String title) {
-		StoryboardMarker marker = new StoryboardMarker("STORYBOARD_CONTAINER", title);
-		marker.add(STORYBOARD);
-
+		StoryboardMarker marker = new StoryboardMarker("STORYBOARD", title);
+		marker.add(MarkerFactory.getMarker("STORYBOARD_CONTAINER"));
+		
 		return marker;
 	}
 }

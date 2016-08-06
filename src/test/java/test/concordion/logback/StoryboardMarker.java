@@ -9,6 +9,8 @@ public class StoryboardMarker extends ConcordionMarker {
 
 	public StoryboardMarker(String name, String title) {
 		super(name);
+		
+		this.title = title;
 	}
 
 	public String getTitle() {

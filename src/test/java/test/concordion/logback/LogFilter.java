@@ -1,48 +1,51 @@
 package test.concordion.logback;
 
-import org.slf4j.MDC;
+import java.util.Iterator;
+
+import org.slf4j.Marker;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.filter.Filter;
 import ch.qos.logback.core.spi.FilterReply;
 
 public class LogFilter extends Filter<ILoggingEvent> {
-	String[] markers;
-	String mdcKey = null;
-	String mdcValue = null;
+	String[] filterMarkers = null;
+	String threadName = null;
 	
-	public LogFilter(String... markers) {
-		if (markers == null) {
-			this.markers = new String[] {};
-		} else {
-			this.markers = markers;
-		}
+	public void setFilterMarkers(String[] markers) {
+		this.filterMarkers = markers;
 	}
 
-	public void setMDCKey(String mdcKey) {
-		this.mdcKey = mdcKey;
-	}
-
-	public void setMDCValue(String mdcValue) {
-		this.mdcValue = mdcValue;
+	public void setThread(String name) {
+		this.threadName = name;
 	}
 
 	@Override
 	public FilterReply decide(ILoggingEvent event) {
-		if (mdcKey != null && !mdcKey.isEmpty()) {
-			if (!MDC.get(mdcKey).equals(mdcValue)) {
+		if (threadName != null && !threadName.isEmpty()) {
+			if (!Thread.currentThread().getName().equals(threadName)) {
 				return FilterReply.DENY;
 			}
 		}
 		
-		if (event.getMarker() != null) {
-			for (String marker : markers) {
-				if (event.getMarker().contains(marker)) {
-					return FilterReply.ACCEPT;
-				}
+		if (filterMarkers == null) {
+			return FilterReply.ACCEPT;
+		}
+		
+		for (String marker : filterMarkers) {
+			if (containsMarker(event.getMarker(), marker)) {
+				return FilterReply.ACCEPT;
 			}
 		}
 
 		return FilterReply.DENY;
+	}
+	
+	private boolean containsMarker(Marker reference, String name) {
+		if (reference == null) {
+			return false;
+		}
+
+		return reference.contains(name);
 	}
 }
