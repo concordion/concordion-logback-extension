@@ -7,13 +7,13 @@ import org.concordion.api.extension.ConcordionExtension;
 import org.concordion.ext.loggingFormatter.ILoggingAdaptor;
 import org.concordion.ext.loggingFormatter.LogbackAdaptor;
 import org.concordion.ext.loggingFormatter.LoggingFormatterSpecificationListener;
+import org.concordion.logback.LogFilter;
+import org.concordion.logback.LoggingListener;
 import org.slf4j.LoggerFactory;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.spi.FilterAttachable;
-import test.concordion.logback.LoggingListener;
-import test.concordion.logback.LogFilter;
 
 /**
  * Formats the footer of the Concordion specification to show a link to the log file that has been created for this test.<br><br>
