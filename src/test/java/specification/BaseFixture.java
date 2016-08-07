@@ -52,6 +52,7 @@ public class BaseFixture {
 		tooltipLogger.debug(message);
 	}
 
+	// Location in log file will appear as if it came from the inheriting class
 	protected void logParentClassLocationAware() {
 		getLogger().with()
 				.htmlMessage("<b>This is a parent class location aware logged entry</b>")
