@@ -51,4 +51,39 @@ public class BaseFixture {
 		// it to the logs (based on included logback configuration files)
 		tooltipLogger.debug(message);
 	}
+
+	protected void logParentClassLocationAware() {
+		getLogger().with()
+				.htmlMessage("<b>This is a parent class location aware logged entry</b>")
+				.locationAwareParent(BaseFixture.class)
+				.trace();
+	}
+
+	protected boolean checkLogEqual(String expected, boolean currentResult) {
+		return checkEqual(expected, exampleLogListener.getStreamContent(), currentResult);
+	}
+
+	protected boolean checkLogContains(String expected, boolean currentResult) {
+		String actual = exampleLogListener.getStreamContent();
+
+		if (!actual.contains(expected)) {
+			getLogger().error("Actual result not equal to expected: [Expected]: {}, [Actual]: {}", expected, actual);
+			return false;
+		}
+
+		return currentResult;
+	}
+
+	protected boolean checkStoryboardLogEqual(String expected, boolean currentResult) {
+		return checkEqual(expected, exampleStoryboardListener.getStreamContent(), currentResult);
+	}
+
+	protected boolean checkEqual(String expected, String actual, boolean currentResult) {
+		if (!actual.equals(expected)) {
+			getLogger().error("Actual result not equal to expected: [Expected]: {}, [Actual]: {}", expected, actual);
+			return false;
+		}
+
+		return currentResult;
+	}
 }

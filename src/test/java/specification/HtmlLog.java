@@ -1,13 +1,14 @@
 package specification;
 
 import java.io.IOException;
+
 import org.concordion.api.BeforeSpecification;
+
 import ch.qos.logback.ext.html.Format;
 import ch.qos.logback.ext.html.HTMLLayout;
 import ch.qos.logback.ext.html.StepRecorder;
-import test.concordion.logback.LogBackHelper;
-import test.concordion.logback.DummyScreenshotTaker;
 import test.concordion.logback.LocationHelper;
+import test.concordion.logback.LogBackHelper;
 
 public class HtmlLog extends BaseFixture {
 	private HTMLLayout layout;
@@ -40,6 +41,8 @@ public class HtmlLog extends BaseFixture {
 
 	// Log statement is in table column format
 	public boolean multiColumnLayout() {
+		boolean result = true;
+
 		retrieveLayout();
 
 		layout.setFormat(Format.COLUMN.name());
@@ -49,11 +52,13 @@ public class HtmlLog extends BaseFixture {
 		
 		restoreLayout();
 
-		return exampleLogListener.getStreamContent().contains("<td class=\"Message\">multiColumnLayout example</td>");
+		return checkLogContains("<td class=\"Message\">multiColumnLayout example</td>", result);
 	}
 
 	// Log statement is in a single table column
 	public boolean singleColumnLayout() {
+		boolean result = true;
+
 		retrieveLayout();
 		
 		layout.setFormat(Format.STRING.name());
@@ -63,10 +68,12 @@ public class HtmlLog extends BaseFixture {
 
 		restoreLayout();
 
-		return exampleLogListener.getStreamContent().contains("<td>singleColumnLayout example HtmlLog.java</td>");
+		return checkLogContains("<td>singleColumnLayout example HtmlLog.java</td>", result);
 	}
 	
 	public boolean recordStepsUsingLogLevel() {
+		boolean result = true;
+
 		retrieveLayout();
 		
 		layout.setStepRecorder(StepRecorder.INFO_LOG_LEVEL.name());
@@ -76,13 +83,15 @@ public class HtmlLog extends BaseFixture {
 		
 		restoreLayout();
 
-		String log = exampleLogListener.getStreamContent();
+		result = checkLogContains("<td colspan=\"5\">Step</td>", result);
+		result = checkLogContains("<td class=\"Message\">Statement</td>", result);
 		
-		return log.contains("<td colspan=\"5\">Step</td>") && log.contains("<td class=\"Message\">Statement</td>");
-		
+		return result;
 	}
 	
 	public boolean recordStepsUsingStepMarker() {
+		boolean result = true;
+
 		retrieveLayout();
 		
 		layout.setStepRecorder(StepRecorder.STEP_MARKER.name());
@@ -92,9 +101,10 @@ public class HtmlLog extends BaseFixture {
 		
 		restoreLayout();
 
-		String log = exampleLogListener.getStreamContent();
+		result = checkLogContains("<td colspan=\"5\">Step</td>", result);
+		result = checkLogContains("<td class=\"Message\">Statement</td>", result);
 		
-		return log.contains("<td colspan=\"5\">Step</td>") && log.contains("<td class=\"Message\">Statement</td>");
+		return result;
 	}
 	
 	public boolean canUseReportLogger() {
@@ -103,16 +113,20 @@ public class HtmlLog extends BaseFixture {
 	}
 	
 	public boolean addHtmlMessage() {
+		boolean result = true;
+
 		retrieveLayout();
 		
 		getLogger().with()
     		.htmlMessage("<b>This is bold</b>")
     		.trace();
 		
-		return exampleLogListener.getStreamContent().contains("<td class=\"Message\"><b>This is bold</b></td>");
+		return checkLogContains("<td class=\"Message\"><b>This is bold</b></td>", result);
 	}
 
 	public boolean addHtmlData() {
+		boolean result = true;
+
 		retrieveLayout();
 		
 		getLogger().with()
@@ -120,14 +134,16 @@ public class HtmlLog extends BaseFixture {
 			.html("This is <b>BOLD</b>")
 			.trace();
 		
-		String log = exampleLogListener.getStreamContent();
+		result = checkLogContains("<td class=\"Message\">Some html will be included below</td>", result);
+		result = checkLogContains("<pre>This is <b>BOLD</b></pre>", result);
 				
-		return log.contains("<td class=\"Message\">Some html will be included below</td>") &&
-				log.contains("<pre>This is <b>BOLD</b></pre>");
+		return result;
 	}
 	
 	
 	public boolean addData() {
+		boolean result = true;
+
 		retrieveLayout();
 		
 		getLogger().with()
@@ -135,13 +151,15 @@ public class HtmlLog extends BaseFixture {
 			.data("<soapenv>...</soapenv>")
 			.trace();
 			
-		String log = exampleLogListener.getStreamContent();
+		result = checkLogContains("<td class=\"Message\">Sending SOAP request</td>", result);
+		result = checkLogContains("<pre>&lt;soapenv&gt;...&lt;/soapenv&gt;</pre>", result);
 				
-		return log.contains("<td class=\"Message\">Sending SOAP request</td>") &&
-				log.contains("<pre>&lt;soapenv&gt;...&lt;/soapenv&gt;</pre>");
+		return result;
 	}
 	
 	public boolean addScreenshot() {
+		boolean result = true;
+
 		retrieveLayout();
 		
 		getLogger().with()
@@ -149,41 +167,45 @@ public class HtmlLog extends BaseFixture {
 			.screenshot()
 			.trace();
 		
-		String log = exampleLogListener.getStreamContent();
+		result = checkLogContains("<td class=\"Message\">Clicking &#39;Login&#39;</td>", result);
+		result = checkLogContains("<pre><a href=\"HtmlLogLogScreenShot", result);
 		
-		return log.contains("<td class=\"Message\">Clicking &#39;Login&#39;</td>") &&
-				log.contains("<pre><a href=\"HtmlLogLogScreenShot");
+		return result;
 	}
 	
 	public boolean throwException() {
+		boolean result = true;
+
 		retrieveLayout();
 		
 		getLogger().error("Something when wrong", new Exception("me"));
 		
-		String log = exampleLogListener.getStreamContent();
-		
-		return log.contains("<td class=\"Message\">Something when wrong</td>") &&
-				log.contains("<input id=\"stackTraceButton");
+		result = checkLogContains("<td class=\"Message\">Something when wrong</td>", result);
+		result = checkLogContains("<input id=\"stackTraceButton", result);
+
+		return result;
 	}
 	
 	public boolean locationAware() throws IOException {
-		retrieveLayout();
-		
+		boolean result = true;
 		LocationHelper helper = new LocationHelper();
 
+		retrieveLayout();
+		
+		// Parent Class
+		logParentClassLocationAware();
+		result = checkLogContains("<td class=\"FileOfCaller\">HtmlLog.java</td>", result);
+
+		// Location Unaware
+		exampleLogListener.resetStream();
 		helper.logLocationUnaware();
+		result = checkLogContains("<td class=\"FileOfCaller\">LocationHelper.java</td>", result);
 		
-		String log = exampleLogListener.getStreamContent();
-		
-		if (!log.contains("<td class=\"FileOfCaller\">LocationHelper.java</td>")) {
-			return false;
-		}
-		
+		// Location Aware
 		exampleLogListener.resetStream();
 		helper.logLocationAware();
+		result = checkLogContains("<td class=\"FileOfCaller\">HtmlLog.java</td>", result);
 		
-		log = exampleLogListener.getStreamContent();
-		
-		return log.contains("<td class=\"FileOfCaller\">HtmlLog.java</td>");
+		return result;
 	}
 }
