@@ -1,6 +1,5 @@
 package org.slf4j.ext;
 
-import java.lang.RuntimeException;
 import java.util.Iterator;
 
 import org.concordion.ext.ScreenshotTaker;
@@ -16,8 +15,8 @@ import org.slf4j.helpers.ScreenshotMarker;
 import org.slf4j.spi.LocationAwareLogger;
 
 public class FluentLogger {
-	private static ThreadLocal<ILoggingAdaptor> loggingAdaptors = new ThreadLocal<>();
-	private static ThreadLocal<ScreenshotTaker> screenshotTakers = new ThreadLocal<>();
+	private static ThreadLocal<ILoggingAdaptor> loggingAdaptors = new ThreadLocal<ILoggingAdaptor>();
+	private static ThreadLocal<ScreenshotTaker> screenshotTakers = new ThreadLocal<ScreenshotTaker>();
 	
 	private final Logger logger;
 	// Is instance of location aware logger

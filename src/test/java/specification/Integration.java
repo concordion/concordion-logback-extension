@@ -42,9 +42,8 @@ public class Integration extends BaseFixture {
 		exampleLogListener.resetStream();
 		exampleStoryboardListener.resetStream();
 
-		//TODO Nigel - how would I duplicate parallel runner extension so that can run these 2 tests 
-		// in parallel to ensure listeners on pick up data for the thread they are on.  
-		List<Callable<WorkerThread>> tests = new ArrayList<>();
+		// TODO Nigel - Does this duplicate parallel runner adequately?
+		List<Callable<WorkerThread>> tests = new ArrayList<Callable<WorkerThread>>();
 
 		tests.add(new WorkerThread(0));
 		tests.add(new WorkerThread(1));
