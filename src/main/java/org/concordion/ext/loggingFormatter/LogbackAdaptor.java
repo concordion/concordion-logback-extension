@@ -4,9 +4,9 @@ import java.io.File;
 import java.util.Iterator;
 import java.util.Stack;
 
+import org.concordion.ext.ScreenshotTaker;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
-
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.sift.SiftingAppender;
@@ -23,7 +23,7 @@ import ch.qos.logback.core.util.StatusPrinter;
 public class LogbackAdaptor implements ILoggingAdaptor
 {
 	public static final String LAYOUT_STYLESHEET = "LAYOUT_STYLESHEET";
-	// public static final String SCREENSHOT_TAKER = "SCREENSHOT_TAKER";
+	//public static final String SCREENSHOT_TAKER = "SCREENSHOT_TAKER";
 
 	public static final String TEST_NAME = "testname";
 	public static final String EXAMPLE_SEPERATOR_PREFIX = "[";
@@ -39,7 +39,7 @@ public class LogbackAdaptor implements ILoggingAdaptor
 		LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
 		StatusPrinter.print(lc);
 	}
-
+	
 	/**
 	 * Adds the test name to MDC so that sift appender can use it and log the new log events to a different file
 	 * 
@@ -98,7 +98,7 @@ public class LogbackAdaptor implements ILoggingAdaptor
 
 	@Override
 	public File getLogFile() {
-		FileAppender<?> appender = getConfiguredAppender();
+		FileAppender<?> appender = getCurrentAppender();
 
 		if (appender == null) {
 			return null;
@@ -106,9 +106,9 @@ public class LogbackAdaptor implements ILoggingAdaptor
 
 		return new File(appender.getFile());
 	}
-
+	
 	/** Finds the first appender matching the MDC value. */
-	private static FileAppender<?> getConfiguredAppender() {
+	private static FileAppender<?> getCurrentAppender() {
 
 		String currentTest = MDC.get(TEST_NAME);
 
@@ -178,4 +178,28 @@ public class LogbackAdaptor implements ILoggingAdaptor
 
 		return resourcePath;
 	}
+
+//	@Override
+//	public void setScreenshotTaker(ScreenshotTaker screenshotTaker) {
+//		//LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+//		//lc.putObject(SCREENSHOT_TAKER + threadName, screenshotTaker);
+//	}
+
+//	@Override
+//	public void removeScreenshotTaker() {
+//		FluentLogger.removeLoggingAdaptor();
+//		
+////		String threadName = Thread.currentThread().getName();
+////		
+////		LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+////		lc.removeObject(SCREENSHOT_TAKER + threadName);
+//	}
+
+//	public ScreenshotTaker getScreenshotTaker() {
+//		String threadName = Thread.currentThread().getName();
+//		
+//		LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+//		return (ScreenshotTaker) lc.getObject(SCREENSHOT_TAKER + threadName);
+//	}
+	
 }

@@ -1,9 +1,10 @@
 package org.slf4j.ext;
 
-import java.io.File;
+import java.lang.RuntimeException;
 import java.util.Iterator;
 
 import org.concordion.ext.ScreenshotTaker;
+import org.concordion.ext.loggingFormatter.ILoggingAdaptor;
 import org.slf4j.Logger;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
@@ -15,17 +16,36 @@ import org.slf4j.helpers.ScreenshotMarker;
 import org.slf4j.spi.LocationAwareLogger;
 
 public class FluentLogger {
+	private static ThreadLocal<ILoggingAdaptor> loggingAdaptors = new ThreadLocal<>();
+	private static ThreadLocal<ScreenshotTaker> screenshotTakers = new ThreadLocal<>();
+	
 	private final Logger logger;
 	// Is instance of location aware logger
 	private final boolean instanceofLAL;
 	// The fully qualified class name of the logger instance
 	private final String reportLoggerFQCN;
-
+	
 	private String overrideFQCN = null;
 	private Marker marker = null;
 	private String format;
 	private Object[] arguments;
 
+	public static void addLoggingAdaptor(ILoggingAdaptor loggingAdaptor) {
+		loggingAdaptors.set(loggingAdaptor);
+	}
+	
+	public static void removeLoggingAdaptor() {
+		loggingAdaptors.remove();
+	}
+
+	public static void addScreenshotTaker(ScreenshotTaker screenshotTaker) {
+		screenshotTakers.set(screenshotTaker);
+	}
+
+	public static void removeScreenshotTaker() {
+		screenshotTakers.remove();
+	}
+	
 	public FluentLogger(Logger logger, boolean instanceofLAL) {
 		this.reportLoggerFQCN = FluentLogger.class.getName();
 		this.logger = logger;
@@ -83,9 +103,55 @@ public class FluentLogger {
 		return this;
 	}
 
-	// TODO Tidy screenshot api to make easier to use
-	public FluentLogger screenshot(File logFile, ScreenshotTaker screenshotTaker) {
-		addMarker(new ScreenshotMarker(logFile.getPath(), screenshotTaker));
+	private ILoggingAdaptor getLoggingAdaptor() {
+		ILoggingAdaptor adaptor = loggingAdaptors.get();
+		
+		if (adaptor == null) {
+			throw new RuntimeException("Logging adapter has not been set for the current thread");
+		}
+		
+		return adaptor;
+	}
+	
+	private ScreenshotTaker getScreenshotTaker() {
+		ScreenshotTaker screenshotTaker = screenshotTakers.get();
+		
+		if (screenshotTaker == null) {
+			throw new RuntimeException("ScreenshotTaker has not been set");
+		}
+		
+		return screenshotTaker;
+	}
+	
+	public FluentLogger screenshot() {
+		return screenshot(getScreenshotTaker());
+	}
+	
+	public FluentLogger screenshot(ScreenshotTaker screenshotTaker) {
+		// TODO Don't like having to get logging adaptor - screenshots (and potentially data files)
+		// are the only thing that need access to the adaptor.
+		addMarker(new ScreenshotMarker(getLoggingAdaptor().getLogFile().getPath(), screenshotTaker));
+		return this;
+	}
+
+	// TODO Need to be able to prepare page object for screenshot
+	// 1. Pass in WebElement so that will highlight element clicking on 
+	//		* could have special screenshot taker that does that
+	//		* then may as well not register screenshot taker with logging extension -> this and always pass in
+	// 2. Sometimes need to run some javascript over page object to force full screen printing
+	//		* could implement ScreenshotFormatting interface
+	// 3. Force common message format eg Clicking 'Log In'
+	//		* Leave this up to implementing application
+	// 4. A method to switch ALL screenshots off
+	//		* should be able to do this with Logback formatting to disable marker
+	//		* support doing it programatically and via configuration
+	// 5. Storyboard marker will want to set title and result, could get title from ScreenshotFormatting interface
+	public FluentLogger screenshot(ScreenshotFormatting pageObject) {
+		return screenshot(getScreenshotTaker(), pageObject);
+	}
+
+	public FluentLogger screenshot(ScreenshotTaker screenshotTaker, ScreenshotFormatting pageObject) {
+		//addMarker(new ScreenshotMarker(getLoggingAdaptor().getLogFile().getPath(), screenshotTaker, pageObject));
 		return this;
 	}
 

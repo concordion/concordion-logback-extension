@@ -16,6 +16,8 @@ import org.concordion.api.listener.SpecificationProcessingEvent;
 import org.concordion.api.listener.SpecificationProcessingListener;
 import org.concordion.api.listener.ThrowableCaughtEvent;
 import org.concordion.api.listener.ThrowableCaughtListener;
+import org.concordion.ext.ScreenshotTaker;
+import org.slf4j.ext.FluentLogger;
 import org.slf4j.ext.ReportLogger;
 import org.slf4j.ext.ReportLoggerFactory;
 
@@ -29,6 +31,10 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 	public void setUseLogFileViewer(boolean useLogFileViewer) {
 		this.useLogFileViewer = useLogFileViewer;
 	}
+
+	public void setScreenshotTaker(ScreenshotTaker screenshotTaker) {
+		FluentLogger.addScreenshotTaker(screenshotTaker);
+	}
 	
 	public ILoggingAdaptor getLoggingAdaptor() {
 		return this.loggingAdaptor;
@@ -37,6 +43,8 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 	public LoggingFormatterSpecificationListener(ILoggingAdaptor loggingAdaptor, Resource stylesheetResource) {
 		this.loggingAdaptor = loggingAdaptor;
 		this.stylesheetResource = stylesheetResource;
+		
+		FluentLogger.addLoggingAdaptor(this.loggingAdaptor);
 	}
 
 ////////////////////////////// Specification Processing Listener //////////////////////////////
@@ -55,6 +63,8 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 			}
 		} finally {
 			loggingAdaptor.stopLogFile();
+			FluentLogger.removeLoggingAdaptor();
+			FluentLogger.removeScreenshotTaker();
 		}
 	}
 

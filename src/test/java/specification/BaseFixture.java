@@ -4,7 +4,6 @@ import org.concordion.api.extension.Extension;
 import org.concordion.ext.LogbackLogMessenger;
 import org.concordion.ext.LoggingFormatterExtension;
 import org.concordion.ext.LoggingTooltipExtension;
-import org.concordion.ext.loggingFormatter.ILoggingAdaptor;
 import org.concordion.ext.loggingFormatter.LogbackAdaptor;
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.runner.RunWith;
@@ -14,6 +13,7 @@ import org.slf4j.ext.ReportLogger;
 import org.slf4j.ext.ReportLoggerFactory;
 
 import ch.qos.logback.classic.Level;
+import test.concordion.logback.DummyScreenshotTaker;
 import test.concordion.logback.ExampleLogListener;
 import test.concordion.logback.ExampleStoryboardListener;
 
@@ -31,7 +31,8 @@ public class BaseFixture {
 
 	@Extension private final LoggingFormatterExtension loggingExtension = new LoggingFormatterExtension()
 			.registerListener(exampleLogListener)
-			.registerListener(exampleStoryboardListener);
+			.registerListener(exampleStoryboardListener)
+			.setScreenshotTaker(new DummyScreenshotTaker());
 	
 	static {
 		LogbackAdaptor.logInternalStatus();
@@ -41,9 +42,9 @@ public class BaseFixture {
 		return logger;
 	}
 
-	public ILoggingAdaptor getLoggingAdaptor() {
-		return loggingExtension.getLoggingAdaptor();
-	}
+//	public ILoggingAdaptor getLoggingAdaptor() {
+//		return loggingExtension.getLoggingAdaptor();
+//	}
 
 	public void addConcordionTooltip(final String message) {
 		// Logging at debug level means the message won't make it to the console, but will make 

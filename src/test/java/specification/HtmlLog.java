@@ -5,8 +5,8 @@ import org.concordion.api.BeforeSpecification;
 import ch.qos.logback.ext.html.Format;
 import ch.qos.logback.ext.html.HTMLLayout;
 import ch.qos.logback.ext.html.StepRecorder;
-import test.concordion.logback.DummyScreenshotTaker;
 import test.concordion.logback.LogBackHelper;
+import test.concordion.logback.DummyScreenshotTaker;
 import test.concordion.logback.LocationHelper;
 
 public class HtmlLog extends BaseFixture {
@@ -146,7 +146,7 @@ public class HtmlLog extends BaseFixture {
 		
 		getLogger().with()
 			.message("Clicking 'Login'")
-			.screenshot(getLoggingAdaptor().getLogFile(), new DummyScreenshotTaker())
+			.screenshot()
 			.trace();
 		
 		String log = exampleLogListener.getStreamContent();
@@ -166,13 +166,12 @@ public class HtmlLog extends BaseFixture {
 				log.contains("<input id=\"stackTraceButton");
 	}
 	
-
 	public boolean locationAware() throws IOException {
 		retrieveLayout();
 		
 		LocationHelper helper = new LocationHelper();
 
-		helper.logLocationUnaware(getLoggingAdaptor());
+		helper.logLocationUnaware();
 		
 		String log = exampleLogListener.getStreamContent();
 		
@@ -181,18 +180,10 @@ public class HtmlLog extends BaseFixture {
 		}
 		
 		exampleLogListener.resetStream();
-		helper.logLocationAware(getLoggingAdaptor());
+		helper.logLocationAware();
 		
 		log = exampleLogListener.getStreamContent();
 		
 		return log.contains("<td class=\"FileOfCaller\">HtmlLog.java</td>");
-		
-		
 	}
-	
-	
-
-	
-
-
 }

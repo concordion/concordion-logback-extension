@@ -108,4 +108,10 @@ public class LoggingFormatterExtension implements ConcordionExtension {
 
 		return this;
 	}
+	
+	public LoggingFormatterExtension setScreenshotTaker(ScreenshotTaker screenshotTaker) {
+		listener.setScreenshotTaker(screenshotTaker);
+		
+		return this;
+	}
 }

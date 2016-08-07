@@ -11,7 +11,6 @@ import java.util.concurrent.Future;
 import org.concordion.api.Resource;
 
 import test.concordion.TestRig;
-import test.concordion.logback.DummyScreenshotTaker;
 import test.concordion.logback.StoryboardMarkerFactory;
 
 public class Integration extends BaseFixture {
@@ -28,7 +27,7 @@ public class Integration extends BaseFixture {
 		
 		getLogger().with()
 			.marker(StoryboardMarkerFactory.storyboard("DummyPage"))
-			.screenshot(getLoggingAdaptor().getLogFile(), new DummyScreenshotTaker())
+			.screenshot()
 			.trace();
 
 		String log = exampleStoryboardListener.getStreamContent();
