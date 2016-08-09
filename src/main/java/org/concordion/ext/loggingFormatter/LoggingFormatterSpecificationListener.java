@@ -235,6 +235,12 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 	public void throwableCaught(ThrowableCaughtEvent event) {
 		Throwable cause = event.getThrowable();
 
-		LOGGER.error(cause.getMessage(), cause);
+		FluentLogger logger = LOGGER.with().message(cause.getMessage());
+
+		if (FluentLogger.hasScreenshotTaker()) {
+			logger.screenshot();
+		}
+
+		logger.error(cause);
 	}
 }

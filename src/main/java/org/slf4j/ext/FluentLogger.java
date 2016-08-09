@@ -112,7 +112,11 @@ public class FluentLogger {
 		return adaptor;
 	}
 	
-	private ScreenshotTaker getScreenshotTaker() {
+	public static boolean hasScreenshotTaker() {
+		return screenshotTakers.get() != null;
+	}
+
+	public ScreenshotTaker getScreenshotTaker() {
 		ScreenshotTaker screenshotTaker = screenshotTakers.get();
 		
 		if (screenshotTaker == null) {
