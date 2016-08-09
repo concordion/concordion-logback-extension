@@ -7,7 +7,7 @@ import org.slf4j.Marker;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.AppenderBase;
 
-//TODO This would need to be made available to all extensions wanting to implement a listener
+//TODO Nigel: This would need to be made available to all extensions wanting to implement a listener
 public abstract class LoggingListener extends AppenderBase<ILoggingEvent> {
 
 	public abstract String[] getFilterMarkers();
