@@ -61,6 +61,20 @@ public class FluentLogger {
 		marker.add(reference);
 	}
 
+	// TODO Think about using object tag to embed files
+	// <script language="javascript" type="text/javascript">
+	// function resizeIframe(obj) {
+	// var height = obj.contentWindow.document.body.scrollHeight;
+	// if (height > 200) height = 200;
+	//
+	// obj.style.height = 0;
+	// obj.style.height = height + 'px';
+	// }
+	// </script>
+	// <a href="test.txt">Open File</a>
+	// <object width="100%" height="50" type="text/plain" data="test.txt" border="1" onload="resizeIframe(this)"><a href="test.txt">test.txt</a></object>
+	//
+	//
 	public FluentLogger htmlMessage(String format, Object... arguments) {
 		addMarker(ReportLogger.HTML_MESSAGE_MARKER);
 		this.format = format;
