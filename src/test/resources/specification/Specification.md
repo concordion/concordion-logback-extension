@@ -1,17 +1,17 @@
 # Logging
 
-The initial requirements behind building this extension where to support the parallel runner and allow and create a single log file per test and link to that log file within the specification for ease of access.
+The initial requirements behind building this extension where to support the parallel runner and allow and create a single log file per test and to link to that log file within the specification for ease of access.  With this in place it came apparent that plain text log files weren't meeting the needs of the business. 
 
 While a well written specification can convey the business intent, it can often be hard to understand what the tests are actually doing and as these tests are often written by developers, it may need a leap in faith for testers to trust them. 
 
 By allowing the logs to be broken down into easily understood steps and including screenshots and data files this extension aims to:
 
-* allow testers and business to gain and insight into what our tests are actually doing and increase the level of trust in the tests
-* help developers quickly diagnose issues tests and find performance improvements
+* allow manual testers and business to gain and insight into what our tests are actually doing and increase the level of trust in the tests
+* assist in quicker diagnoses of tests failures 
 * capture and log exceptions automatically reducing the effort to create logs
 * work seemlessly with other extensions that also provide information such as the Storyboard, Tooltip, and ScreenShotTaker extensions
 
-The implementation uses [SLF4J](http://slf4j.org) to provide a standard logging interface a logging implementation using [LogBack](http://logback.qos.ch) because of its ability to split logs into separate logs per test.
+In order to allow a test application to use the new features with minimum effort the logging interface has been implemented using [SLF4J](http://slf4j.org) and the logging implementation using [LogBack](http://logback.qos.ch) because of its ability to split logs into separate logs per test.
 
 
 ## Getting Started

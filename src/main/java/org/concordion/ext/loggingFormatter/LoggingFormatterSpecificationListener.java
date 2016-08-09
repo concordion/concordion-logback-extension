@@ -233,13 +233,8 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 	
 	@Override
 	public void throwableCaught(ThrowableCaughtEvent event) {
-		String message = "";
 		Throwable cause = event.getThrowable();
 
-    	// Indent multi-line errors to make it easier to scan the log
-    	message = message.replace("\r\n", "\n");
-    	message = message.replace("\n", "\n\t");
-    	
-		LOGGER.error(message, cause);
+		LOGGER.error(cause.getMessage(), cause);
 	}
 }

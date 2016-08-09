@@ -234,6 +234,10 @@ public class FluentLogger {
 	}
 
 	public void error() {
+		error(null);
+	}
+
+	public void error(Throwable t) {
 		if (!logger.isErrorEnabled(marker)) {
 			return;
 		}
@@ -241,7 +245,7 @@ public class FluentLogger {
 		prepare();
 
 		if (instanceofLAL) {
-			((LocationAwareLogger) logger).log(marker, getFQCN(), LocationAwareLogger.ERROR_INT, getFormattedMessage(), arguments, null);
+			((LocationAwareLogger) logger).log(marker, getFQCN(), LocationAwareLogger.ERROR_INT, getFormattedMessage(), arguments, t);
 		} else {
 			logger.error(marker, format, arguments);
 		}

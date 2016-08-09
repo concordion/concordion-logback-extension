@@ -4,7 +4,7 @@ If all you need are simple text based logs then this ones for you.
 
 The primary purpose of this extension becomes the ability to have a separate log per test (or example) and place a link to the log in the specification.
 
-## Appender Configuration
+## Configuration
 ---
 
 Configuring to use the classic text logs is a simple matter of adding the appender to the logback-jenkins.xml and logback-test.xml files as follows:

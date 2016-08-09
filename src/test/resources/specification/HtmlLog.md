@@ -11,10 +11,10 @@ The goals of the HTML based logs are to:
 
 The implementation is based around [SLF4J Extensions](http://slf4j.org/extensions.html) and provides a custom [layout](http://logback.qos.ch/manual/layouts.html) and [appender](http://logback.qos.ch/manual/appenders.html) for the LogBack logging framework.
 
-Advanced logging features such as recording steps, screenshots and data, are enabled by the use of [Markers](http://www.slf4j.org/apidocs/org/slf4j/Marker.html) (there is some more information on markers buried in the LogBack manuals chapter on [filters](http://logback.qos.ch/manual/filters.html)).  
+Advanced logging features such as recording steps, screenshots and data are enabled by the use of [Markers](http://www.slf4j.org/apidocs/org/slf4j/Marker.html) (there is some more information on markers buried in the LogBack manuals chapter on [filters](http://logback.qos.ch/manual/filters.html)).  
 
 
-## Configuration File
+## Configuration
 ---
 
 Configuring to use the HTML logs is a simple matter of [adding the appender](- "c:assertTrue=isHtmlAppenderConfigured()") to the logback-jenkins.xml and logback-test.xml files as follows:
@@ -67,7 +67,7 @@ Configuration is done in logback-include.xml by updating the value of the step r
     <layout class="org.concordion.logback.HTMLLayout">
       <format>COLUMN</format>
       <pattern>%date{HH:mm:ss.SSS}%message%file%line</pattern>
-      <stepRecorder>INFO_LOG_LEVEL</stepRecorder>
+      <stepRecorder>STEP_MARKER</stepRecorder>
     </layout>
     
         
