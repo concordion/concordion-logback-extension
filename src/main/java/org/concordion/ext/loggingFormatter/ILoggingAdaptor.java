@@ -2,8 +2,6 @@ package org.concordion.ext.loggingFormatter;
 
 import java.io.File;
 
-import org.concordion.ext.ScreenshotTaker;
-
 /**
  * Class to handle setting/removing MDC on per test case basis. This helps us log each test case into it's own log file. 
  * @see <a href="http://logback.qos.ch/manual/appenders.html#SiftingAppender">Sifting Appender</a>

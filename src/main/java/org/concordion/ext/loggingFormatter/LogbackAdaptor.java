@@ -4,9 +4,9 @@ import java.io.File;
 import java.util.Iterator;
 import java.util.Stack;
 
-import org.concordion.ext.ScreenshotTaker;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.sift.SiftingAppender;
