@@ -28,33 +28,23 @@ public class LogBackHelper {
 		return context.getLogger(Logger.ROOT_LOGGER_NAME);
 	}
 
-	public static SiftingAppender getHtmlFileSiftingAppender() {
-		return getSiftingAppender(HTML_FILE_APPENDER);
+	public static boolean isConfiguredForHtmlLog() {
+		return getHtmlFileSiftingAppender() != null;
 	}
 
-	public static SiftingAppender getTextFileSiftingAppender() {
-		return getSiftingAppender(TEXT_FILE_APPENDER);
+	public static boolean isConfiguredForTextLog() {
+		return getTextFileSiftingAppender() != null;
 	}
 
-	private static SiftingAppender getSiftingAppender(String name) {
-		Logger logger = getRootLogger();
-
-		return (SiftingAppender) logger.getAppender(name);
-
-		// for (Iterator<Appender<ILoggingEvent>> index = logger.iteratorForAppenders(); index.hasNext();) {
-		// Appender<ILoggingEvent> appender = index.next();
-		//
-		// if (appender instanceof SiftingAppender) {
-		// if (appender.getName().equals(name)) {
-		// return (SiftingAppender) appender;
-		// }
-		// }
-		// }
-		//
-		// return null;
+	private static SiftingAppender getHtmlFileSiftingAppender() {
+		return (SiftingAppender) getRootLogger().getAppender(HTML_FILE_APPENDER);
 	}
 
-	public static FileAppender<?> getHtmlFileAppender() {
+	private static SiftingAppender getTextFileSiftingAppender() {
+		return (SiftingAppender) getRootLogger().getAppender(TEXT_FILE_APPENDER);
+	}
+
+	private static FileAppender<?> getHtmlFileAppender() {
 		SiftingAppender siftingAppender = getHtmlFileSiftingAppender();
 
 		if (siftingAppender != null) {
@@ -102,10 +92,6 @@ public class LogBackHelper {
 		copy(backup, orig);
 	}
 
-	public static boolean isHtmlLoggerConfigured() {
-		return getHtmlFileSiftingAppender() != null;
-	}
-
 	public static void switchToClassicLoggerConfiguration() {
 		StringBuilder sb = new StringBuilder();
 
@@ -120,8 +106,6 @@ public class LogBackHelper {
 		InputStream stream = new ByteArrayInputStream(sb.toString().getBytes());
 		
 		LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
-
-		ContextInitializer ci = new ContextInitializer(loggerContext);
 
 		try {
 			JoranConfigurator configurator = new JoranConfigurator();

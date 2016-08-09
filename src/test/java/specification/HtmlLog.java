@@ -38,7 +38,7 @@ public class HtmlLog extends BaseFixture {
 	
 	// HTML-FILE-PER-TEST appender is attached to the root logger 
 	public boolean isHtmlAppenderConfigured() {
-		return LogBackHelper.getHtmlFileSiftingAppender() != null;
+		return LogBackHelper.isConfiguredForHtmlLog();
 	}
 
 	// Log statement is in table column format

@@ -44,7 +44,7 @@ public class BaseFixture {
 
 	@BeforeSpecification
 	private final void beforeSpecification() {
-		if (!LogBackHelper.isHtmlLoggerConfigured()) {
+		if (!LogBackHelper.isConfiguredForHtmlLog()) {
 			LogBackHelper.restoreLoggerConfiguration();
 
 			loggingExtension.registerListener(exampleLogListener);
@@ -53,7 +53,7 @@ public class BaseFixture {
 	}
 
 	protected void switchToClassicLogger(boolean useLogViewer) {
-		if (LogBackHelper.isHtmlLoggerConfigured()) {
+		if (LogBackHelper.isConfiguredForHtmlLog()) {
 			LogBackHelper.switchToClassicLoggerConfiguration();
 
 			loggingExtension.setUseLogFileViewer(useLogViewer);

@@ -14,7 +14,7 @@ public class ClassicLog extends BaseFixture {
 	public boolean canUseClassicLogger() {
 		getLogger().debug("This log statement is for the specification log");
 
-		return LogBackHelper.getTextFileSiftingAppender() != null;
+		return LogBackHelper.isConfiguredForTextLog();
 	}
 
 	public boolean hasExampleLog() {
