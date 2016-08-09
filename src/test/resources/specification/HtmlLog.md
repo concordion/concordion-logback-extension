@@ -24,7 +24,7 @@ Configuring to use the HTML logs is a simple matter of [adding the appender](- "
 See [Configuration](Configuration.md) for more information.
 
 
-## Log Message Format
+### Log Message Format
 
 To customise the log messages edit logback-include.xml and update the [pattern](http://logback.qos.ch/manual/layouts.html#ClassicPatternLayout) with the desired conversion words:
 
@@ -80,7 +80,7 @@ Configuration is done in logback-include.xml by updating the value of the step r
 ## Usage
 ---
 
-While you can continue to use the standard logger to log to the HTML log file, to use the new features you will need to [use the ReportLogger](- "c:assertTrue=canUseReportLogger()").
+While you can continue to use the [standard logger](- "c:assertTrue=canUseClassicLogger()") to log to the HTML log file, to use the new features you will need to [use the ReportLogger](- "c:assertTrue=canUseReportLogger()").
 
     import org.slf4j.ext.ReportLogger;
     import org.slf4j.ext.ReportLoggerFactory;

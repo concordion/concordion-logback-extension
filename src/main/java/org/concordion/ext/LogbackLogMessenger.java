@@ -98,7 +98,9 @@ public class LogbackLogMessenger implements LogMessenger {
 	@Override
 	public String getNewLogMessages() {
 		try {
-			streamAppender.getOutputStream().flush();
+			if (streamAppender.getOutputStream() != null) {
+				streamAppender.getOutputStream().flush();
+			}
 		} catch (IOException e) {
 			// Ignore this exception
 		}

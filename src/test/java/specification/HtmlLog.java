@@ -3,6 +3,8 @@ package specification;
 import java.io.IOException;
 
 import org.concordion.api.BeforeSpecification;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ch.qos.logback.ext.html.Format;
 import ch.qos.logback.ext.html.HTMLLayout;
@@ -31,12 +33,12 @@ public class HtmlLog extends BaseFixture {
 	@BeforeSpecification
 	private final void beforeSpecification() {
 		// Force the logger to create the various appenders and layouts required for these tests
-		getLogger().debug("nothing");
+		getLogger().debug("preparing logger for testing");
 	}
 	
 	// HTML-FILE-PER-TEST appender is attached to the root logger 
 	public boolean isHtmlAppenderConfigured() {
-		return LogBackHelper.getHtmlFilePerTestSiftingAppender() != null;
+		return LogBackHelper.getHtmlFileSiftingAppender() != null;
 	}
 
 	// Log statement is in table column format
@@ -107,6 +109,17 @@ public class HtmlLog extends BaseFixture {
 		return result;
 	}
 	
+	public boolean canUseClassicLogger() {
+		retrieveLayout();
+
+		Logger logger = LoggerFactory.getLogger(HtmlLog.class);
+		logger.debug("This uses the classic logger");
+
+		restoreLayout();
+
+		return checkLogContains("<td class=\"Message\">This uses the classic logger</td>", true);
+	}
+
 	public boolean canUseReportLogger() {
 		// TODO how pass in snippet?
 		return true;
@@ -121,6 +134,8 @@ public class HtmlLog extends BaseFixture {
     		.htmlMessage("<b>This is bold</b>")
     		.trace();
 		
+		restoreLayout();
+
 		return checkLogContains("<td class=\"Message\"><b>This is bold</b></td>", result);
 	}
 
@@ -134,6 +149,8 @@ public class HtmlLog extends BaseFixture {
 			.html("This is <b>BOLD</b>")
 			.trace();
 		
+		restoreLayout();
+
 		result = checkLogContains("<td class=\"Message\">Some html will be included below</td>", result);
 		result = checkLogContains("<pre>This is <b>BOLD</b></pre>", result);
 				
@@ -151,6 +168,8 @@ public class HtmlLog extends BaseFixture {
 			.data("<soapenv>...</soapenv>")
 			.trace();
 			
+		restoreLayout();
+
 		result = checkLogContains("<td class=\"Message\">Sending SOAP request</td>", result);
 		result = checkLogContains("<pre>&lt;soapenv&gt;...&lt;/soapenv&gt;</pre>", result);
 				
@@ -167,6 +186,8 @@ public class HtmlLog extends BaseFixture {
 			.screenshot()
 			.trace();
 		
+		restoreLayout();
+
 		result = checkLogContains("<td class=\"Message\">Clicking &#39;Login&#39;</td>", result);
 		result = checkLogContains("<pre><a href=\"HtmlLogLogScreenShot", result);
 		
@@ -180,6 +201,8 @@ public class HtmlLog extends BaseFixture {
 		
 		getLogger().error("Something when wrong", new Exception("me"));
 		
+		restoreLayout();
+
 		result = checkLogContains("<td class=\"Message\">Something when wrong</td>", result);
 		result = checkLogContains("<input id=\"stackTraceButton", result);
 
@@ -206,6 +229,8 @@ public class HtmlLog extends BaseFixture {
 		helper.logLocationAware();
 		result = checkLogContains("<td class=\"FileOfCaller\">HtmlLog.java</td>", result);
 		
+		restoreLayout();
+
 		return result;
 	}
 }

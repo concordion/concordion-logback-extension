@@ -105,9 +105,10 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 			return logName;
 		}
 
+
 		int i = logName.lastIndexOf('.');
 		if (i > 0) {
-			logName = logName.substring(i + 1);
+			logName = logName.substring(0, i);
 		}
 
 		logName = logName + "LogViewer.html";
@@ -118,8 +119,8 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 
 			viewerContent = viewerContent.replaceAll("LOG_FILE_NAME", logName);
 			viewerContent = viewerContent.replaceAll("LOG_FILE_CONTENT", Matcher.quoteReplacement(getLogContent(logFile)));
-
-			FileUtils.writeStringToFile(new File(logName), viewerContent);
+			
+			FileUtils.writeStringToFile(new File(logFile.getParent(), logName), viewerContent);
 		} catch (IOException e) {
 			LOGGER.error(e.getMessage());
 			logName = logFile.getName();
@@ -198,14 +199,16 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 	public void afterExample(ExampleEvent event) {
 		try {
 			if (loggingAdaptor.logFileExists()) {
-				appendLogFileLinkToExample(event, loggingAdaptor.getLogFile().getName());
+				appendLogFileLinkToExample(event, loggingAdaptor.getLogFile());
 			}
 		} finally  {
 			loggingAdaptor.stopLogFile();		
 		}
 	}
 	
-	private void appendLogFileLinkToExample(ExampleEvent event, String logURL) {
+	private void appendLogFileLinkToExample(ExampleEvent event, File log) {
+		String logURL = createViewer(log);
+
 		Element anchor = new Element("a");
 		anchor.addAttribute("style", "font-weight: bold; text-decoration: none; color: #89C; float: right; display: inline-block; margin-top: 20px;");
 		anchor.addAttribute("href", logURL);

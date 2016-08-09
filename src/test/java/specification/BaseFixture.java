@@ -1,5 +1,6 @@
 package specification;
 
+import org.concordion.api.BeforeSpecification;
 import org.concordion.api.extension.Extension;
 import org.concordion.ext.LogbackLogMessenger;
 import org.concordion.ext.LoggingFormatterExtension;
@@ -16,6 +17,7 @@ import ch.qos.logback.classic.Level;
 import test.concordion.logback.DummyScreenshotTaker;
 import test.concordion.logback.ExampleLogListener;
 import test.concordion.logback.ExampleStoryboardListener;
+import test.concordion.logback.LogBackHelper;
 
 /**
  * A base class for Google search tests that opens up the Google site at the Google search page, and closes the browser once the test is complete.
@@ -27,15 +29,38 @@ public class BaseFixture {
 	protected ExampleLogListener exampleLogListener = new ExampleLogListener();
 	protected ExampleStoryboardListener exampleStoryboardListener = new ExampleStoryboardListener();
 
-	@Extension private final LoggingTooltipExtension tooltipExtension = new LoggingTooltipExtension(new LogbackLogMessenger(tooltipLogger.getName(), Level.ALL, true, "%msg%n"));
+	@Extension
+	private final LoggingTooltipExtension tooltipExtension = new LoggingTooltipExtension(new LogbackLogMessenger(tooltipLogger.getName(), Level.ALL, true, "%msg%n"));
 
-	@Extension private final LoggingFormatterExtension loggingExtension = new LoggingFormatterExtension()
+	@Extension
+	private final LoggingFormatterExtension loggingExtension = new LoggingFormatterExtension()
 			.registerListener(exampleLogListener)
 			.registerListener(exampleStoryboardListener)
 			.setScreenshotTaker(new DummyScreenshotTaker());
 	
 	static {
 		LogbackAdaptor.logInternalStatus();
+	}
+
+	@BeforeSpecification
+	private final void beforeSpecification() {
+		if (!LogBackHelper.isHtmlLoggerConfigured()) {
+			LogBackHelper.restoreLoggerConfiguration();
+
+			loggingExtension.registerListener(exampleLogListener);
+			loggingExtension.registerListener(exampleStoryboardListener);
+		}
+	}
+
+	protected void switchToClassicLogger(boolean useLogViewer) {
+		if (LogBackHelper.isHtmlLoggerConfigured()) {
+			LogBackHelper.switchToClassicLoggerConfiguration();
+
+			loggingExtension.setUseLogFileViewer(useLogViewer);
+			loggingExtension.registerListener(exampleLogListener);
+			loggingExtension.registerListener(exampleStoryboardListener);
+
+		}
 	}
 
 	public ReportLogger getLogger() {
