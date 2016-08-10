@@ -191,8 +191,6 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 	@Override
 	public void beforeExample(ExampleEvent event) {
 		loggingAdaptor.startExampleLogFile(testPath, event.getExampleName());
-		
-		LOGGER.step("Example: " + event.getExampleName());
 	}
 
 	@Override
