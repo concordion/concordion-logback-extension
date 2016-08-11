@@ -10,7 +10,6 @@ import org.slf4j.MarkerFactory;
 import org.slf4j.helpers.BaseDataMarker;
 import org.slf4j.helpers.DataMarker;
 import org.slf4j.helpers.HtmlMarker;
-import org.slf4j.helpers.MessageFormatter;
 import org.slf4j.helpers.ScreenshotMarker;
 import org.slf4j.spi.LocationAwareLogger;
 
@@ -80,22 +79,19 @@ public class FluentLogger {
 		this.format = format;
 		this.arguments = arguments;
 
-		// TODO Can we log plain text to console and html message to file?
-		//
-		// Tried the following but came unstuck with HtmlLayout reading correct message
-		/*
-		addMarker(new HtmlMessageMarker(format, arguments));
+// TODO Finish log plain text to console and html message to file...
+//		addMarker(new HtmlMessageMarker(format, arguments));
 
 		// Remove HTML tags
-		this.format = format.replaceAll("<.*?>", "");
-		this.arguments = arguments;
+//		this.format = format.replaceAll("<.*?>", "");
+//		this.arguments = arguments;
 
-		for (int i = 0; i < this.arguments.length; i++) {
-			if (this.arguments[i] instanceof String) {
-				this.arguments[i] = StringEscapeUtils.unescapeHtml4((String) this.arguments[i]);
-			}
-		}
-		*/
+//		for (int i = 0; i < this.arguments.length; i++) {
+//			if (this.arguments[i] instanceof String) {
+//				this.arguments[i] = StringEscapeUtils.unescapeHtml4((String) this.arguments[i]);
+//			}
+//		}
+		
 		
 		return this;
 	}
@@ -195,7 +191,7 @@ public class FluentLogger {
 		prepare();
 
 		if (instanceofLAL) {
-			((LocationAwareLogger) logger).log(marker, getFQCN(), LocationAwareLogger.TRACE_INT, getFormattedMessage(), arguments, null);
+			((LocationAwareLogger) logger).log(marker, getFQCN(), LocationAwareLogger.TRACE_INT, format, arguments, null);
 		} else {
 			logger.trace(marker, format, arguments);
 		}
@@ -211,7 +207,7 @@ public class FluentLogger {
 		prepare();
 
 		if (instanceofLAL) {
-			((LocationAwareLogger) logger).log(marker, getFQCN(), LocationAwareLogger.DEBUG_INT, getFormattedMessage(), arguments, null);
+			((LocationAwareLogger) logger).log(marker, getFQCN(), LocationAwareLogger.DEBUG_INT, format, arguments, null);
 		} else {
 			logger.debug(marker, format, arguments);
 		}
@@ -227,7 +223,7 @@ public class FluentLogger {
 		prepare();
 
 		if (instanceofLAL) {
-			((LocationAwareLogger) logger).log(marker, getFQCN(), LocationAwareLogger.INFO_INT, getFormattedMessage(), arguments, null);
+			((LocationAwareLogger) logger).log(marker, getFQCN(), LocationAwareLogger.INFO_INT, format, arguments, null);
 		} else {
 			logger.info(marker, format, arguments);
 		}
@@ -243,7 +239,7 @@ public class FluentLogger {
 		prepare();
 
 		if (instanceofLAL) {
-			((LocationAwareLogger) logger).log(marker, getFQCN(), LocationAwareLogger.WARN_INT, getFormattedMessage(), arguments, null);
+			((LocationAwareLogger) logger).log(marker, getFQCN(), LocationAwareLogger.WARN_INT, format, arguments, null);
 		} else {
 			logger.warn(marker, format, arguments);
 		}
@@ -263,7 +259,7 @@ public class FluentLogger {
 		prepare();
 
 		if (instanceofLAL) {
-			((LocationAwareLogger) logger).log(marker, getFQCN(), LocationAwareLogger.ERROR_INT, getFormattedMessage(), arguments, t);
+			((LocationAwareLogger) logger).log(marker, getFQCN(), LocationAwareLogger.ERROR_INT, format, arguments, t);
 		} else {
 			logger.error(marker, format, arguments);
 		}
@@ -298,10 +294,6 @@ public class FluentLogger {
 
 	private String getFQCN() {
 		return overrideFQCN == null ? reportLoggerFQCN : overrideFQCN;
-	}
-
-	private String getFormattedMessage() {
-		return MessageFormatter.arrayFormat(format, arguments).getMessage();
 	}
 
 	private void reset() {

@@ -6,6 +6,7 @@ import static ch.qos.logback.core.CoreConstants.LINE_SEPARATOR;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.Map;
@@ -17,6 +18,7 @@ import org.slf4j.Marker;
 import org.slf4j.ext.ReportLogger;
 import org.slf4j.helpers.BaseDataMarker;
 import org.slf4j.helpers.DataMarker;
+import org.slf4j.helpers.MessageFormatter;
 
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.PatternLayout;
@@ -172,6 +174,10 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 		buf.append("</tr>");
 	}
 	
+	private String getFormattedMessage(String format, Object[] arguments) {
+		return MessageFormatter.arrayFormat(format, arguments).getMessage();
+	}
+	
 	private void appendMessageToBuffer(StringBuilder buf, ILoggingEvent event) {
 		boolean odd = true;
 		if (((counter++) & 1) == 0) {
@@ -195,6 +201,18 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
     
 		boolean escapeTags = !containsMarker(event, ReportLogger.HTML_MESSAGE_MARKER);
 
+// TODO Finish log plain text to console and html message to file...
+//		if (!escapeTags) {
+//			Field field;
+//			try {
+//				field = event.getClass().getDeclaredField("formattedMessage");
+//				field.setAccessible(true);
+//				field.set(getFormattedMessage(format, event.getArgumentArray()));
+//			} catch (Throwable e) {
+//				// Silently ignore
+//			}
+//		}
+		
 		Converter<ILoggingEvent> c = head;
 		if (format == Format.COLUMN) {
 			while (c != null) {
