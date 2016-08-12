@@ -8,12 +8,15 @@ import org.slf4j.LoggerFactory;
 
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
 import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.classic.sift.SiftingAppender;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.util.ContextInitializer;
 import ch.qos.logback.core.Appender;
+import ch.qos.logback.core.ConsoleAppender;
 import ch.qos.logback.core.FileAppender;
+import ch.qos.logback.core.Layout;
 import ch.qos.logback.core.encoder.LayoutWrappingEncoder;
 import ch.qos.logback.core.joran.spi.JoranException;
 import ch.qos.logback.core.util.StatusPrinter;
@@ -22,7 +25,8 @@ import ch.qos.logback.ext.html.HTMLLayout;
 public class LogBackHelper {
 	private static String HTML_FILE_APPENDER = "HTML-FILE-PER-TEST";
 	private static String TEXT_FILE_APPENDER = "FILE-PER-TEST";
-
+	private static String CONSOLE_APPENDER = "STDOUT";
+	
 	public static Logger getRootLogger() {
 		LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
 		return context.getLogger(Logger.ROOT_LOGGER_NAME);
@@ -57,7 +61,7 @@ public class LogBackHelper {
 
 		throw new IllegalStateException("HTML-FILE-PER-TEST file appender is not configured");
 	}
-
+	
 	public static HTMLLayout getHtmlLayout() {
 		FileAppender<?> fileAppender = getHtmlFileAppender();
 
@@ -74,11 +78,22 @@ public class LogBackHelper {
 		return (HTMLLayout) encoder.getLayout();
 	}
 
+	public static Layout<ILoggingEvent> getConsoleLayout() {
+		ConsoleAppender<?> consoleAppender = (ConsoleAppender<?>) getRootLogger().getAppender(CONSOLE_APPENDER);
+
+		if (consoleAppender != null) {
+			PatternLayoutEncoder encoder = (PatternLayoutEncoder) consoleAppender.getEncoder();
+			return encoder.getLayout();
+		}
+
+		throw new IllegalStateException(CONSOLE_APPENDER + " appender is not configured");
+	}
+	
 	private static void copy(HTMLLayout src, HTMLLayout dest) {
-		src.setStylesheet(dest.getStylesheet());
-		src.setFormat(dest.getFormat());
-		src.setPattern(dest.getPattern());
-		src.setStepRecorder(dest.getStepRecorder());
+		dest.setStylesheet(src.getStylesheet());
+		dest.setFormat(src.getFormat());
+		dest.setPattern(src.getPattern());
+		dest.setStepRecorder(src.getStepRecorder());
 	}
 
 	public static HTMLLayout backupLayout(HTMLLayout orig) {
@@ -88,7 +103,7 @@ public class LogBackHelper {
 		return backup;
 	}
 
-	public static void restoreLayout(HTMLLayout backup, HTMLLayout orig) {
+	public static void restoreHtmlLayout(HTMLLayout backup, HTMLLayout orig) {
 		copy(backup, orig);
 	}
 

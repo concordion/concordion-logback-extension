@@ -10,13 +10,19 @@ import ch.qos.logback.core.Layout;
 
 public class ExampleLogListener extends LoggingListener {
 	private ByteArrayOutputStream stream = new ByteArrayOutputStream();
-	private Layout<ILoggingEvent> layout;
+	private ByteArrayOutputStream consoleStream = new ByteArrayOutputStream();
+	private Layout<ILoggingEvent> htmlLayout;
+	private Layout<ILoggingEvent> consoleLayout;
 
 	@Override
 	protected void append(ILoggingEvent event) {
 		try {
-			if (layout != null) {
-				stream.write(layout.doLayout(event).getBytes());
+			if (consoleLayout != null) {
+				consoleStream.write(consoleLayout.doLayout(event).getBytes());
+			}
+			
+			if (htmlLayout != null) {
+				stream.write(htmlLayout.doLayout(event).getBytes());
 			} else {
 				stream.write(event.getFormattedMessage().getBytes());
 			}
@@ -30,15 +36,24 @@ public class ExampleLogListener extends LoggingListener {
 		return null;
 	}
 
-	public String getStreamContent() {
+	public String getHtmlLog() {
 		return stream.toString();
 	}
 
-	public void resetStream() {
+	public String getConsoleLog() {
+		return consoleStream.toString();
+	}
+	
+	public void reset() {
 		stream.reset();
+		consoleStream.reset();
 	}
 
-	public void setLayout(Layout<ILoggingEvent> layout) {
-		this.layout = layout;
+	public void setHtmlLayout(Layout<ILoggingEvent> layout) {
+		this.htmlLayout = layout;
+	}
+
+	public void setConsoleLayout(Layout<ILoggingEvent> layout) {
+		this.consoleLayout = layout;
 	}
 }

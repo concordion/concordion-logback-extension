@@ -39,7 +39,7 @@ public class Integration extends BaseFixture {
 	public boolean parallel() throws InterruptedException, ExecutionException {
 		boolean result = true;
 		
-		exampleLogListener.resetStream();
+		exampleLogListener.reset();
 		exampleStoryboardListener.resetStream();
 
 		// TODO Nigel - Does this duplicate parallel runner adequately?
@@ -58,7 +58,7 @@ public class Integration extends BaseFixture {
 			
 			String thread = Thread.currentThread().getName();
 
-			result = checkLogEqual("Master on thread " + thread, result);
+			result = checkHtmlLogEqual("Master on thread " + thread, result);
 			result = checkStoryboardLogEqual("STORYBOARD_CONTAINER: Master on thread " + thread, result);
 			
 			for (Future<WorkerThread> future : results) {
@@ -110,7 +110,7 @@ public class Integration extends BaseFixture {
 			rig.processFragment("<span concordion:execute=\"writelog()\" />", "/" + this.getClass().getName().replace(".", "/").replace("$", "/"));
 
 			storyboardListenerContent = fixture.exampleStoryboardListener.getStreamContent();
-	        logListenerContent = fixture.exampleLogListener.getStreamContent();
+	        logListenerContent = fixture.exampleLogListener.getHtmlLog();
 	        
 			return this;
 		}

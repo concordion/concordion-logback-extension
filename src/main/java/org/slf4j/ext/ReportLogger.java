@@ -39,7 +39,7 @@ public class ReportLogger extends LoggerWrapper {
 
 	public static Marker PROGRESS_MARKER = MarkerFactory.getMarker("PROGRESS");
 	public static Marker STEP_MARKER = MarkerFactory.getMarker("STEP");
-	public static Marker HTML_MESSAGE_MARKER = MarkerFactory.getMarker("HTML");
+	//public static Marker HTML_MESSAGE_MARKER = MarkerFactory.getMarker("HTML");
 	public static Marker DATA_MARKER = MarkerFactory.getMarker("DATA");
 
 	/**

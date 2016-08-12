@@ -80,7 +80,7 @@ Configuration is done in logback-include.xml by updating the value of the step r
 ## Usage
 ---
 
-While you can continue to use the [standard logger](- "c:assertTrue=canUseClassicLogger()") to log to the HTML log file, to use the new features you will need to [use the ReportLogger](- "c:assertTrue=canUseReportLogger()").
+While you can continue to use the [standard logger](- "c:assertTrue=canUseClassicLogger()") to log to the HTML log file, to use the new features you will need to [use the ReportLogger](- "c:assertTrue=canUseReportLogger()").  Arguments are supported in the same manner as the original api. 
 
     import org.slf4j.ext.ReportLogger;
     import org.slf4j.ext.ReportLoggerFactory;
@@ -89,18 +89,20 @@ While you can continue to use the [standard logger](- "c:assertTrue=canUseClassi
         private static final ReportLogger LOGGER = ReportLoggerFactory.getReportLogger(Test.class);
         
         public void logSomething() {
-            LOGGER.debug("Log {}", "a value");
+            LOGGER.debug("Log a value {}", "with arguments");
         }
     }
      
 The report logger provides a fluent api for advanced logging features. 
 
 ### HTML Messages
-This will add a log entry in the HTML log with a [bold font](- "c:assertTrue=addHtmlMessage()"). 
+This will add a log entry in the HTML log with a [bold font](- "c:assertTrue=addHtmlMessage()").
 
     LOGGER.with()
-    	.htmlMessage("<b>This is bold</b>")
+    	.htmlMessage("<b>This is BOLD</b>")
     	.trace();
+
+Other appenders such as the console appender will continue log the text [without the HTML](- "c:assertTrue=consoleLogIsPlainText()") tags.
 
 ### HTML Data
 Custom HTML can be included and rendered as [html](- "c:assertTrue=addHtmlData()"):

@@ -18,6 +18,7 @@ import org.slf4j.Marker;
 import org.slf4j.ext.ReportLogger;
 import org.slf4j.helpers.BaseDataMarker;
 import org.slf4j.helpers.DataMarker;
+import org.slf4j.helpers.HtmlMessageMarker;
 import org.slf4j.helpers.MessageFormatter;
 
 import ch.qos.logback.classic.LoggerContext;
@@ -141,7 +142,7 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 		appendMessageToBuffer(buf, event);
         
         if (containsMarker(event, ReportLogger.DATA_MARKER)) {
-			appendDataToBuffer(buf, (BaseDataMarker<?>) getMarker(event.getMarker(), ReportLogger.DATA_MARKER));
+			appendDataToBuffer(buf, (BaseDataMarker<?>) getMarker(event.getMarker(), ReportLogger.DATA_MARKER.getName()));
         }
 
         if (event.getThrowableProxy() != null) {
@@ -164,9 +165,9 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 		buf.append("<td colspan=\"").append(columnCount + 1).append("\">");
         
 		if (event.getMarker() instanceof DataMarker) {
-			buf.append(event.getMessage());
+			buf.append(event.getFormattedMessage());
 		} else {
-			buf.append(Transform.escapeTags(event.getMessage()));
+			buf.append(Transform.escapeTags(event.getFormattedMessage()));
 		}
         
         buf.append("</td>");
@@ -179,7 +180,11 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 	}
 	
 	private void appendMessageToBuffer(StringBuilder buf, ILoggingEvent event) {
+		boolean escapeTags = true;
+		Field field = null;
+		String originalMessage = null;
 		boolean odd = true;
+		
 		if (((counter++) & 1) == 0) {
 			odd = false;
 		}
@@ -198,20 +203,23 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 		buf.append("<td class=\"indent ").append(event.getLevel().toString().toLowerCase()).append("\">");
 		buf.append("<i class=\"").append(Icon.getIcon(event.getLevel())).append("\"></i>");
 		buf.append("</td>");
-    
-		boolean escapeTags = !containsMarker(event, ReportLogger.HTML_MESSAGE_MARKER);
-
-// TODO Finish log plain text to console and html message to file...
-//		if (!escapeTags) {
-//			Field field;
-//			try {
-//				field = event.getClass().getDeclaredField("formattedMessage");
-//				field.setAccessible(true);
-//				field.set(getFormattedMessage(format, event.getArgumentArray()));
-//			} catch (Throwable e) {
-//				// Silently ignore
-//			}
-//		}
+		
+		if (containsMarker(event, HtmlMessageMarker.MARKER_NAME)) {
+			// Replace plain log message with HTML formatted version 
+			escapeTags = false;
+			
+			HtmlMessageMarker marker = (HtmlMessageMarker) getMarker(event.getMarker(), HtmlMessageMarker.MARKER_NAME);
+			
+			try {
+				originalMessage = event.getFormattedMessage();
+				
+				field = event.getClass().getDeclaredField("formattedMessage");
+				field.setAccessible(true);
+				field.set(event, getFormattedMessage(marker.getFormat(), event.getArgumentArray()));
+			} catch (Throwable e) {
+				// Silently ignore
+			}
+		}
 		
 		Converter<ILoggingEvent> c = head;
 		if (format == Format.COLUMN) {
@@ -239,6 +247,14 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 			buf.append("</td>");
         }
         
+		if (field != null) {
+			try {
+				field.set(event, originalMessage);
+			} catch (Throwable e) {
+				// Silently ignore
+			}
+		}
+		
         buf.append("</tr>");
 	}
 
@@ -401,18 +417,26 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 		return event.getMarker().contains(marker);
 	}
 
-	private Marker getMarker(Marker reference, Marker search) {
+	private boolean containsMarker(ILoggingEvent event, String name) {
+		if (event.getMarker() == null) {
+			return false;
+		}
+		
+		return event.getMarker().contains(name);
+	}
+
+	private Marker getMarker(Marker reference, String name) {
 		if (reference == null) {
 			return null;
 		}
 
-		if (reference.getName().equals(search.getName())) {
+		if (reference.getName().equals(name)) {
 			return reference;
 		}
 		
 		Iterator<Marker> references = reference.iterator();
 		while (references.hasNext()) {
-			Marker found = getMarker(references.next(), search);
+			Marker found = getMarker(references.next(), name);
 			
 			if (found != null) {
 				return found;
@@ -420,14 +444,6 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 		}
 		
 		return null;
-	}
-	
-	private boolean containsMarker(ILoggingEvent event, String name) {
-		if (event.getMarker() == null) {
-			return false;
-		}
-		
-		return event.getMarker().contains(name);
 	}
 	
 	private int getColumnCount() {

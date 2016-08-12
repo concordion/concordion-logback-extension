@@ -85,19 +85,16 @@ public class BaseFixture {
 				.trace();
 	}
 
-	protected boolean checkLogEqual(String expected, boolean currentResult) {
-		return checkEqual(expected, exampleLogListener.getStreamContent(), currentResult);
+	protected boolean checkHtmlLogEqual(String expected, boolean currentResult) {
+		return checkEqual(expected, exampleLogListener.getHtmlLog(), currentResult);
 	}
 
-	protected boolean checkLogContains(String expected, boolean currentResult) {
-		String actual = exampleLogListener.getStreamContent();
+	protected boolean checkHtmlLogContains(String expected, boolean currentResult) {
+		return checkContains(expected, exampleLogListener.getHtmlLog(), currentResult);	
+	}
 
-		if (!actual.contains(expected)) {
-			getLogger().error("Actual result not equal to expected: [Expected]: {}, [Actual]: {}", expected, actual);
-			return false;
-		}
-
-		return currentResult;
+	protected boolean checkConsoleLogContains(String expected, boolean currentResult) {
+		return checkContains(expected, exampleLogListener.getConsoleLog(), currentResult);
 	}
 
 	protected boolean checkStoryboardLogEqual(String expected, boolean currentResult) {
@@ -112,4 +109,14 @@ public class BaseFixture {
 
 		return currentResult;
 	}
+	
+	protected boolean checkContains(String expected, String actual, boolean currentResult) {
+		if (!actual.contains(expected)) {
+			getLogger().error("Actual result does not contain expected: [Expected]: {}, [Actual]: {}", expected, actual);
+			return false;
+		}
+
+		return currentResult;
+	}
+
 }

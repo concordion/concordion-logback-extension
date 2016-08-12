@@ -2,6 +2,7 @@ package org.slf4j.ext;
 
 import java.util.Iterator;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.concordion.ext.ScreenshotTaker;
 import org.concordion.ext.loggingFormatter.ILoggingAdaptor;
 import org.slf4j.Logger;
@@ -10,6 +11,7 @@ import org.slf4j.MarkerFactory;
 import org.slf4j.helpers.BaseDataMarker;
 import org.slf4j.helpers.DataMarker;
 import org.slf4j.helpers.HtmlMarker;
+import org.slf4j.helpers.HtmlMessageMarker;
 import org.slf4j.helpers.ScreenshotMarker;
 import org.slf4j.spi.LocationAwareLogger;
 
@@ -75,23 +77,17 @@ public class FluentLogger {
 	//
 	//
 	public FluentLogger htmlMessage(String format, Object... arguments) {
-		addMarker(ReportLogger.HTML_MESSAGE_MARKER);
-		this.format = format;
-		this.arguments = arguments;
-
-// TODO Finish log plain text to console and html message to file...
-//		addMarker(new HtmlMessageMarker(format, arguments));
+		addMarker(new HtmlMessageMarker(format));
 
 		// Remove HTML tags
-//		this.format = format.replaceAll("<.*?>", "");
-//		this.arguments = arguments;
+		this.format = format.replaceAll("<.*?>", "");
+		this.arguments = arguments;
 
 //		for (int i = 0; i < this.arguments.length; i++) {
 //			if (this.arguments[i] instanceof String) {
 //				this.arguments[i] = StringEscapeUtils.unescapeHtml4((String) this.arguments[i]);
 //			}
 //		}
-		
 		
 		return this;
 	}
