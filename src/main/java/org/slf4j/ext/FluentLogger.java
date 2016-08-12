@@ -2,7 +2,6 @@ package org.slf4j.ext;
 
 import java.util.Iterator;
 
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.concordion.ext.ScreenshotTaker;
 import org.concordion.ext.loggingFormatter.ILoggingAdaptor;
 import org.slf4j.Logger;
