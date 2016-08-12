@@ -17,20 +17,19 @@ public class ClassicLog extends BaseFixture {
 		return LogBackHelper.isConfiguredForTextLog();
 	}
 
+	public boolean hasLinkToLogFile() {
+		// TODO Nigel: need to be able to pass in code and fixture snippets for various examples and use TestRig to get specification and get footer
+		return true;
+	}
+
 	public boolean hasExampleLog() {
+		// TODO repeat of hasLinkToLogFile() for example link 
 		getLogger().debug("This log statement is for the example log");
 		return true;
 	}
 
-	public boolean hasLinkToLogFile() {
-		// TODO need to be able to pass in code and fixture snippets for various examples
-		// TODO use TestRig to get specification and get footer
-		// TODO repeat for example link 
-		return true;
-	}
-
 	public boolean useLogViewer() {
-		//TODO how test?
+		//TODO Nigel: should we support it any more? If so how test?
 		return true;
 	}
 }

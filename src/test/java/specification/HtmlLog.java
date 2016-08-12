@@ -139,7 +139,7 @@ public class HtmlLog extends BaseFixture {
 	}
 
 	public boolean canUseReportLogger() {
-		// TODO how pass in snippet?
+		// TODO Nigel: how pass in snippet?
 		return true;
 	}
 	

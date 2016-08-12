@@ -281,6 +281,8 @@ public class FluentLogger {
 			((BaseDataMarker<?>) reference).prepareData();
 		}
 
+		// TODO This takes screenshots and writes data to files, this probably should be done in HTMLLayout
+		// so the effort is not wasted if it's not going to be used.
 		Iterator<Marker> references = reference.iterator();
 		while (references.hasNext()) {
 			prepareData(references.next());

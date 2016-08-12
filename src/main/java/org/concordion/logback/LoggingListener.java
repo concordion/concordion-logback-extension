@@ -8,6 +8,8 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.AppenderBase;
 
 //TODO Nigel: This would need to be made available to all extensions wanting to implement a listener
+//or we just accept generic AppenderBase<ILoggingEvent> and suggest their appenders include a filter so
+//only get called when its a logging event they're interested in.
 public abstract class LoggingListener extends AppenderBase<ILoggingEvent> {
 
 	public abstract String[] getFilterMarkers();

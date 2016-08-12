@@ -56,6 +56,5 @@ This extension includes a [LogViewer](- "c:assertTrue=useLogViewer()") to make t
 
 This is ignored if using the HTML Logs.
 
-
     @Extension 
     private final LoggingFormatterExtension loggingExtension = new LoggingFormatterExtension().setUseLogViewer(true);
