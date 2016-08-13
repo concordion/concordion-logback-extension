@@ -11,10 +11,15 @@ public class ClassicLog extends BaseFixture {
 		switchToClassicLogger(false);
 	}
 
-	public boolean canUseClassicLogger() {
+	public boolean isClassicLoggerConfigured() {
+		return LogBackHelper.isConfiguredForTextLog();
+	}
+	
+	public boolean canUseClassicLogger(String fixture) {
+		// TODO Use the fixture supplied!
 		getLogger().debug("This log statement is for the specification log");
 
-		return LogBackHelper.isConfiguredForTextLog();
+		return true;
 	}
 
 	public boolean hasLinkToLogFile() {

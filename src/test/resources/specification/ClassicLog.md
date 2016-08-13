@@ -29,18 +29,23 @@ To customise the log messages edit logback-include.xml and update the pattern:
 ## Usage
 ---
 
-[Using the logger](- "c:assertTrue=canUseClassicLogger()") is as simple as declaring the logger and logging away, the resulting specification will [contain a link to the log file](- "c:assertTrue=hasLinkToLogFile()").
+As long as the logger is configured to log to use the [text based log file appender](- "c:assertTrue=isClassicLoggerConfigured()"), appending entries to the log is as simple as declaring the logger and logging away. 
 
-    import org.slf4j.Logger;
-    import org.slf4j.LoggerFactory;
+<div><pre concordion:set="#fixture">
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class Test {
+    private static final Logger LOGGER = LoggerFactory.getLogger(Test.class);
     
-    public class Test {
-        private static final Logger LOGGER = LoggerFactory.getLogger(Test.class);
-        
-        public void logSomething() {
-            LOGGER.debug("Log {}", "a value");
-        }
+    public void logSomething() {
+        LOGGER.debug("Log a value");
     }
+}
+</pre></div>
+
+This will the place the value [Log a value](- "c:assertTrue=canUseClassicLogger(#fixture)") into the log file and the resulting specification will [contain a link to the log file](- "c:assertTrue=hasLinkToLogFile()").
+
 
 ### Example Logs
 
@@ -58,3 +63,4 @@ This is ignored if using the HTML Logs.
 
     @Extension 
     private final LoggingFormatterExtension loggingExtension = new LoggingFormatterExtension().setUseLogViewer(true);
+
