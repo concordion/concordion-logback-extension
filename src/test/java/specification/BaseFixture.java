@@ -1,6 +1,7 @@
 package specification;
 
 import org.concordion.api.BeforeSpecification;
+import org.concordion.api.Resource;
 import org.concordion.api.extension.Extension;
 import org.concordion.ext.LogbackLogMessenger;
 import org.concordion.ext.LoggingFormatterExtension;
@@ -14,6 +15,7 @@ import org.slf4j.ext.ReportLogger;
 import org.slf4j.ext.ReportLoggerFactory;
 
 import ch.qos.logback.classic.Level;
+import test.concordion.TestRig;
 import test.concordion.logback.DummyScreenshotTaker;
 import test.concordion.logback.ExampleLogListener;
 import test.concordion.logback.ExampleStoryboardListener;
@@ -119,4 +121,21 @@ public class BaseFixture {
 		return currentResult;
 	}
 
+	protected TestRig getTestRig() {
+		TestRig rig = new TestRig();
+		
+		rig.withResource(new Resource("/org/concordion/ext/resource/tooltip.css"), "");
+		rig.withResource(new Resource("/org/concordion/ext/resource/bubble.gif"), "");
+		rig.withResource(new Resource("/org/concordion/ext/resource/bubble_filler.gif"), "");
+		rig.withResource(new Resource("/org/concordion/ext/resource/i16.png"), "");
+		rig.withResource(new Resource("/font-awesome-4.6.3/css/font-awesome.css"), "");
+		rig.withResource(new Resource("/font-awesome-4.6.3/fonts/fontawesome-webfont.eot"), "");
+		rig.withResource(new Resource("/font-awesome-4.6.3/fonts/fontawesome-webfont.svg"), "");
+		rig.withResource(new Resource("/font-awesome-4.6.3/fonts/fontawesome-webfont.ttf"), "");
+		rig.withResource(new Resource("/font-awesome-4.6.3/fonts/fontawesome-webfont.woff"), "");
+		rig.withResource(new Resource("/font-awesome-4.6.3/fonts/fontawesome-webfont.woff2"), "");
+		rig.withResource(new Resource("/font-awesome-4.6.3/fonts/FontAwesome.otf"), "");
+
+		return rig;
+	}
 }

@@ -93,21 +93,9 @@ public class Integration extends BaseFixture {
 			
 			WorkerFixture fixture = new WorkerFixture(index, thread);
 			
-			TestRig rig = new TestRig();
-			rig.withFixture(fixture);
-			rig.withResource(new Resource("/org/concordion/ext/resource/tooltip.css"), "");
-			rig.withResource(new Resource("/org/concordion/ext/resource/bubble.gif"), "");
-			rig.withResource(new Resource("/org/concordion/ext/resource/bubble_filler.gif"), "");
-			rig.withResource(new Resource("/org/concordion/ext/resource/i16.png"), "");
-			rig.withResource(new Resource("/font-awesome-4.6.3/css/font-awesome.css"), "");
-			rig.withResource(new Resource("/font-awesome-4.6.3/fonts/fontawesome-webfont.eot"), "");
-			rig.withResource(new Resource("/font-awesome-4.6.3/fonts/fontawesome-webfont.svg"), "");
-			rig.withResource(new Resource("/font-awesome-4.6.3/fonts/fontawesome-webfont.ttf"), "");
-			rig.withResource(new Resource("/font-awesome-4.6.3/fonts/fontawesome-webfont.woff"), "");
-			rig.withResource(new Resource("/font-awesome-4.6.3/fonts/fontawesome-webfont.woff2"), "");
-			rig.withResource(new Resource("/font-awesome-4.6.3/fonts/FontAwesome.otf"), "");
-						
-			rig.processFragment("<span concordion:execute=\"writelog()\" />", "/" + this.getClass().getName().replace(".", "/").replace("$", "/"));
+			getTestRig()
+				.withFixture(fixture)
+				.processFragment("<span concordion:execute=\"writelog()\" />", "/" + this.getClass().getName().replace(".", "/").replace("$", "/"));
 
 			storyboardListenerContent = fixture.exampleStoryboardListener.getStreamContent();
 	        logListenerContent = fixture.exampleLogListener.getLog();

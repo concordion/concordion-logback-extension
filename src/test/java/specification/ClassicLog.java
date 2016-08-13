@@ -1,5 +1,9 @@
 package specification;
 
+import java.net.URI;
+
+import javax.tools.SimpleJavaFileObject;
+
 import org.concordion.api.AfterSpecification;
 import org.concordion.api.BeforeSpecification;
 
@@ -41,6 +45,35 @@ public class ClassicLog extends BaseFixture {
 	public boolean canUseClassicLogger(String fixture) {
 		resetLogListener();
 		
+		//TODO Nigel: should I be attempting this, or should I just stick to passing in stubbed specifications?
+//		import test.concordion.compiler.JavaCompiler;
+//		import test.concordion.compiler.Source;
+
+//		JavaCompiler compiler = new JavaCompiler();
+//		Source source = new Source(fixture, this.getClass().getPackage().getName() + ".Test.java");
+//		
+//		compiler.compile(source);
+//		
+//		JavaFileObject file = new SimpleJavaFileObject ("HelloWorld", writer.toString());
+
+//	    Iterable<? extends JavaFileObject> compilationUnits = Arrays.asList(file);
+//	    CompilationTask task = compiler.getTask(null, null, diagnostics, null, null, compilationUnits);
+
+	    
+//		FileOutputStreamer streamer;
+//		
+//		getTestRig()
+//		    .withFixture(this.getClass().newInstance())
+//		    .withOutputStreamer(streamer);
+	
+//		protected String getBaseOutputDir() {
+//	    	return streamer.getBaseOutputDir().getPath();
+//	    }
+//		getTestRig()
+//			.withFixture(this.getClass().newInstance())
+//			.processFragment("<span concordion:execute=\"writelog()\" />", "/" + this.getClass().getName().replace(".", "/").replace("$", "/"))
+//			.getElementXML("storyboard");
+		
 		// TODO Use the fixture supplied!
 		getLogger().debug("This log statement is for the specification log");
 
@@ -61,5 +94,13 @@ public class ClassicLog extends BaseFixture {
 	public boolean useLogViewer() {
 		//TODO Nigel: should we support it any more? If so how test?
 		return true;
+	}
+	
+	public class fo extends SimpleJavaFileObject {
+
+		protected fo(URI uri, Kind kind) {
+			super(uri, kind);
+		}
+		
 	}
 }
