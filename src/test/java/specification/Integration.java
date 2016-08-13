@@ -58,7 +58,7 @@ public class Integration extends BaseFixture {
 			
 			String thread = Thread.currentThread().getName();
 
-			result = checkHtmlLogEqual("Master on thread " + thread, result);
+			result = checkLogEqual("Master on thread " + thread, result);
 			result = checkStoryboardLogEqual("STORYBOARD_CONTAINER: Master on thread " + thread, result);
 			
 			for (Future<WorkerThread> future : results) {
@@ -110,7 +110,7 @@ public class Integration extends BaseFixture {
 			rig.processFragment("<span concordion:execute=\"writelog()\" />", "/" + this.getClass().getName().replace(".", "/").replace("$", "/"));
 
 			storyboardListenerContent = fixture.exampleStoryboardListener.getStreamContent();
-	        logListenerContent = fixture.exampleLogListener.getHtmlLog();
+	        logListenerContent = fixture.exampleLogListener.getLog();
 	        
 			return this;
 		}

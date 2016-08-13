@@ -9,10 +9,11 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.Layout;
 
 public class ExampleLogListener extends LoggingListener {
+	private Layout<ILoggingEvent> layout;
 	private ByteArrayOutputStream stream = new ByteArrayOutputStream();
-	private ByteArrayOutputStream consoleStream = new ByteArrayOutputStream();
-	private Layout<ILoggingEvent> htmlLayout;
+
 	private Layout<ILoggingEvent> consoleLayout;
+	private ByteArrayOutputStream consoleStream = new ByteArrayOutputStream();
 
 	@Override
 	protected void append(ILoggingEvent event) {
@@ -21,8 +22,8 @@ public class ExampleLogListener extends LoggingListener {
 				consoleStream.write(consoleLayout.doLayout(event).getBytes());
 			}
 			
-			if (htmlLayout != null) {
-				stream.write(htmlLayout.doLayout(event).getBytes());
+			if (layout != null) {
+				stream.write(layout.doLayout(event).getBytes());
 			} else {
 				stream.write(event.getFormattedMessage().getBytes());
 			}
@@ -36,7 +37,7 @@ public class ExampleLogListener extends LoggingListener {
 		return null;
 	}
 
-	public String getHtmlLog() {
+	public String getLog() {
 		return stream.toString();
 	}
 
@@ -49,8 +50,8 @@ public class ExampleLogListener extends LoggingListener {
 		consoleStream.reset();
 	}
 
-	public void setHtmlLayout(Layout<ILoggingEvent> layout) {
-		this.htmlLayout = layout;
+	public void setLayout(Layout<ILoggingEvent> layout) {
+		this.layout = layout;
 	}
 
 	public void setConsoleLayout(Layout<ILoggingEvent> layout) {

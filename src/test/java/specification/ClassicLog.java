@@ -1,5 +1,6 @@
 package specification;
 
+import org.concordion.api.AfterSpecification;
 import org.concordion.api.BeforeSpecification;
 
 import test.concordion.logback.LogBackHelper;
@@ -9,17 +10,41 @@ public class ClassicLog extends BaseFixture {
 	@BeforeSpecification
 	private final void beforeSpecification() {
 		switchToClassicLogger(false);
+		getLogger().debug("preparing logger for testing");
+		attchTextLayout();
 	}
 
+	@AfterSpecification
+	private final void afterSpecification() {
+		releaseTextLayout();
+	}
+	
+	private void attchTextLayout() {
+//		layout = LogBackHelper.getHtmlLayout();
+//		backup = LogBackHelper.backupLayout(layout);
+		
+		exampleLogListener.setLayout(LogBackHelper.getTextLayout());
+	}
+	
+	private void releaseTextLayout() {
+		exampleLogListener.setLayout(null);
+	}
+	
+	private void resetLogListener() {
+		exampleLogListener.reset();	
+	}
+	
 	public boolean isClassicLoggerConfigured() {
 		return LogBackHelper.isConfiguredForTextLog();
 	}
 	
 	public boolean canUseClassicLogger(String fixture) {
+		resetLogListener();
+		
 		// TODO Use the fixture supplied!
 		getLogger().debug("This log statement is for the specification log");
 
-		return true;
+		return checkLogContains("DEBUG " + this.getClass().getName() + " - This log statement is for the specification log", true);
 	}
 
 	public boolean hasLinkToLogFile() {

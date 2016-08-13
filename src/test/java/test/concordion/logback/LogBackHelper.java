@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.PatternLayout;
 import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
 import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.classic.sift.SiftingAppender;
@@ -33,24 +34,18 @@ public class LogBackHelper {
 	}
 
 	public static boolean isConfiguredForHtmlLog() {
-		return getHtmlFileSiftingAppender() != null;
+		return getSiftingAppender(HTML_FILE_APPENDER) != null;
 	}
 
 	public static boolean isConfiguredForTextLog() {
-		return getTextFileSiftingAppender() != null;
+		return getSiftingAppender(TEXT_FILE_APPENDER) != null;
 	}
 
-	private static SiftingAppender getHtmlFileSiftingAppender() {
-		return (SiftingAppender) getRootLogger().getAppender(HTML_FILE_APPENDER);
+	private static SiftingAppender getSiftingAppender(String appenderName) {
+		return (SiftingAppender) getRootLogger().getAppender(appenderName);
 	}
 
-	private static SiftingAppender getTextFileSiftingAppender() {
-		return (SiftingAppender) getRootLogger().getAppender(TEXT_FILE_APPENDER);
-	}
-
-	private static FileAppender<?> getHtmlFileAppender() {
-		SiftingAppender siftingAppender = getHtmlFileSiftingAppender();
-
+	private static FileAppender<?> getFileAppender(SiftingAppender siftingAppender) {
 		if (siftingAppender != null) {
 			for (Appender<ILoggingEvent> appender : siftingAppender.getAppenderTracker().allComponents()) {
 				if (appender instanceof FileAppender) {
@@ -59,23 +54,32 @@ public class LogBackHelper {
 			}
 		}
 
-		throw new IllegalStateException("HTML-FILE-PER-TEST file appender is not configured");
+		throw new IllegalStateException("Requested appender is not configured");
 	}
 	
-	public static HTMLLayout getHtmlLayout() {
-		FileAppender<?> fileAppender = getHtmlFileAppender();
+	@SuppressWarnings("unchecked")
+	private static <T> T getLayout(String appenderName, Class<T> expectedClass) {
+		FileAppender<?> fileAppender = getFileAppender(getSiftingAppender(appenderName));
 
 		if (fileAppender.getEncoder() instanceof LayoutWrappingEncoder<?> == false) {
-			throw new IllegalStateException("HTML-FILE-PER-TEST layout is not configured");
+			throw new IllegalStateException(appenderName + " encoder is not configured");
 		}
 
 		LayoutWrappingEncoder<?> encoder = (LayoutWrappingEncoder<?>) fileAppender.getEncoder();
 
-		if (encoder.getLayout() instanceof HTMLLayout == false) {
-			throw new IllegalStateException("HTML-FILE-PER-TEST layout is not configured");
+		if (encoder.getLayout().getClass() == expectedClass) {
+			return (T) encoder.getLayout();
 		}
 
-		return (HTMLLayout) encoder.getLayout();
+		throw new IllegalStateException(appenderName + " layout is not configured");		
+	}
+	
+	public static HTMLLayout getHtmlLayout() {
+		return getLayout(HTML_FILE_APPENDER, HTMLLayout.class);
+	}
+
+	public static Layout<ILoggingEvent> getTextLayout() {
+		return getLayout(TEXT_FILE_APPENDER, PatternLayout.class);
 	}
 
 	public static Layout<ILoggingEvent> getConsoleLayout() {

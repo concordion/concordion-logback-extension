@@ -85,12 +85,12 @@ public class BaseFixture {
 				.trace();
 	}
 
-	protected boolean checkHtmlLogEqual(String expected, boolean currentResult) {
-		return checkEqual(expected, exampleLogListener.getHtmlLog(), currentResult);
+	protected boolean checkLogEqual(String expected, boolean currentResult) {
+		return checkEqual(expected, exampleLogListener.getLog(), currentResult);
 	}
 
-	protected boolean checkHtmlLogContains(String expected, boolean currentResult) {
-		return checkContains(expected, exampleLogListener.getHtmlLog(), currentResult);	
+	protected boolean checkLogContains(String expected, boolean currentResult) {
+		return checkContains(expected, exampleLogListener.getLog(), currentResult);	
 	}
 
 	protected boolean checkConsoleLogContains(String expected, boolean currentResult) {

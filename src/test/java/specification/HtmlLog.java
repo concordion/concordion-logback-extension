@@ -21,7 +21,7 @@ public class HtmlLog extends BaseFixture {
 		layout = LogBackHelper.getHtmlLayout();
 		backup = LogBackHelper.backupLayout(layout);
 		
-		exampleLogListener.setHtmlLayout(layout);
+		exampleLogListener.setLayout(layout);
 	}
 	
 	private void restoreHtmlLayout() {
@@ -29,7 +29,7 @@ public class HtmlLog extends BaseFixture {
 	}
 	
 	private void releaseHtmlLayout() {
-		exampleLogListener.setHtmlLayout(null);
+		exampleLogListener.setLayout(null);
 	}
 	
 	private void attchConsoleLayout() {
@@ -74,7 +74,7 @@ public class HtmlLog extends BaseFixture {
 		
 		restoreHtmlLayout();
 		
-		return checkHtmlLogContains("<td class=\"Message\">multiColumnLayout example</td>", result);
+		return checkLogContains("<td class=\"Message\">multiColumnLayout example</td>", result);
 	}
 
 	// Log statement is in a single table column
@@ -90,7 +90,7 @@ public class HtmlLog extends BaseFixture {
 
 		restoreHtmlLayout();
 		
-		return checkHtmlLogContains("<td>singleColumnLayout example HtmlLog.java</td>", result);
+		return checkLogContains("<td>singleColumnLayout example HtmlLog.java</td>", result);
 	}
 	
 	public boolean recordStepsUsingLogLevel() {
@@ -105,8 +105,8 @@ public class HtmlLog extends BaseFixture {
 		
 		restoreHtmlLayout();
 		
-		result = checkHtmlLogContains("<td colspan=\"5\">Step</td>", result);
-		result = checkHtmlLogContains("<td class=\"Message\">Statement</td>", result);
+		result = checkLogContains("<td colspan=\"5\">Step</td>", result);
+		result = checkLogContains("<td class=\"Message\">Statement</td>", result);
 		
 		return result;
 	}
@@ -123,8 +123,8 @@ public class HtmlLog extends BaseFixture {
 
 		restoreHtmlLayout();
 		
-		result = checkHtmlLogContains("<td colspan=\"5\">Step</td>", result);
-		result = checkHtmlLogContains("<td class=\"Message\">Statement</td>", result);
+		result = checkLogContains("<td colspan=\"5\">Step</td>", result);
+		result = checkLogContains("<td class=\"Message\">Statement</td>", result);
 		
 		return result;
 	}
@@ -135,7 +135,7 @@ public class HtmlLog extends BaseFixture {
 		Logger logger = LoggerFactory.getLogger(HtmlLog.class);
 		logger.debug("This uses the classic logger");
 
-		return checkHtmlLogContains("<td class=\"Message\">This uses the classic logger</td>", true);
+		return checkLogContains("<td class=\"Message\">This uses the classic logger</td>", true);
 	}
 
 	public boolean canUseReportLogger() {
@@ -155,7 +155,7 @@ public class HtmlLog extends BaseFixture {
 		
 		releaseConsoleLayout();
 		
-		return checkHtmlLogContains("<td class=\"Message\">This is <b>BOLD</b></td>", result);
+		return checkLogContains("<td class=\"Message\">This is <b>BOLD</b></td>", result);
 	}
 
 	public boolean consoleLogIsPlainText() {
@@ -172,8 +172,8 @@ public class HtmlLog extends BaseFixture {
 			.html("This is <b>BOLD</b>")
 			.trace();
 		
-		result = checkHtmlLogContains("<td class=\"Message\">Some html will be included below</td>", result);
-		result = checkHtmlLogContains("<pre>This is <b>BOLD</b></pre>", result);
+		result = checkLogContains("<td class=\"Message\">Some html will be included below</td>", result);
+		result = checkLogContains("<pre>This is <b>BOLD</b></pre>", result);
 				
 		return result;
 	}
@@ -189,8 +189,8 @@ public class HtmlLog extends BaseFixture {
 			.data("<soapenv>...</soapenv>")
 			.trace();
 
-		result = checkHtmlLogContains("<td class=\"Message\">Sending SOAP request</td>", result);
-		result = checkHtmlLogContains("<pre>&lt;soapenv&gt;...&lt;/soapenv&gt;</pre>", result);
+		result = checkLogContains("<td class=\"Message\">Sending SOAP request</td>", result);
+		result = checkLogContains("<pre>&lt;soapenv&gt;...&lt;/soapenv&gt;</pre>", result);
 				
 		return result;
 	}
@@ -205,8 +205,8 @@ public class HtmlLog extends BaseFixture {
 			.screenshot()
 			.trace();
 
-		result = checkHtmlLogContains("<td class=\"Message\">Clicking &#39;Login&#39;</td>", result);
-		result = checkHtmlLogContains("<pre><a href=\"HtmlLogLogScreenShot", result);
+		result = checkLogContains("<td class=\"Message\">Clicking &#39;Login&#39;</td>", result);
+		result = checkLogContains("<pre><a href=\"HtmlLogLogScreenShot", result);
 		
 		return result;
 	}
@@ -217,8 +217,8 @@ public class HtmlLog extends BaseFixture {
 		resetLogListener();
 		getLogger().error("Something when wrong", new Exception("me"));
 		
-		result = checkHtmlLogContains("<td class=\"Message\">Something when wrong</td>", result);
-		result = checkHtmlLogContains("<input id=\"stackTraceButton", result);
+		result = checkLogContains("<td class=\"Message\">Something when wrong</td>", result);
+		result = checkLogContains("<input id=\"stackTraceButton", result);
 
 		return result;
 	}
@@ -231,17 +231,17 @@ public class HtmlLog extends BaseFixture {
 		
 		// Parent Class
 		logParentClassLocationAware();
-		result = checkHtmlLogContains("<td class=\"FileOfCaller\">HtmlLog.java</td>", result);
+		result = checkLogContains("<td class=\"FileOfCaller\">HtmlLog.java</td>", result);
 
 		// Location Unaware
 		resetLogListener();
 		helper.logLocationUnaware();
-		result = checkHtmlLogContains("<td class=\"FileOfCaller\">LocationHelper.java</td>", result);
+		result = checkLogContains("<td class=\"FileOfCaller\">LocationHelper.java</td>", result);
 		
 		// Location Aware
 		resetLogListener();
 		helper.logLocationAware();
-		result = checkHtmlLogContains("<td class=\"FileOfCaller\">HtmlLog.java</td>", result);
+		result = checkLogContains("<td class=\"FileOfCaller\">HtmlLog.java</td>", result);
 		
 		return result;
 	}
