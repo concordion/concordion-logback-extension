@@ -29,9 +29,11 @@ To customise the log messages edit logback-include.xml and update the pattern:
 ## Usage
 ---
 
-As long as the logger is configured to log to use the [text based log file appender](- "c:assertTrue=isClassicLoggerConfigured()"), appending entries to the log is as simple as declaring the logger and logging away. 
+As long as the logger is configured to log to use the [text based log file appender](- "c:assertTrue=isClassicLoggerConfigured()"), appending entries to the log is as simple as declaring the logger and logging away. Note that we are using SLF4J rather than referring to the logging implementation directly. 
 
 <div><pre concordion:set="#fixture">
+import org.concordion.api.extension.Extension;
+import org.concordion.ext.LoggingFormatterExtension;
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.runner.RunWith;
 
@@ -42,29 +44,31 @@ import org.slf4j.LoggerFactory;
 public class ExampleFixture {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExampleFixture.class);
     
+    @Extension 
+    private final LoggingFormatterExtension loggingExtension = new LoggingFormatterExtension();
+
     public void logSomething() {
         LOGGER.debug("Log a value");
     }
 }
 </pre></div>
 
-This will append the entry [DEBUG ExampleFixture - Log a value](- "?=canUseClassicLogger(#fixture)") into the log file and the resulting specification will [contain a link to the log file](- "c:assertTrue=hasLinkToLogFile()").
+This will append the entry [DEBUG ExampleFixture - Log a value](- "?=canUseClassicLogger(#fixture)") into the log file.
 
 
+### Specification Log
+
+For ease of access, and to support running tests in parallel, a separate log file will be created per specification (but only if the test writes a log entry) and a link to that log file will be placed in the [specifications footer](- "c:assertTrue=specificationHasLinkToLogFile(#fixture)").
+ 
 ### Example Logs
 
-If using examples log files will be automatically split into a log per example with a link to the log placed in the top right of the example as follows:
-
-#### [Example] (-)
-
-This example will have its own [log and link](- "c:assertTrue=hasExampleLog()") , while the rest of the specification will have it's own log file.
+If the specification makes use of the new Concordion Example command, a separate log file will be created per example and a link to that log file will be placed at the [top right of the example](- "c:assertTrue=exampleHasLinkToLogFile(#fixture)") 
 
 ### Log Viewer
 
-This extension includes a [LogViewer](- "c:assertTrue=useLogViewer()") to make the logs a little friendlier to use and gives the ability to filter the logs by the log level.  
-
-This is ignored if using the HTML Logs.
+This extension includes a log viewer to make the logs a little friendlier to use and gives the ability to filter the logs by the log level.  The log viewer is enabled by calling the method [`setUseLogFileViewer(true)`](- "c:assertTrue=useLogViewer(#fixture, #TEXT)") on the logging extension
 
     @Extension 
-    private final LoggingFormatterExtension loggingExtension = new LoggingFormatterExtension().setUseLogViewer(true);
+    private final LoggingFormatterExtension loggingExtension = new LoggingFormatterExtension().setUseLogFileViewer(true);
 
+This setting is ignored if using HTML Logs.

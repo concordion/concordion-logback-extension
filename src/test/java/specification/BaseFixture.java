@@ -160,7 +160,7 @@ public class BaseFixture {
 
     public ProcessingResult processHtmlAndJava(String htmlFragment, String... javaFragments) throws Exception {
     	// concept taken from Concordion's ExtensionConfigurationTest
-        compiler = new JavaSourceCompiler();
+   		compiler = new JavaSourceCompiler();
         
         Object fixture = null;
         

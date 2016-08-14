@@ -72,7 +72,7 @@ public class ClassicLog extends BaseFixture {
 	public String canUseClassicLogger(String javaFragment) throws Exception {
 		resetLogListener();
 		
-		ProcessingResult result = processHtmlAndJava("<span concordion:execute=\"logSomething()\"></span>", javaFragment);
+		processHtmlAndJava("<span concordion:execute=\"logSomething()\"></span>", javaFragment);
 
 		return getLogContent();
 		//checkLogContains("DEBUG " + getClassName(javaFragment) + " - Log a value", true);
@@ -95,27 +95,30 @@ public class ClassicLog extends BaseFixture {
 		
 	}
 
-	public boolean hasLinkToLogFile() {
-		// TODO Nigel: need to be able to pass in code and fixture snippets for various examples and use TestRig to get specification and get footer
-		return true;
+	public boolean specificationHasLinkToLogFile(String javaFragment) throws Exception {
+		ProcessingResult processingResult = processHtmlAndJava("<span concordion:execute=\"logSomething()\"></span>", javaFragment);
+
+		String html = processingResult.getElementXML("footer");
+		
+		return html.contains("href=\"testrig.log\">Log File</a>");
 	}
 
-	public boolean hasExampleLog() {
-		// TODO repeat of hasLinkToLogFile() for example link 
-		getLogger().debug("This log statement is for the example log");
-		return true;
-	}
+	public boolean exampleHasLinkToLogFile(String javaFragment) throws Exception {
+		ProcessingResult processingResult = processHtmlAndJava("<div class=\"example1\" concordion:example=\"example1\"><span concordion:execute=\"logSomething()\"></span></div>", javaFragment);
 
-	public boolean useLogViewer() {
-		//TODO Nigel: should we support it any more? If so how test?
-		return true;
+		String html = processingResult.getElementXML("example1");
+		
+		return html.contains("href=\"testrig[example1].log\">Log File</a>");
 	}
 	
-	public class fo extends SimpleJavaFileObject {
 
-		protected fo(URI uri, Kind kind) {
-			super(uri, kind);
-		}
+	public boolean useLogViewer(String javaFragment, String method) throws Exception {
+		javaFragment = javaFragment.replace("new LoggingFormatterExtension();", "new LoggingFormatterExtension()." + method + ";");
+	
+		ProcessingResult processingResult = processHtmlAndJava("<span concordion:execute=\"logSomething()\"></span>", javaFragment);
+
+		String html = processingResult.getElementXML("footer");
 		
+		return html.contains("href=\"testrigLogViewer.html\">Log File</a>");
 	}
 }
