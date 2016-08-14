@@ -1,17 +1,9 @@
 package specification;
 
-import java.net.URI;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.tools.SimpleJavaFileObject;
-
 import org.concordion.api.AfterSpecification;
 import org.concordion.api.BeforeSpecification;
 
 import ch.qos.logback.classic.PatternLayout;
-import ch.qos.logback.ext.html.HTMLLayout;
-import test.concordion.JavaSourceCompiler;
 import test.concordion.ProcessingResult;
 import test.concordion.logback.LogBackHelper;
 
@@ -75,24 +67,6 @@ public class ClassicLog extends BaseFixture {
 		processHtmlAndJava("<span concordion:execute=\"logSomething()\"></span>", javaFragment);
 
 		return getLogContent();
-		//checkLogContains("DEBUG " + getClassName(javaFragment) + " - Log a value", true);
-
-		//TODO Some of this might help with other tests
-	    
-//		FileOutputStreamer streamer;
-//		
-//		getTestRig()
-//		    .withFixture(this.getClass().newInstance())
-//		    .withOutputStreamer(streamer);
-	
-//		protected String getBaseOutputDir() {
-//	    	return streamer.getBaseOutputDir().getPath();
-//	    }
-//		getTestRig()
-//			.withFixture(this.getClass().newInstance())
-//			.processFragment("<span concordion:execute=\"writelog()\" />", "/" + this.getClass().getName().replace(".", "/").replace("$", "/"))
-//			.getElementXML("storyboard");
-		
 	}
 
 	public boolean specificationHasLinkToLogFile(String javaFragment) throws Exception {
@@ -110,7 +84,6 @@ public class ClassicLog extends BaseFixture {
 		
 		return html.contains("href=\"testrig[example1].log\">Log File</a>");
 	}
-	
 
 	public boolean useLogViewer(String javaFragment, String method) throws Exception {
 		javaFragment = javaFragment.replace("new LoggingFormatterExtension();", "new LoggingFormatterExtension()." + method + ";");
