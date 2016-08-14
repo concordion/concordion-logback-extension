@@ -17,17 +17,28 @@ public class HtmlLog extends BaseFixture {
 	private HTMLLayout layout;
 	private HTMLLayout backup;
 	
+	@BeforeSpecification
+	private final void beforeSpecification() {
+		// Force the logger to create the various appenders and layouts required for these tests
+		getLogger().debug("preparing logger for testing");
+		attchHtmlLayout();
+	}
+	
+	@AfterSpecification
+	private final void afterSpecification() {
+		releaseHtmlLayout();
+	}
+
+	//// Helper Methods
 	private void attchHtmlLayout() {
 		layout = LogBackHelper.getHtmlLayout();
-		backup = LogBackHelper.backupLayout(layout);
+		
+		backup = new HTMLLayout();
+		copy(layout, backup);
 		
 		exampleLogListener.setLayout(layout);
 	}
-	
-	private void restoreHtmlLayout() {
-		LogBackHelper.restoreHtmlLayout(backup, layout);	
-	}
-	
+
 	private void releaseHtmlLayout() {
 		exampleLogListener.setLayout(null);
 	}
@@ -43,18 +54,19 @@ public class HtmlLog extends BaseFixture {
 	private void resetLogListener() {
 		exampleLogListener.reset();	
 	}
-	
-	@BeforeSpecification
-	private final void beforeSpecification() {
-		// Force the logger to create the various appenders and layouts required for these tests
-		getLogger().debug("preparing logger for testing");
-		attchHtmlLayout();
+
+	private void restoreHtmlLayout() {
+		copy(backup, layout);
 	}
-	
-	@AfterSpecification
-	private final void afterSpecification() {
-		releaseHtmlLayout();
+
+	private void copy(HTMLLayout src, HTMLLayout dest) {
+		dest.setStylesheet(src.getStylesheet());
+		dest.setFormat(src.getFormat());
+		dest.setPattern(src.getPattern());
+		dest.setStepRecorder(src.getStepRecorder());
 	}
+	//// END Helper Methods
+	
 	
 	// HTML-FILE-PER-TEST appender is attached to the root logger 
 	public boolean isHtmlAppenderConfigured() {

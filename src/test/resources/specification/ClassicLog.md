@@ -21,7 +21,7 @@ To customise the log messages edit logback-include.xml and update the pattern:
     <appender name="FILE-PER-TEST" class="ch.qos.logback.classic.sift.SiftingAppender">
     	...		
     			<layout class="ch.qos.logback.classic.PatternLayout">
-    				<pattern>%d{dd-MM-yyyy HH:mm:ss.SSS} %-5level %logger{36} - %msg%n</pattern> 
+    				<pattern>%d{dd-MM-yyyy HH:mm:ss.SSS} %-5level %logger{36} - %msg%n%ex{short}</pattern> 
     			</layout>
     	...
     </appender>
@@ -32,11 +32,15 @@ To customise the log messages edit logback-include.xml and update the pattern:
 As long as the logger is configured to log to use the [text based log file appender](- "c:assertTrue=isClassicLoggerConfigured()"), appending entries to the log is as simple as declaring the logger and logging away. 
 
 <div><pre concordion:set="#fixture">
+import org.concordion.integration.junit4.ConcordionRunner;
+import org.junit.runner.RunWith;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Test {
-    private static final Logger LOGGER = LoggerFactory.getLogger(Test.class);
+@RunWith(ConcordionRunner.class)
+public class ExampleFixture {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExampleFixture.class);
     
     public void logSomething() {
         LOGGER.debug("Log a value");
@@ -44,7 +48,7 @@ public class Test {
 }
 </pre></div>
 
-This will the place the value [Log a value](- "c:assertTrue=canUseClassicLogger(#fixture)") into the log file and the resulting specification will [contain a link to the log file](- "c:assertTrue=hasLinkToLogFile()").
+This will append the entry [DEBUG ExampleFixture - Log a value](- "?=canUseClassicLogger(#fixture)") into the log file and the resulting specification will [contain a link to the log file](- "c:assertTrue=hasLinkToLogFile()").
 
 
 ### Example Logs

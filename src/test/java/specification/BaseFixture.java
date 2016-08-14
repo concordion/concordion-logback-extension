@@ -1,5 +1,8 @@
 package specification;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.concordion.api.BeforeSpecification;
 import org.concordion.api.Resource;
 import org.concordion.api.extension.Extension;
@@ -15,6 +18,8 @@ import org.slf4j.ext.ReportLogger;
 import org.slf4j.ext.ReportLoggerFactory;
 
 import ch.qos.logback.classic.Level;
+import test.concordion.JavaSourceCompiler;
+import test.concordion.ProcessingResult;
 import test.concordion.TestRig;
 import test.concordion.logback.DummyScreenshotTaker;
 import test.concordion.logback.ExampleLogListener;
@@ -30,6 +35,8 @@ public class BaseFixture {
 	private final Logger tooltipLogger = LoggerFactory.getLogger("TOOLTIP_" + this.getClass().getName());
 	protected ExampleLogListener exampleLogListener = new ExampleLogListener();
 	protected ExampleStoryboardListener exampleStoryboardListener = new ExampleStoryboardListener();
+	private JavaSourceCompiler compiler;
+    private static final Pattern CLASS_NAME_PATTERN = Pattern.compile("class\\s*(.*?)\\s*(\\{|extends)");
 
 	@Extension
 	private final LoggingTooltipExtension tooltipExtension = new LoggingTooltipExtension(new LogbackLogMessenger(tooltipLogger.getName(), Level.ALL, true, "%msg%n"));
@@ -87,6 +94,10 @@ public class BaseFixture {
 				.trace();
 	}
 
+	protected String getLogContent() {
+		return exampleLogListener.getLog();
+	}
+	
 	protected boolean checkLogEqual(String expected, boolean currentResult) {
 		return checkEqual(expected, exampleLogListener.getLog(), currentResult);
 	}
@@ -137,5 +148,43 @@ public class BaseFixture {
 		rig.withResource(new Resource("/font-awesome-4.6.3/fonts/FontAwesome.otf"), "");
 
 		return rig;
+	}
+	
+    public ProcessingResult processHtml(String htmlFragment) throws Exception {
+    	return process(htmlFragment, this.getClass().newInstance());
+    }
+    
+    public ProcessingResult processJava(String... javaFragments) throws Exception {
+    	return processHtmlAndJava("", javaFragments);
+    }
+
+    public ProcessingResult processHtmlAndJava(String htmlFragment, String... javaFragments) throws Exception {
+    	// concept taken from Concordion's ExtensionConfigurationTest
+        compiler = new JavaSourceCompiler();
+        
+        Object fixture = null;
+        
+        for (String javaFragment : javaFragments) {
+        	fixture = compile(javaFragment);	
+		}
+        
+        return process(htmlFragment, fixture);
+    }
+    
+    private ProcessingResult process(String htmlFragment, Object fixture) {
+        ProcessingResult result = getTestRig()
+            .withFixture(fixture)
+            .processFragment(htmlFragment);
+        return result;
+    }
+    
+    private Object compile(String javaSource) throws Exception, InstantiationException, IllegalAccessException {
+    	return compiler.compile(getClassName(javaSource), javaSource).newInstance();
+	}
+	
+	public String getClassName(String javaFragment) {
+		Matcher matcher = CLASS_NAME_PATTERN.matcher(javaFragment);
+		matcher.find();
+		return matcher.group(1);
 	}
 }

@@ -78,7 +78,7 @@ public class LogBackHelper {
 		return getLayout(HTML_FILE_APPENDER, HTMLLayout.class);
 	}
 
-	public static Layout<ILoggingEvent> getTextLayout() {
+	public static PatternLayout getTextLayout() {
 		return getLayout(TEXT_FILE_APPENDER, PatternLayout.class);
 	}
 
@@ -93,24 +93,6 @@ public class LogBackHelper {
 		throw new IllegalStateException(CONSOLE_APPENDER + " appender is not configured");
 	}
 	
-	private static void copy(HTMLLayout src, HTMLLayout dest) {
-		dest.setStylesheet(src.getStylesheet());
-		dest.setFormat(src.getFormat());
-		dest.setPattern(src.getPattern());
-		dest.setStepRecorder(src.getStepRecorder());
-	}
-
-	public static HTMLLayout backupLayout(HTMLLayout orig) {
-		HTMLLayout backup = new HTMLLayout();
-		copy(orig, backup);
-
-		return backup;
-	}
-
-	public static void restoreHtmlLayout(HTMLLayout backup, HTMLLayout orig) {
-		copy(backup, orig);
-	}
-
 	public static void switchToClassicLoggerConfiguration() {
 		StringBuilder sb = new StringBuilder();
 

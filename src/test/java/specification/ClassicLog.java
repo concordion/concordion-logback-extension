@@ -1,15 +1,23 @@
 package specification;
 
 import java.net.URI;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.tools.SimpleJavaFileObject;
 
 import org.concordion.api.AfterSpecification;
 import org.concordion.api.BeforeSpecification;
 
+import ch.qos.logback.classic.PatternLayout;
+import ch.qos.logback.ext.html.HTMLLayout;
+import test.concordion.JavaSourceCompiler;
+import test.concordion.ProcessingResult;
 import test.concordion.logback.LogBackHelper;
 
 public class ClassicLog extends BaseFixture {
+	private PatternLayout layout;
+	private PatternLayout backup;
 	
 	@BeforeSpecification
 	private final void beforeSpecification() {
@@ -21,13 +29,22 @@ public class ClassicLog extends BaseFixture {
 	@AfterSpecification
 	private final void afterSpecification() {
 		releaseTextLayout();
+		restoreTextLayout();
 	}
 	
+	////Helper Methods
 	private void attchTextLayout() {
-//		layout = LogBackHelper.getHtmlLayout();
-//		backup = LogBackHelper.backupLayout(layout);
+		layout = LogBackHelper.getTextLayout();
 		
-		exampleLogListener.setLayout(LogBackHelper.getTextLayout());
+		backup = new PatternLayout();
+		copy(layout, backup);
+		
+		// Remove date from Pattern so for easier comparison of log entry
+		layout.setPattern("%-5level %logger{36} - %msg%n");
+		layout.stop();
+		layout.start();
+		
+		exampleLogListener.setLayout(layout);
 	}
 	
 	private void releaseTextLayout() {
@@ -37,28 +54,30 @@ public class ClassicLog extends BaseFixture {
 	private void resetLogListener() {
 		exampleLogListener.reset();	
 	}
+
+	private void restoreTextLayout() {
+		copy(backup, layout);
+	}
 	
+	private void copy(PatternLayout src, PatternLayout dest) {
+		dest.setPattern(src.getPattern());
+	}
+	////END Helper Methods
+	
+	// Classic logger is configured and has the pattern we need 
 	public boolean isClassicLoggerConfigured() {
 		return LogBackHelper.isConfiguredForTextLog();
 	}
-	
-	public boolean canUseClassicLogger(String fixture) {
+
+	public String canUseClassicLogger(String javaFragment) throws Exception {
 		resetLogListener();
 		
-		//TODO Nigel: should I be attempting this, or should I just stick to passing in stubbed specifications?
-//		import test.concordion.compiler.JavaCompiler;
-//		import test.concordion.compiler.Source;
+		ProcessingResult result = processHtmlAndJava("<span concordion:execute=\"logSomething()\"></span>", javaFragment);
 
-//		JavaCompiler compiler = new JavaCompiler();
-//		Source source = new Source(fixture, this.getClass().getPackage().getName() + ".Test.java");
-//		
-//		compiler.compile(source);
-//		
-//		JavaFileObject file = new SimpleJavaFileObject ("HelloWorld", writer.toString());
+		return getLogContent();
+		//checkLogContains("DEBUG " + getClassName(javaFragment) + " - Log a value", true);
 
-//	    Iterable<? extends JavaFileObject> compilationUnits = Arrays.asList(file);
-//	    CompilationTask task = compiler.getTask(null, null, diagnostics, null, null, compilationUnits);
-
+		//TODO Some of this might help with other tests
 	    
 //		FileOutputStreamer streamer;
 //		
@@ -74,10 +93,6 @@ public class ClassicLog extends BaseFixture {
 //			.processFragment("<span concordion:execute=\"writelog()\" />", "/" + this.getClass().getName().replace(".", "/").replace("$", "/"))
 //			.getElementXML("storyboard");
 		
-		// TODO Use the fixture supplied!
-		getLogger().debug("This log statement is for the specification log");
-
-		return checkLogContains("DEBUG " + this.getClass().getName() + " - This log statement is for the specification log", true);
 	}
 
 	public boolean hasLinkToLogFile() {
