@@ -13,6 +13,7 @@ import org.concordion.api.BeforeSpecification;
 
 import ch.qos.logback.classic.PatternLayout;
 import test.concordion.ProcessingResult;
+import test.concordion.TestRig;
 import test.concordion.logback.LogBackHelper;
 import test.concordion.logback.StoryboardMarkerFactory;
 
@@ -78,6 +79,18 @@ public class Extension extends BaseFixture {
 		return getLogContent();
 	}
 
+	public boolean logUncaughtException() throws Exception {
+		resetLogListener();
+		
+		processHtml("<span concordion:execute=\"throwException()\"></span>");
+		
+		return checkLogContains("Exception: Oops!", true);
+	}
+	
+	public void throwException() throws Exception {
+		throw new Exception("Oops!"); 
+	}
+	
 	public boolean specificationHasLinkToLogFile(String javaFragment) throws Exception {
 		ProcessingResult processingResult = processHtmlAndJava("<span concordion:execute=\"logSomething()\"></span>", javaFragment);
 
@@ -106,9 +119,7 @@ public class Extension extends BaseFixture {
 
 	// Integration with other extensions
 	public boolean integration() {
-		if (!exampleStoryboardListener.getStreamContent().isEmpty()) {
-			return false;
-		}
+		exampleStoryboardListener.resetStream();
 
 		getLogger().with()
 				.marker(StoryboardMarkerFactory.container("Doing Stuff"))
@@ -146,8 +157,9 @@ public class Extension extends BaseFixture {
 			List<Future<WorkerThread>> results = executor.invokeAll(tests);
 
 			String thread = Thread.currentThread().getName();
-
-			result = checkLogEqual("Master on thread " + thread, result);
+			String expectedLog = String.format("DEBUG specification.Extension - Master on thread %s%sTRACE specification.Extension - null%s", thread, System.lineSeparator(), System.lineSeparator());
+					
+			result = checkLogEqual(expectedLog, result);
 			result = checkStoryboardLogEqual("STORYBOARD_CONTAINER: Master on thread " + thread, result);
 
 			for (Future<WorkerThread> future : results) {
@@ -181,10 +193,13 @@ public class Extension extends BaseFixture {
 			this.thread = Thread.currentThread().getName();
 
 			WorkerFixture fixture = new WorkerFixture(index, thread);
-
-			getTestRig()
-					.withFixture(fixture)
-					.processFragment("<span concordion:execute=\"writelog()\" />", "/" + this.getClass().getName().replace(".", "/").replace("$", "/"));
+			String htmlFragment = "<span concordion:execute=\"writelog()\" />";
+			
+			process(htmlFragment, fixture);
+			
+//			getTestRig()
+//					.withFixture(fixture)
+//					.processFragment(htmlFragment, "/" + this.getClass().getName().replace(".", "/").replace("$", "/"));
 
 			storyboardListenerContent = fixture.exampleStoryboardListener.getStreamContent();
 			logListenerContent = fixture.exampleLogListener.getLog();

@@ -32,6 +32,14 @@ public class FluentLogger {
 	public static void addLoggingAdaptor(ILoggingAdaptor loggingAdaptor) {
 		loggingAdaptors.set(loggingAdaptor);
 	}
+
+//	public static boolean hasLoggingAdaptor() {
+//		return loggingAdaptors.get() != null;
+//	}
+
+	public static ILoggingAdaptor getLoggingAdaptor() {
+		return loggingAdaptors.get();
+	}
 	
 	public static void removeLoggingAdaptor() {
 		loggingAdaptors.remove();
@@ -41,6 +49,14 @@ public class FluentLogger {
 		screenshotTakers.set(screenshotTaker);
 	}
 
+	public static boolean hasScreenshotTaker() {
+		return screenshotTakers.get() != null;
+	}
+
+	public static ScreenshotTaker getScreenshotTaker() {
+		return screenshotTakers.get();
+	}
+	
 	public static void removeScreenshotTaker() {
 		screenshotTakers.remove();
 	}
@@ -107,30 +123,6 @@ public class FluentLogger {
 		return this;
 	}
 
-	private ILoggingAdaptor getLoggingAdaptor() {
-		ILoggingAdaptor adaptor = loggingAdaptors.get();
-		
-		if (adaptor == null) {
-			throw new RuntimeException("Logging adapter has not been set for the current thread");
-		}
-		
-		return adaptor;
-	}
-	
-	public static boolean hasScreenshotTaker() {
-		return screenshotTakers.get() != null;
-	}
-
-	public ScreenshotTaker getScreenshotTaker() {
-		ScreenshotTaker screenshotTaker = screenshotTakers.get();
-		
-		if (screenshotTaker == null) {
-			throw new RuntimeException("ScreenshotTaker has not been set");
-		}
-		
-		return screenshotTaker;
-	}
-	
 	public FluentLogger screenshot() {
 		return screenshot(getScreenshotTaker());
 	}
@@ -138,7 +130,18 @@ public class FluentLogger {
 	public FluentLogger screenshot(ScreenshotTaker screenshotTaker) {
 		// TODO Don't like having to get logging adaptor - screenshots (and potentially data files)
 		// are the only thing that need access to the adaptor.
+		
+		if (screenshotTaker == null) {
+			throw new RuntimeException("ScreenshotTaker has not been set");
+		}
+
+		ILoggingAdaptor adaptor = getLoggingAdaptor();
+		if (adaptor == null) {
+			throw new RuntimeException("Logging adapter has not been set for the current thread");
+		}
+		
 		addMarker(new ScreenshotMarker(getLoggingAdaptor().getLogFile().getPath(), screenshotTaker));
+		
 		return this;
 	}
 

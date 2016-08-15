@@ -1,5 +1,6 @@
 package specification;
 
+import java.util.concurrent.Callable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -9,11 +10,14 @@ import org.concordion.api.extension.Extension;
 import org.concordion.ext.LogbackLogMessenger;
 import org.concordion.ext.LoggingFormatterExtension;
 import org.concordion.ext.LoggingTooltipExtension;
+import org.concordion.ext.ScreenshotTaker;
+import org.concordion.ext.loggingFormatter.ILoggingAdaptor;
 import org.concordion.ext.loggingFormatter.LogbackAdaptor;
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.ext.FluentLogger;
 import org.slf4j.ext.ReportLogger;
 import org.slf4j.ext.ReportLoggerFactory;
 
@@ -62,13 +66,15 @@ public class BaseFixture {
 	}
 
 	protected void switchToClassicLogger(boolean useLogViewer) {
-		if (LogBackHelper.isConfiguredForHtmlLog()) {
+		if (!LogBackHelper.isConfiguredForTextLog()) {
 			LogBackHelper.switchToClassicLoggerConfiguration();
 
 			loggingExtension.setUseLogFileViewer(useLogViewer);
 			loggingExtension.registerListener(exampleLogListener);
 			loggingExtension.registerListener(exampleStoryboardListener);
-
+			
+			// Already set
+			//loggingExtension.setScreenshotTaker(new DummyScreenshotTaker());
 		}
 	}
 
@@ -132,7 +138,7 @@ public class BaseFixture {
 		return currentResult;
 	}
 
-	protected TestRig getTestRig() {
+	private TestRig getTestRig() {
 		TestRig rig = new TestRig();
 		
 		rig.withResource(new Resource("/org/concordion/ext/resource/tooltip.css"), "");
@@ -151,7 +157,7 @@ public class BaseFixture {
 	}
 	
     public ProcessingResult processHtml(String htmlFragment) throws Exception {
-    	return process(htmlFragment, this.getClass().newInstance());
+    	return process(htmlFragment, this); //.getClass().newInstance());
     }
     
     public ProcessingResult processJava(String... javaFragments) throws Exception {
@@ -171,12 +177,39 @@ public class BaseFixture {
         return process(htmlFragment, fixture);
     }
     
-    private ProcessingResult process(String htmlFragment, Object fixture) {
-        ProcessingResult result = getTestRig()
-            .withFixture(fixture)
-            .processFragment(htmlFragment);
+    protected ProcessingResult process(String htmlFragment, Object fixture) {
+    	// As the TestRig runs the full lifecycle of a test it keeps removing
+    	// the screenshot taker
+    	ILoggingAdaptor loggingAdaptor = FluentLogger.getLoggingAdaptor();
+    	ScreenshotTaker screenshotTaker = FluentLogger.getScreenshotTaker();
+
+    	ProcessingResult result = getTestRig()
+			.withFixture(fixture)
+			.processFragment(htmlFragment);
+      
+        
+        FluentLogger.addLoggingAdaptor(loggingAdaptor);
+        FluentLogger.addScreenshotTaker(screenshotTaker);
+    	
         return result;
     }
+    
+    public class TestRigWorker implements Callable<ProcessingResult> {
+    	private Object fixture;
+    	private String htmlFragment;
+    	
+    	public TestRigWorker(Object fixture, String htmlFragment) {
+    		this.fixture = fixture;
+    		this.htmlFragment = htmlFragment;
+    	}
+    	
+		@Override
+		public ProcessingResult call() throws Exception {
+			return getTestRig()
+		            .withFixture(fixture)
+		            .processFragment(htmlFragment);
+		}
+	}
     
     private Object compile(String javaSource) throws Exception, InstantiationException, IllegalAccessException {
     	return compiler.compile(getClassName(javaSource), javaSource).newInstance();

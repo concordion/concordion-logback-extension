@@ -14,7 +14,9 @@ However it is likely that you'll want to customise the extension so more often y
 
 ## Using the extension
 
-Assuming the the logger is [configured correctly](- "c:assertTrue=isClassicLoggerConfigured()") (see [here](LogBackConfiguration.html) for more information), appending entries to the log is as simple as declaring the logger and logging away. Note that we are using SLF4J rather than referring to the logging implementation (i.e. LogBack) directly. 
+Assuming the the logger is [configured correctly](- "c:assertTrue=isClassicLoggerConfigured()") (see [here](LogBackConfiguration.html) for more information), appending entries to the log is as simple as declaring the logger and logging away. 
+
+Note that we are using SLF4J rather than referring to the logging implementation (i.e. LogBack) directly. 
 
 <div><pre concordion:set="#fixture">
 import org.concordion.api.extension.Extension;
@@ -42,7 +44,7 @@ This will append the entry [DEBUG ExampleFixture - Log a value](- "?=canUseClass
 
 ### Automatic Exception Logging
 
-TODO: Write up something and test!
+The extension will automatically catch and log any [uncaught exceptions](- "c:assertTrue=logUncaughtException()") thrown within your tests.  This removes the need to catch and log exceptions potentially simplifying your test code.
 
 ### Specification Log
 
@@ -73,6 +75,5 @@ These listeners will work with when tests run in [parallel](- "c:assertTrue=para
 
 ## Using an Alternative Logging Implementation
 
-If for some reason you do not wish to use LogBack then 
-
+If for some reason you do not wish to use LogBack then the extension will accept a custom logging adaptor that implements the `ILoggingAdaptor` interface.
 
