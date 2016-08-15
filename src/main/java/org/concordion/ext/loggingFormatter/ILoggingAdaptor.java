@@ -11,15 +11,17 @@ public interface ILoggingAdaptor
 {
 	/**
 	 * Update logger so that logging statements are directed a file
-	 * 
-	 * @param fileName Full path to the output folder and class (without the file extension) of the current specification
+	 *
+	 * @param testPath Path of the current test
+	 * @param stylesheet Name of a style sheet to append to the log file 
 	 */
-	public void startSpecificationLogFile(String resourcePath, String stylesheet);
+	public void startSpecificationLogFile(String testPath, String stylesheet);
 	
 	/**
 	 * Update logger so that logging statements for a specific example are directed to specified file
 	 * 
-	 * @param fileName Full path to the output folder and class (without the file extension) of the current specification
+	 * @param testPath Path of the current test
+	 * @param exampleName Name of the current example 
 	 */
 	public void startExampleLogFile(String testPath, String exampleName);
 

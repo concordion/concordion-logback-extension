@@ -26,9 +26,6 @@ public class LoggingFormatterExtension implements ConcordionExtension {
 	
 	/**
 	 * Constructor - defaults to using LogbackAdaptor.
-	 * 
-	 * @param useLogFileViewer
-	 *            Flag whether to show raw log file (false) or present the log file inside a log file viewer (true, default).
 	 */
 	public LoggingFormatterExtension() {
 		this(new LogbackAdaptor());
@@ -38,7 +35,6 @@ public class LoggingFormatterExtension implements ConcordionExtension {
 	 * Constructor.
 	 * 
 	 * @param loggingAdaptor Custom logging adaptor
-	 * @param useLogFileViewer Flag whether to show raw log file (false) or present the log file inside a log file viewer (true, default).
 	 */
 	public LoggingFormatterExtension(ILoggingAdaptor loggingAdaptor) {
 		stylesheetResource = new Resource("/font-awesome/css/font-awesome.css");

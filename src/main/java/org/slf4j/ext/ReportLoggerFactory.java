@@ -45,7 +45,7 @@ public class ReportLoggerFactory {
     /**
 	 * Get an ReportLogger instance by name.
 	 * 
-	 * @param name
+	 * @param name The name of the logger.
 	 * @return ReportLogger instance
 	 */
 	public static ReportLogger getReportLogger(String name) {
@@ -56,7 +56,7 @@ public class ReportLoggerFactory {
 	 * Get a new ReportLogger instance by class. The returned CLogger
 	 * will be named after the class.
 	 * 
-	 * @param clazz
+	 * @param clazz the returned logger will be named after clazz
 	 * @return ReportLogger instance by name
 	 */
 	public static ReportLogger getReportLogger(Class<?> clazz) {

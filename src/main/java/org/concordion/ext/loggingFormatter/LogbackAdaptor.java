@@ -42,12 +42,10 @@ public class LogbackAdaptor implements ILoggingAdaptor
 	
 	/**
 	 * Adds the test name to MDC so that sift appender can use it and log the new log events to a different file
-	 * 
-	 * @param fileName The full path to the required log file
 	 */
 	@Override
-	public void startSpecificationLogFile(String resourcePath, String stylesheet) {
-		String path = baseFolder + getPath(resourcePath);
+	public void startSpecificationLogFile(String testPath, String stylesheet) {
+		String path = baseFolder + getPath(testPath);
 
 		// Add path to css style sheet to logger context for later use
 		LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();

@@ -12,6 +12,7 @@ public class TransformText {
 	 * 
 	 * @param input
 	 *            The text to be converted.
+	 * @return The converted value
 	 */
 	public static String escapeText(final String input) {
 		if (input == null || input.length() == 0) {
@@ -26,7 +27,7 @@ public class TransformText {
 	 * and replaces these with the appropriate html tags.
 	 * 
 	 * @param buf StringBuffer to transform
-	 * @return
+	 * @return The converted value
 	 */
 	public static String escapeText(final StringBuffer buf) {
 		for (int i = 0; i < buf.length(); i++) {

@@ -27,13 +27,12 @@ public interface ScreenshotTaker {
      * Take a shot and write to the given output stream.  
      *
      * @param outputStream Stream to write screenshot to
-     *  @return the width of the screenshot
-     *  @throws IOException if an I/O error occurs writing the screenshot to the stream
-     *  @throws ScreenshotUnavailableException if unable to take a screenshot 
+     * @return the width of the screenshot
+     * @throws IOException if an I/O error occurs writing the screenshot to the stream
      */
 	Dimension writeScreenshotTo(OutputStream outputStream) throws IOException;
 
-    /**
+	/**
      * @return Returns the file extension that should be used for images taken by this object.
      */
     String getFileExtension();
