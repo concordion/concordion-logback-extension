@@ -77,13 +77,13 @@ public class LogBackConfiguration extends BaseFixture {
 		resetLogListener();
 
 		layout.setFormat(Format.STRING.name());
-		layout.setPattern("%message %file");
+		layout.setPattern("%message");
 
 		getLogger().debug("singleColumnLayout example");
 
 		restoreHtmlLayout();
 
-		return checkLogContains("<td>singleColumnLayout example HtmlLog.java</td>", result);
+		return checkLogContains("<td>singleColumnLayout example</td>", result);
 	}
 
 	public boolean recordStepsUsingLogLevel() {
