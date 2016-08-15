@@ -1,35 +1,20 @@
-# Classic Logs
+# The Logging Formatter Extension 
 
-If all you need are simple text based logs then this ones for you.
+## Registering the extension
 
-The primary purpose of this extension becomes the ability to have a separate log per test (or example) and place a link to the log in the specification.
+Like all Concordion extensions the logging extension can be registered with an annotation on the test (or ancestor) class:
 
-## Configuration
----
-
-Configuring to use the classic text logs is a simple matter of adding the appender to the logback-jenkins.xml and logback-test.xml files as follows:
-
-    <appender-ref ref="FILE-PER-TEST" />
-
-See [Configuration](Configuration.html) for more information.
+	@Extensions(LoggingFormatterExtension.class)
 
 
-### Log Message Format
+However it is likely that you'll want to customise the extension so more often you'll register the extension manually: 
+ 
+    @Extension 
+    private final LoggingFormatterExtension loggingExtension = new LoggingFormatterExtension()
 
-To customise the log messages edit logback-include.xml and update the pattern:
+## Using the extension
 
-    <appender name="FILE-PER-TEST" class="ch.qos.logback.classic.sift.SiftingAppender">
-    	...		
-    			<layout class="ch.qos.logback.classic.PatternLayout">
-    				<pattern>%d{dd-MM-yyyy HH:mm:ss.SSS} %-5level %logger{36} - %msg%n%ex{short}</pattern> 
-    			</layout>
-    	...
-    </appender>
-
-## Usage
----
-
-As long as the logger is configured to log to use the [text based log file appender](- "c:assertTrue=isClassicLoggerConfigured()"), appending entries to the log is as simple as declaring the logger and logging away. Note that we are using SLF4J rather than referring to the logging implementation directly. 
+Assuming the the logger is [configured correctly](- "c:assertTrue=isClassicLoggerConfigured()") (see [here](LogBackConfiguration.html) for more information), appending entries to the log is as simple as declaring the logger and logging away. Note that we are using SLF4J rather than referring to the logging implementation (i.e. LogBack) directly. 
 
 <div><pre concordion:set="#fixture">
 import org.concordion.api.extension.Extension;
@@ -55,6 +40,9 @@ public class ExampleFixture {
 
 This will append the entry [DEBUG ExampleFixture - Log a value](- "?=canUseClassicLogger(#fixture)") into the log file.
 
+### Automatic Exception Logging
+
+TODO: Write up something and test!
 
 ### Specification Log
 
@@ -72,3 +60,19 @@ This extension includes a log viewer to make the logs a little friendlier to use
     private final LoggingFormatterExtension loggingExtension = new LoggingFormatterExtension().setUseLogFileViewer(true);
 
 This setting is ignored if using HTML Logs.
+
+
+## Integration With other Extensions
+
+The logging extension allows listeners to be registered to allow other extensions to monitor and [react to log entries](- "c:assertTrue=integration()") when a specific marker is encountered.
+
+    @Extension private final LoggingFormatterExtension loggingExtension = new LoggingFormatterExtension()
+			.registerListener(new ExampleStoryboardListener());
+
+These listeners will work with when tests run in [parallel](- "c:assertTrue=parallel()"). 
+
+## Using an Alternative Logging Implementation
+
+If for some reason you do not wish to use LogBack then 
+
+

@@ -14,67 +14,9 @@ The implementation is based around [SLF4J Extensions](http://slf4j.org/extension
 Advanced logging features such as recording steps, screenshots and data are enabled by the use of [Markers](http://www.slf4j.org/apidocs/org/slf4j/Marker.html) (there is some more information on markers buried in the LogBack manuals chapter on [filters](http://logback.qos.ch/manual/filters.html)).  
 
 
-## Configuration
----
+See [Configuration](LogBackConfiguration.html) for more information.
 
-Configuring to use the HTML logs is a simple matter of [adding the appender](- "c:assertTrue=isHtmlAppenderConfigured()") to the logback-jenkins.xml and logback-test.xml files as follows:
-
-    <appender-ref ref="HTML-FILE-PER-TEST" /> 
-
-See [Configuration](Configuration.md) for more information.
-
-
-### Log Message Format
-
-To customise the log messages edit logback-include.xml and update the [pattern](http://logback.qos.ch/manual/layouts.html#ClassicPatternLayout) with the desired conversion words:
-
-Conversion words should not add exception information to the message (eg %exception, %throwable, %rootException, etc) as this information is automatically appended by HTMLLayout in a new table row below the logging statement.
-
-There is a choice between two different layout formats, multi-column or single-column modes.  The is specified by updating the format property for the HTMLLayout:
-
-**&#8658; Multiple Column Layout**
-
-Each conversion word in the layout pattern will be shown in a [separate column](- "c:assertTrue=multiColumnLayout()").  
-
-One notable exception about the use of PatternLayout with HTMLLayout is that conversion words should not be separated by space characters or more generally by literal text. Each specifier found in the pattern will result in a separate column. Likewise a separate column will be generated for each block of literal text found in the pattern, potentially wasting valuable real-estate on your screen.
-
-    <layout class="org.concordion.logback.HTMLLayout">
-      <format>COLUMN</format>
-      <pattern>%date{HH:mm:ss.SSS}%message%file%line</pattern>
-    </layout>
-
-**&#8658; Single Column Layout**
-
-The log message as defined by the layout pattern will be shown in a [single column](- "c:assertTrue=singleColumnLayout()").  This is much like your traditional log pattern except displayed in a table.
-
-    <layout class="org.concordion.logback.HTMLLayout">
-      <format>STRING</format>
-      <pattern>%date{HH:mm:ss.SSS} %message [%file:%line]</pattern>
-    </layout>
-
-
-### Grouping Log Statements
-
-A test often involves a series of steps to complete a task.  This extension provides two mechanisms to group log statements under a step.  
-
-The simplest method is to choose select a [log level](- "c:assertTrue=recordStepsUsingLogLevel()") (either INFO or DEBUG) and any log messages logged at that level will create a step in your log file.  This may work well for existing test suites.  
-
-A more flexible option (and the default) is to use a [step marker](- "c:assertTrue=recordStepsUsingStepMarker()"), and any log statement with that marker will be formatted as a step.  
-
-Configuration is done in logback-include.xml by updating the value of the step recorder property to: STEP_MARKER, INFO_LOG_LEVEL, or DEBUG_LOG_LEVEL.
-
-    <!-- This is set in logback-include.xml -->
-    <layout class="org.concordion.logback.HTMLLayout">
-      <format>COLUMN</format>
-      <pattern>%date{HH:mm:ss.SSS}%message%file%line</pattern>
-      <stepRecorder>STEP_MARKER</stepRecorder>
-    </layout>
-    
-        
-    LOGGER.info("My step here");
-
-    // Using a step marker will always work, regardless of the setting of the StepRecorder property
-    LOGGER.info(HTMLLogMarkers.step(), "My step here");
+Configuring to use the HTML logs is a simple matter of [adding the appender](- "c:assertTrue=isHtmlAppenderConfigured()") to the logback-jenkins.xml and logback-test.xml files as follows
 
 
 ## Usage
@@ -153,7 +95,6 @@ Exceptions are formatted within a [collapsible section](- "c:assertTrue=throwExc
 
     LOGGER.error("Something when wrong", new Exception("me"));
     
-    
 ### Location Aware Logging
 All log statements show the location and line number of the class and line number where the logging statement was called.  By setting the locationAwareParent() to the current class then the location of any the log statement will [appear to be the calling method](- "c:assertTrue=locationAware()").
 
@@ -169,4 +110,14 @@ All log statements show the location and line number of the class and line numbe
 				.trace();
 		}
     }
+
+
+### Grouping Log Statements
+
+A test often involves a series of steps to complete a task.  This extension provides two mechanisms to group log statements under a step.  
+
+Configuration...
+    
+    // Using a step marker will always work, regardless of the setting of the StepRecorder property
+    LOGGER.step("My step here");
     
