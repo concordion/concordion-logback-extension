@@ -12,6 +12,18 @@ import test.concordion.logback.LocationHelper;
 import test.concordion.logback.LogBackHelper;
 
 public class HtmlLog extends BaseFixture {
+	private static final String HTML_FRAGMENT = "<span concordion:execute=\"logSomething()\"></span>";
+	private static final String FIXTURE_CLASSNAME = "Test";
+	private static final String FIXTURE_START = "import org.slf4j.ext.ReportLogger;" + System.lineSeparator() +
+												"import org.slf4j.ext.ReportLoggerFactory;" + System.lineSeparator() +
+												System.lineSeparator() +
+												"public class Test {" + System.lineSeparator() +
+												"    private static final ReportLogger LOGGER = ReportLoggerFactory.getReportLogger(Test.class);" + System.lineSeparator() +
+												System.lineSeparator() +
+												"    public void logSomething() {" + System.lineSeparator();
+	private static final String FIXTURE_STOP =  "    }" + System.lineSeparator() + 
+												"}";
+    		
 	private HTMLLayout layout;
 	
 	@BeforeSpecification
@@ -58,7 +70,7 @@ public class HtmlLog extends BaseFixture {
 	
 	public boolean canUseClassicLogger() {
 		resetLogListener();
-
+ 
 		Logger logger = LoggerFactory.getLogger(HtmlLog.class);
 		logger.debug("This uses the classic logger");
 
@@ -67,29 +79,29 @@ public class HtmlLog extends BaseFixture {
 
 	public boolean canUseReportLogger(String javaFragment, String logMessage) throws Exception {
 		resetLogListener();
-		
-		processHtmlAndJava("<span concordion:execute=\"logSomething()\"></span>", javaFragment);
+
+		processHtmlAndJava(HTML_FRAGMENT, javaFragment);
 
 		return checkLogContains("<td class=\"Message\">" + logMessage + "</td>", true);
 	}
 	
-	public boolean addHtmlMessage() {
-		boolean result = true;
+	public String getLogMessage(String javaFragment) throws Exception {
+		resetLogListener();
 
+		processHtmlAndJava(HTML_FRAGMENT, FIXTURE_START + javaFragment + FIXTURE_STOP);
+
+		return getLogMessage();
+	}
+	
+	public boolean consoleLogIsPlainText(String javaFragment) throws Exception {
 		resetLogListener();
 		attchConsoleLayout();
 		
-		getLogger().with()
-    		.htmlMessage("This is <b>BOLD</b>")
-    		.trace();
+		processHtmlAndJava(HTML_FRAGMENT, FIXTURE_START + javaFragment + FIXTURE_STOP);
 		
 		releaseConsoleLayout();
 		
-		return checkLogContains("<td class=\"Message\">This is <b>BOLD</b></td>", result);
-	}
-
-	public boolean consoleLogIsPlainText() {
-		return checkConsoleLogContains("This is BOLD", true);
+		return checkConsoleLogContains(FIXTURE_CLASSNAME + " - This is BOLD");
 	}
 	
 	public boolean addHtmlData() {
@@ -108,7 +120,24 @@ public class HtmlLog extends BaseFixture {
 		return result;
 	}
 	
-	
+//	TODO: Storyboard will need to be able to link to this entry
+//	TODO: Display XML just like Internet Explorer?
+//
+//	* http://www.geekzilla.co.uk/ViewD245BBE0-2EAB-44C0-9119-8038467926EE.htm
+//	* http://www.codeproject.com/Articles/24299/XML-String-Browser-just-like-Internet-Explorer-usi
+//
+//	or maybe add link an open as file?
+//
+//	* http://www.w3schools.com/tags/tag_embed.asp
+//
+//	And Status Icons
+//
+//	*  http://fontawesome.io
+//
+//	need to figure out which ones to use - will need to look at extent reports
+//
+//	clone https://github.com/anshooarora/extentreports and search for fa-check-circle-o
+
 	public boolean addData() {
 		boolean result = true;
 

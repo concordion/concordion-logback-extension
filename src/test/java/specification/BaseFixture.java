@@ -41,7 +41,9 @@ public class BaseFixture {
 	protected ExampleStoryboardListener exampleStoryboardListener = new ExampleStoryboardListener();
 	private JavaSourceCompiler compiler;
     private static final Pattern CLASS_NAME_PATTERN = Pattern.compile("class\\s*(.*?)\\s*(\\{|extends)");
-
+    private static String MESSAGE_TOKEN = "<td class=\"Message\">";
+    private static String END_TOKEN = "</td>";
+	
 	@Extension
 	private final LoggingTooltipExtension tooltipExtension = new LoggingTooltipExtension(new LogbackLogMessenger(tooltipLogger.getName(), Level.ALL, true, "%msg%n"));
 
@@ -104,6 +106,17 @@ public class BaseFixture {
 		return exampleLogListener.getLog();
 	}
 	
+	protected String getLogMessage() {
+		String message = exampleLogListener.getLog(); 
+		
+		int index = message.indexOf(MESSAGE_TOKEN);
+		if (index > 0) {
+			message = message.substring(index + MESSAGE_TOKEN.length(), message.indexOf(END_TOKEN, index));
+		}
+
+		return message;
+	}
+	
 	protected boolean checkLogEqual(String expected, boolean currentResult) {
 		return checkEqual(expected, exampleLogListener.getLog(), currentResult);
 	}
@@ -112,8 +125,8 @@ public class BaseFixture {
 		return checkContains(expected, exampleLogListener.getLog(), currentResult);	
 	}
 
-	protected boolean checkConsoleLogContains(String expected, boolean currentResult) {
-		return checkContains(expected, exampleLogListener.getConsoleLog(), currentResult);
+	protected boolean checkConsoleLogContains(String expected) {
+		return checkContains(expected, exampleLogListener.getConsoleLog(), true);
 	}
 
 	protected boolean checkStoryboardLogEqual(String expected, boolean currentResult) {
@@ -212,10 +225,10 @@ public class BaseFixture {
 	}
     
     private Object compile(String javaSource) throws Exception, InstantiationException, IllegalAccessException {
-    	return compiler.compile(getClassName(javaSource), javaSource).newInstance();
+    	return compiler.compile(getClassNameFrom(javaSource), javaSource).newInstance();
 	}
 	
-	public String getClassName(String javaFragment) {
+	public String getClassNameFrom(String javaFragment) {
 		Matcher matcher = CLASS_NAME_PATTERN.matcher(javaFragment);
 		matcher.find();
 		return matcher.group(1);
