@@ -25,11 +25,11 @@ The supplied configuration files provide a number of pre-configured appenders al
 
 For console logging you have a choice between:
 
-**STDOUT**
+**&#8658; STDOUT**
 
 Is designed to log everything to the console, you might prefer to use this when running tests within an IDE such as Eclipse.
 
-**STDOUT-INFO**
+**&#8658; STDOUT-INFO**
 
 Is designed to log only INFO level and above to the console and ignore DEBUG and below log statements.  This can be useful in a continuous integration environment such as Jenkins, especially if running tests in parallel as the logs can become all but incomprehensible..
 
@@ -37,11 +37,11 @@ Is designed to log only INFO level and above to the console and ignore DEBUG and
 
 To log to a file you have a choice between the following two appenders:
  
-**FILE-PER-TEST**
+**&#8658; FILE-PER-TEST**
 
 Automatically creates a new text based (i.e. classic) log file per test (or example if using Concordion's Example command).r
-**HTML-FILE-PER-TEST** (default)
 
+**&#8658; HTML-FILE-PER-TEST** (default)
 
 Automatically creates a new HTML based log file per test (or example if using Concordion's Example command).  This logger also allows embedding screenshots, and other data that a text based log file cannot handle in an easy to read format.
 
