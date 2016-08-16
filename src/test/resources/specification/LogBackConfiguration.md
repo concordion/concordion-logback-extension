@@ -1,23 +1,23 @@
 # LogBack Configuration
 
-In order to remain as flexible as possible the logging interface has been implemented using [SLF4J](http://slf4j.org) and a default logging implementation has been created using [LogBack](http://logback.qos.ch) because of its ability to split logs into separate logs per test and, at the time this extension was created, was recommended as the successor to Log4j.
+In order to remain as flexible as possible the logging interface has been implemented using [SLF4J](http://slf4j.org) and a default logging implementation has been created using [LogBack](http://logback.qos.ch) because of its ability to split logs into separate logs per test and LogBack, at the time this extension was created, was recommended as the successor to Log4j.
 
 
 ## Configuration Files
 
-The extension comes with an example set of logback configuration files to use:
+The extension comes with a set of logback configuration files to get you up and running:
 
 | ------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| logback-test.xml    | Default configuration picked up by LogBack, it is designed to log everything both to standard out and to the log file(s) |
-| logback-jenkins.xml | Alternative configuration file that only logs information, warning and error level entries to standard out and everything to the log file |
-| logback-include.xml | Configuration for the various appenders used by the logging framework, it is used by the previous two configuration files |    
+| **logback-test.xml**    | Default configuration picked up by LogBack when running tests, it is configured to log everything both to standard out and to HTML style log file(s) |
+| **logback-jenkins.xml** | Alternative configuration differs from the above in that the console log on receives information, warning and error level entries |
+| **logback-include.xml** | Configuration for the various appenders used by the logging framework, it is used by the previous two configuration files |    
 
 These files must be placed in the class path of your project, eg in the src/test/resources folder. 
 
 
 ## Configuration Selection
 
-By default LogBack will search for logback-test.xml and use that to configure logging.  This file has been set up with defaults that will work well in when running tests in your favourite IDE but possibly not so great when running in a continuous integration environment such as Jenkins you might want different behaviour.  
+By default LogBack will search for logback-test.xml and use that to configure logging.  This file has been set up with defaults that will work well in when running tests in your favourite IDE but possibly not so great when running in a continuous integration environment.  
 
 In a continuous integration environment such as Jenkins you have the option to provide a different configuration file to LogBack by including the command line argument `-Dlogback.configurationFile=logback-jenkins.xml`.
 
@@ -33,7 +33,7 @@ The logback-include.xml configuration files provide a number of pre-configured a
 | STDOUT-INFO            | Is designed to log only INFO level and above to the console and ignore DEBUG and below log statements.  This can be useful in a continuous integration environment such as Jenkins, especially if running tests in parallel as the logs can become all but incomprehensible |
 |**File Appenders**                                                            ||
 | FILE-PER-TEST          | Automatically creates a new text based (i.e. classic) log file per test (or example if using Concordion's Example command) |
-| HTML-FILE-PER-TEST     | Automatically creates a new HTML based log file per test (or example if using Concordion's Example command).  This logger also allows embedding screenshots, and other data that a text based log file cannot handle in an easy to read format. (This is the default file appender) |
+| HTML&#8209;FILE&#8209;PER&#8209;TEST  | Automatically creates a new HTML based log file per test (or example if using Concordion's Example command).  This logger also allows embedding screenshots, and other data that a text based log file cannot handle in an easy to read format. (This is the default file appender) |
 
 
 ## Log Message Format

@@ -20,14 +20,14 @@ Getting up and running is a simple matter of following these steps:
 2. [Register the Extension](Extension.md#registeringtheextension "c:run")
 3. [Start Logging](Extension.html#usingtheextension)
 
-**Tip:** Don't bother catching exceptions and logging them - this will do it for you.  Ideally just allow exceptions to propagate up the stack and allow this extension to catch and log the exception - unless you need to catch the exception and do something.
+**Tip:** Don't bother catching exceptions and logging them - the extension will do it for you.  Ideally just allow exceptions to propagate up the stack and allow this extension to catch and log the exception - unless you need to catch the exception and do something.
 
 
 ## HTML Logging / Reporting
 
 * [HTML Logs](HtmlLog.md "c:run") - provide the information in a more digestible format and can include screenshots and other data to back up what the test has done
 
-It is easy to switch between the two so feel free to experiment.
+It is easy to switch between Text and HTML formatted logging so feel free to experiment.
 
 
 ## Tooltip Logs
