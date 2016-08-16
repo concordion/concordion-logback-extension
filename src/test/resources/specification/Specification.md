@@ -17,8 +17,8 @@ By allowing the logs to be broken down into easily understood steps and includin
 Getting up and running is a simple matter of following these steps:
 
 1. [Configure LogBack](LogBackConfiguration.md "c:run") 
-2. [Register the Extension](Extension.md "c:run")
-3. Start Logging???
+2. [Register the Extension](Extension.md#registeringtheextension "c:run")
+3. [Start Logging](Extension.html#usingtheextension)
 
 **Tip:** Don't bother catching exceptions and logging them - this will do it for you.  Ideally just allow exceptions to propagate up the stack and allow this extension to catch and log the exception - unless you need to catch the exception and do something.
 
@@ -35,8 +35,4 @@ It is easy to switch between the two so feel free to experiment.
 [Tooltip Logs](ToolTipLog.md "c:run") provide a handy mechanism for providing information back to anyone reading the generated specification without having to drill down into the logs.
 
 ## Integration with Other Extensions 
-TODO: link to Extensions
-
-
-
-
+Other extensions can [listen and react](Extension.html#integration) to the logging events.

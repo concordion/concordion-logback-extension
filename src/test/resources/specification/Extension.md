@@ -1,6 +1,8 @@
 # The Logging Formatter Extension 
 
-## Registering the extension
+<div id="registeringtheextension" />
+
+## Registering the extension 
 
 Like all Concordion extensions the logging extension can be registered with an annotation on the test (or ancestor) class:
 
@@ -11,6 +13,8 @@ However it is likely that you'll want to customise the extension so more often y
  
     @Extension 
     private final LoggingFormatterExtension loggingExtension = new LoggingFormatterExtension()
+
+<div id="usingtheextension" />
 
 ## Using the extension
 
@@ -63,6 +67,7 @@ This extension includes a log viewer to make the logs a little friendlier to use
 
 This setting is ignored if using HTML Logs.
 
+<div id="integration" />
 
 ## Integration With other Extensions
 
