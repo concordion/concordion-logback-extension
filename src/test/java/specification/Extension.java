@@ -13,7 +13,6 @@ import org.concordion.api.BeforeSpecification;
 
 import ch.qos.logback.classic.PatternLayout;
 import test.concordion.ProcessingResult;
-import test.concordion.TestRig;
 import test.concordion.logback.LogBackHelper;
 import test.concordion.logback.StoryboardMarkerFactory;
 
