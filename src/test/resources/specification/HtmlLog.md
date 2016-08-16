@@ -58,7 +58,7 @@ LOGGER.with()
 	.trace();
 </pre></div>
 
-This will add a log entry in the HTML log with the message [<b>This is BOLD</b>](- "?=getLogMessage(#fixture)").
+This will add a log entry in the HTML log with the message [&lt;b&gt;This is BOLD&lt;/b&gt;](- "?=getLogMessage(#fixture)").
 
 Other appenders such as the console appender will continue log the text [without the HTML](- "c:assertTrue=consoleLogIsPlainText(#fixture)") tags.
 
