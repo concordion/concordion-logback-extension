@@ -55,9 +55,6 @@ public class HtmlLog extends BaseFixture {
 	public boolean isHtmlAppenderConfigured() {
 		return LogBackHelper.isConfiguredForHtmlLog();
 	}
-
-
-	
 	
 	public boolean canUseClassicLogger() {
 		resetLogListener();
@@ -68,9 +65,12 @@ public class HtmlLog extends BaseFixture {
 		return checkLogContains("<td class=\"Message\">This uses the classic logger</td>", true);
 	}
 
-	public boolean canUseReportLogger() {
-		// TODO Nigel: how pass in snippet?
-		return true;
+	public boolean canUseReportLogger(String javaFragment, String logMessage) throws Exception {
+		resetLogListener();
+		
+		processHtmlAndJava("<span concordion:execute=\"logSomething()\"></span>", javaFragment);
+
+		return checkLogContains("<td class=\"Message\">" + logMessage + "</td>", true);
 	}
 	
 	public boolean addHtmlMessage() {

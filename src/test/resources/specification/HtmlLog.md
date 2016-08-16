@@ -22,23 +22,27 @@ Configuring to use the HTML logs is a simple matter of [adding the appender](- "
 ## Usage
 ---
 
-While you can continue to use the [standard logger](- "c:assertTrue=canUseClassicLogger()") to log to the HTML log file, to use the new features you will need to [use the ReportLogger](- "c:assertTrue=canUseReportLogger()").  Arguments are supported in the same manner as the original api. 
+While you can continue to use the [standard logger](- "c:assertTrue=canUseClassicLogger()") to log to the HTML log file, to use the advanced logging features you will need to use the ReportLogger.   
 
-    import org.slf4j.ext.ReportLogger;
-    import org.slf4j.ext.ReportLoggerFactory;
+<div><pre concordion:set="#fixture">
+import org.slf4j.ext.ReportLogger;
+import org.slf4j.ext.ReportLoggerFactory;
 
-    public class Test {
-        private static final ReportLogger LOGGER = ReportLoggerFactory.getReportLogger(Test.class);
-        
-        public void logSomething() {
-            LOGGER.debug("Log a value {}", "with arguments");
-        }
+public class Test {
+    private static final ReportLogger LOGGER = ReportLoggerFactory.getReportLogger(Test.class);
+    
+    public void logSomething() {
+        LOGGER.debug("Log a value");
     }
-     
-The report logger provides a fluent api for advanced logging features. 
+}
+</pre></div>
+
+This will append the entry [Log a value](- "c:assertTrue=canUseReportLogger(#fixture, #TEXT)") into the log file.
+
 
 ### HTML Messages
 This will add a log entry in the HTML log with a [bold font](- "c:assertTrue=addHtmlMessage()").
+Arguments are supported in the same manner as the original api.
 
     LOGGER.with()
     	.htmlMessage("<b>This is BOLD</b>")
