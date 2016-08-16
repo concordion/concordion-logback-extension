@@ -62,7 +62,7 @@ Text based data such as CSV, XML and JSON can be [included](- "c:assertTrue=addD
 		.data("<soapenv>...</soapenv>")
 		.trace();
    
-
+TODO: Storyboard will need to be able to link to this entry
 TODO: Display XML just like Internet Explorer?
 
 * http://www.geekzilla.co.uk/ViewD245BBE0-2EAB-44C0-9119-8038467926EE.htm
@@ -80,6 +80,14 @@ need to figure out which ones to use - will need to look at extent reports
 
 clone https://github.com/anshooarora/extentreports and search for fa-check-circle-o
 
+### Attachments
+If you wish to include non text base files, or just want keep your data outside of the log file, then attachments allow you to do this.
+
+    LOGGER.with()
+		.message("Show this")
+		.attachment(new File("path/to/something.pdf"))
+		.trace();
+
 
 ### Screenshots
 Screenshots can be [included](- "c:assertTrue=addScreenshot()") using the following:
@@ -88,8 +96,7 @@ Screenshots can be [included](- "c:assertTrue=addScreenshot()") using the follow
 		.message("Clicking 'Login'")
 		.screenshot(getLoggingAdaptor().getLogFile(), new DummyScreenshotTaker())
 		.trace();
-
-
+		
 ### Exceptions
 Exceptions are formatted within a [collapsible section](- "c:assertTrue=throwException()") that presents the error message by default but will allow the user to drill down into the stack trace.  
 

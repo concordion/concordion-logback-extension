@@ -1,4 +1,4 @@
-# Configuration
+# LogBack Configuration
 
 In order to remain as flexible as possible the logging interface has been implemented using [SLF4J](http://slf4j.org) and a default logging implementation has been created using [LogBack](http://logback.qos.ch) because of its ability to split logs into separate logs per test and, at the time this extension was created, was recommended as the successor to Log4j.
 
