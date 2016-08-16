@@ -20,14 +20,11 @@ dependencies {
 	compile 'ch.qos.logback:logback-classic:1.1.7'
 	compile "org.concordion:concordion-logging-tooltip-extension:1.1.2"
 	compile 'org.apache.commons:commons-io:1.3.2'
-	//compile 'org.apache.commons:commons-lang3:3.4'
+	
+	// Only needed for javadocs :-(
+	compileOnly 'commons-lang:commons-lang:2.6'
 }
 
-sourceSets {
-	test {
-		resources { srcDirs += 'src/test/java' }
-	}
-}
 
 test.dependsOn cleanTest
 test {
