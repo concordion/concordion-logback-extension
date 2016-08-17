@@ -13,7 +13,7 @@ The implementation is based around [SLF4J Extensions](http://slf4j.org/extension
 
 Advanced logging features such as recording steps, screenshots and data are enabled by the use of [Markers](http://www.slf4j.org/apidocs/org/slf4j/Marker.html) (there is some more information on markers buried in the LogBack manuals chapter on [filters](http://logback.qos.ch/manual/filters.html)).  
 
-Before using this the logger, LogBack must be configured.  See[LogBack Configuration](LogBackConfiguration.html) for more information.
+Before using this the logger, LogBack must be configured.  See [LogBack Configuration](LogBackConfiguration.html) for more information.
 
 
 ## Usage
