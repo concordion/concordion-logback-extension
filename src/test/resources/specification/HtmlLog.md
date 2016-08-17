@@ -1,4 +1,4 @@
-# HTML Logs
+# HTML Logging / Reporting
 
 Plain text logs supply a lot of useful information but it can take time to trawl though to find the information you want and the context of what is being logged is often lacking.
 

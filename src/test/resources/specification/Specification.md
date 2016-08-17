@@ -25,7 +25,7 @@ Getting up and running is a simple matter of following these steps:
 
 ## HTML Logging / Reporting
 
-* [HTML Logs](HtmlLog.md "c:run") - provide the information in a more digestible format and can include screenshots and other data to back up what the test has done
+[HTML Logs](HtmlLog.md "c:run") provide the information in a more digestible format and can include screenshots and other data to back up what the test has done.
 
 It is easy to switch between Text and HTML formatted logging so feel free to experiment.
 
