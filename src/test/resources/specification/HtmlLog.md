@@ -63,13 +63,50 @@ This will add a log entry in the HTML log with the message [&lt;b&gt;This is BOL
 Other appenders such as the console appender will continue log the text [without the HTML](- "c:assertTrue=consoleLogIsPlainText(#fixture)") tags.
 
 ### Screenshots
-Screenshots can be [included](- "c:assertTrue=addScreenshot()") using the following:
+To include screenshots in your logs you must provide a class that implements ScreenShotTaker.  See the demo project for an example of a Selenium screenshot taker. 
 
-    LOGGER.with()
-		.message("Clicking 'Login'")
-		.screenshot(getLoggingAdaptor().getLogFile(), new DummyScreenshotTaker())
-		.trace();
+To allow the extension to include screenshots in the logs when an exception or failure is detected during a test, then the screenshot taker must either be registered with:
 
+<div><pre concordion:set="#fixture">
+// Registering via extension
+getLoggingExtension().setScreenshotTaker(new DummyScreenshotTaker());
+</pre></div>
+
+... the [logging extension](- "c:assertTrue=registerExtension(#fixture)")
+
+<div><pre concordion:set="#fixture">
+// Registering via ReportLogger
+getLogger().setScreenshotTaker(new DummyScreenshotTaker());
+</pre></div>
+
+... or directly with the [report logger](- "c:assertTrue=registerExtension(#fixture)") 
+
+**Note** that the screenshot taker is automatically unregistered as the specification completes and are only valid for the thread they are registered with. 
+
+Logging of the screenshots can be performed:
+
+<div><pre concordion:set="#fixture">
+LOGGER.setScreenshotTaker(new DummyScreenshotTaker());
+
+LOGGER.with()
+	.message("Clicking 'Login'")
+	.screenshot()
+	.trace();
+
+LOGGER.removeScreenshotTaker();
+</pre></div>
+
+... using the pre-registered [screenshot taker](- "c:assertTrue=hasScreenshot(#fixture)") 
+ 
+<div><pre concordion:set="#fixture">
+LOGGER.with()
+	.message("Clicking 'Login'")
+	.screenshot(new DummyScreenshotTaker())
+	.trace();
+</pre></div>
+
+... or for a more customised approach the screen shot taker can be [provided](- "c:assertTrue=hasScreenshot(#fixture)").
+ 
 ### HTML Data
 Custom HTML can be included and rendered as [html](- "c:assertTrue=addHtmlData()"):
 

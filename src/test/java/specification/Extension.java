@@ -196,10 +196,6 @@ public class Extension extends BaseFixture {
 			
 			process(htmlFragment, fixture);
 			
-//			getTestRig()
-//					.withFixture(fixture)
-//					.processFragment(htmlFragment, "/" + this.getClass().getName().replace(".", "/").replace("$", "/"));
-
 			storyboardListenerContent = fixture.exampleStoryboardListener.getStreamContent();
 			logListenerContent = fixture.exampleLogListener.getLog();
 

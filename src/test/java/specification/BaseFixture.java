@@ -25,7 +25,6 @@ import ch.qos.logback.classic.Level;
 import test.concordion.JavaSourceCompiler;
 import test.concordion.ProcessingResult;
 import test.concordion.TestRig;
-import test.concordion.logback.DummyScreenshotTaker;
 import test.concordion.logback.ExampleLogListener;
 import test.concordion.logback.ExampleStoryboardListener;
 import test.concordion.logback.LogBackHelper;
@@ -50,8 +49,7 @@ public class BaseFixture {
 	@Extension
 	private final LoggingFormatterExtension loggingExtension = new LoggingFormatterExtension()
 			.registerListener(exampleLogListener)
-			.registerListener(exampleStoryboardListener)
-			.setScreenshotTaker(new DummyScreenshotTaker());
+			.registerListener(exampleStoryboardListener);
 	
 	static {
 		LogbackAdaptor.logInternalStatus();
@@ -84,9 +82,9 @@ public class BaseFixture {
 		return logger;
 	}
 
-//	public ILoggingAdaptor getLoggingAdaptor() {
-//		return loggingExtension.getLoggingAdaptor();
-//	}
+	public LoggingFormatterExtension getLoggingExtension() {
+		return loggingExtension;
+	}
 
 	public void addConcordionTooltip(final String message) {
 		// Logging at debug level means the message won't make it to the console, but will make 

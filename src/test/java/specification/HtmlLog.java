@@ -16,6 +16,7 @@ public class HtmlLog extends BaseFixture {
 	private static final String FIXTURE_CLASSNAME = "Test";
 	private static final String FIXTURE_START = "import org.slf4j.ext.ReportLogger;" + System.lineSeparator() +
 												"import org.slf4j.ext.ReportLoggerFactory;" + System.lineSeparator() +
+												"import test.concordion.logback.DummyScreenshotTaker;" + System.lineSeparator() + 
 												System.lineSeparator() +
 												"public class Test {" + System.lineSeparator() +
 												"    private static final ReportLogger LOGGER = ReportLoggerFactory.getReportLogger(Test.class);" + System.lineSeparator() +
@@ -104,6 +105,31 @@ public class HtmlLog extends BaseFixture {
 		return checkConsoleLogContains(FIXTURE_CLASSNAME + " - This is BOLD");
 	}
 	
+	public boolean registerExtension(String javaFragment) throws Exception {
+		resetLogListener();
+		
+		String fixture = FIXTURE_START + javaFragment + FIXTURE_STOP;
+				
+		fixture = fixture.replace("public class Test {", "import specification.BaseFixture;\r\n\r\npublic class Test extends BaseFixture {");
+		
+		processHtmlAndJava(HTML_FRAGMENT, fixture);
+		
+		return true;
+	}
+	
+	public boolean hasScreenshot(String javaFragment) throws Exception {
+		resetLogListener();
+
+		processHtmlAndJava(HTML_FRAGMENT, FIXTURE_START + javaFragment + FIXTURE_STOP);
+
+		boolean result = true;
+		
+		result = checkLogContains("<td class=\"Message\">Clicking &#39;Login&#39;</td>", result);
+		result = checkLogContains("<pre><a href=\"HtmlLogLogScreenShot", result);
+		
+		return result;
+	}
+	
 	public boolean addHtmlData() {
 		boolean result = true;
 
@@ -151,22 +177,6 @@ public class HtmlLog extends BaseFixture {
 		result = checkLogContains("<td class=\"Message\">Sending SOAP request</td>", result);
 		result = checkLogContains("<pre>&lt;soapenv&gt;...&lt;/soapenv&gt;</pre>", result);
 				
-		return result;
-	}
-	
-	public boolean addScreenshot() {
-		boolean result = true;
-
-		resetLogListener();
-		
-		getLogger().with()
-			.message("Clicking 'Login'")
-			.screenshot()
-			.trace();
-
-		result = checkLogContains("<td class=\"Message\">Clicking &#39;Login&#39;</td>", result);
-		result = checkLogContains("<pre><a href=\"HtmlLogLogScreenShot", result);
-		
 		return result;
 	}
 	

@@ -24,6 +24,7 @@
  */
 package org.slf4j.ext;
 
+import org.concordion.ext.ScreenshotTaker;
 import org.slf4j.Logger;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
@@ -95,5 +96,17 @@ public class ReportLogger extends LoggerWrapper {
 	 */
 	public void tooltip(String format, Object... arguments) {
 		debug(TOOLTIP_MARKER, format, arguments);
+	}
+	
+	public void setScreenshotTaker(ScreenshotTaker screenshotTaker) {
+		FluentLogger.addScreenshotTaker(screenshotTaker);
+	}
+	
+	public void removeScreenshotTaker() {
+		FluentLogger.removeScreenshotTaker();
+	}
+	
+	public boolean hasScreenshotTaker() {
+		return FluentLogger.hasScreenshotTaker();
 	}
 }
