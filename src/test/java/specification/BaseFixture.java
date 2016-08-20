@@ -93,12 +93,12 @@ public class BaseFixture {
 	}
 
 	// Location in log file will appear as if it came from the inheriting class
-	protected void logParentClassLocationAware() {
-		getLogger().with()
-				.htmlMessage("<b>This is a parent class location aware logged entry</b>")
-				.locationAwareParent(BaseFixture.class)
-				.trace();
-	}
+//	protected void logParentClassLocationAware() {
+//		getLogger().with()
+//				.htmlMessage("<b>This is a parent class location aware logged entry</b>")
+//				.locationAwareParent(BaseFixture.class)
+//				.trace();
+//	}
 
 	protected String getLogContent() {
 		return exampleLogListener.getLog();

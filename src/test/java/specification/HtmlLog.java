@@ -1,14 +1,11 @@
 package specification;
 
-import java.io.IOException;
-
 import org.concordion.api.AfterSpecification;
 import org.concordion.api.BeforeSpecification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.qos.logback.ext.html.HTMLLayout;
-import test.concordion.logback.LocationHelper;
 import test.concordion.logback.LogBackHelper;
 
 public class HtmlLog extends BaseFixture {
@@ -130,16 +127,13 @@ public class HtmlLog extends BaseFixture {
 		return result;
 	}
 	
-	public boolean addHtmlData() {
-		boolean result = true;
-
+	public boolean addHtmlData(String javaFragment) throws Exception {
 		resetLogListener();
 		
-		getLogger().with()
-			.message("Some html will be included below")
-			.html("This is <b>BOLD</b>")
-			.trace();
+		processHtmlAndJava(HTML_FRAGMENT, FIXTURE_START + javaFragment + FIXTURE_STOP);
 		
+		boolean result = true;
+
 		result = checkLogContains("<td class=\"Message\">Some html will be included below</td>", result);
 		result = checkLogContains("<pre>This is <b>BOLD</b></pre>", result);
 				
@@ -164,27 +158,49 @@ public class HtmlLog extends BaseFixture {
 //
 //	clone https://github.com/anshooarora/extentreports and search for fa-check-circle-o
 
-	public boolean addData() {
-		boolean result = true;
-
+	public boolean addData(String javaFragment) throws Exception {
 		resetLogListener();
 		
-		getLogger().with()
-			.message("Sending SOAP request")
-			.data("<soapenv>...</soapenv>")
-			.trace();
+		processHtmlAndJava(HTML_FRAGMENT, FIXTURE_START + javaFragment + FIXTURE_STOP);
 
+		boolean result = true;
+		
 		result = checkLogContains("<td class=\"Message\">Sending SOAP request</td>", result);
 		result = checkLogContains("<pre>&lt;soapenv&gt;...&lt;/soapenv&gt;</pre>", result);
 				
 		return result;
 	}
 	
-	public boolean throwException() {
-		boolean result = true;
-
+	public boolean addAttachment(String javaFragment) throws Exception {
 		resetLogListener();
-		getLogger().error("Something when wrong", new Exception("me"));
+		
+		String imports = 
+			"import java.io.InputStream;" + System.lineSeparator() +
+			"import java.io.ByteArrayInputStream;" + System.lineSeparator() +
+			"import java.nio.charset.StandardCharsets;" + System.lineSeparator() + System.lineSeparator();
+		String fixture = FIXTURE_START + javaFragment + FIXTURE_STOP;
+		
+		fixture = fixture.replace("public class Test {", imports + "public class Test {");
+		
+		processHtmlAndJava(HTML_FRAGMENT, fixture);
+
+		return checkLogContains("<object width=", true);
+	}
+	
+	public boolean addStep(String javaFragment) throws Exception {
+		resetLogListener();
+		
+		processHtmlAndJava(HTML_FRAGMENT, FIXTURE_START + javaFragment + FIXTURE_STOP);
+
+		return checkLogContains("<td colspan=\"5\">My step here</td>", true);
+	}
+	
+	public boolean throwException(String javaFragment) throws Exception {
+		resetLogListener();
+		
+		processHtmlAndJava(HTML_FRAGMENT, FIXTURE_START + javaFragment + FIXTURE_STOP);
+
+		boolean result = true;
 		
 		result = checkLogContains("<td class=\"Message\">Something when wrong</td>", result);
 		result = checkLogContains("<input id=\"stackTraceButton", result);
@@ -192,26 +208,22 @@ public class HtmlLog extends BaseFixture {
 		return result;
 	}
 	
-	public boolean locationAware() throws IOException {
-		boolean result = true;
-		LocationHelper helper = new LocationHelper();
-
+	public boolean locationAware(String helperClass, String javaFragment) throws Exception {
 		resetLogListener();
+		
+		processHtmlAndJava(HTML_FRAGMENT, helperClass, FIXTURE_START + javaFragment + FIXTURE_STOP);
+
+		return checkLogContains("<td class=\"FileOfCaller\">Test.java</td>", true);
 		
 		// Parent Class
-		logParentClassLocationAware();
-		result = checkLogContains("<td class=\"FileOfCaller\">HtmlLog.java</td>", result);
+//		logParentClassLocationAware();
+//		result = checkLogContains("<td class=\"FileOfCaller\">HtmlLog.java</td>", result);
 
 		// Location Unaware
-		resetLogListener();
-		helper.logLocationUnaware();
-		result = checkLogContains("<td class=\"FileOfCaller\">LocationHelper.java</td>", result);
+//		resetLogListener();
+//		helper.logLocationUnaware();
+//		result = checkLogContains("<td class=\"FileOfCaller\">LocationHelper.java</td>", result);
 		
-		// Location Aware
-		resetLogListener();
-		helper.logLocationAware();
-		result = checkLogContains("<td class=\"FileOfCaller\">HtmlLog.java</td>", result);
-		
-		return result;
+//		return result;
 	}
 }

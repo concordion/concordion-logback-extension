@@ -108,57 +108,98 @@ LOGGER.with()
 ... or for a more customised approach the screen shot taker can be [provided](- "c:assertTrue=hasScreenshot(#fixture)").
  
 ### HTML Data
-Custom HTML can be included and rendered as [html](- "c:assertTrue=addHtmlData()"):
 
-    LOGGER.with()
-		.message("Some html will be included below")
-		.html("This is <b>BOLD</b>")
-		.trace();
+<div><pre concordion:set="#fixture">
+LOGGER.with()
+	.message("Some html will be included below")
+	.html("This is &lt;b>BOLD&lt;/b>")
+	.trace();
+</pre></div>
+
+Custom HTML can be included and rendered as [html](- "c:assertTrue=addHtmlData(#fixture)"):
 				
 ### Text Based Data
-Text based data such as CSV, XML and JSON can be [included](- "c:assertTrue=addData()") and any reserved html characters such as '<' will be escaped.
 
-    LOGGER.with()
-		.message("Sending SOAP request")
-		.data("<soapenv>...</soapenv>")
-		.trace();
-   
+<div><pre concordion:set="#fixture">
+LOGGER.with()
+	.message("Sending SOAP request")
+	.data("&lt;soapenv>...&lt;/soapenv>")
+	.trace();
+</pre></div>
+
+Text based data such as CSV, XML and JSON can be [included](- "c:assertTrue=addData(#fixture)") and any reserved html characters such as '<' will be escaped.
+
 ### Attachments
-If you wish to include non text base files, or just want keep your data outside of the log file, then attachments allow you to do this.
 
-    LOGGER.with()
-		.message("Show this")
-		.attachment(new File("path/to/something.pdf"))
-		.trace();
-		
+<div><pre concordion:set="#fixture">
+InputStream stream = new ByteArrayInputStream("Example".getBytes(StandardCharsets.UTF_8));
+
+LOGGER.with()
+	.message("Show this attachment")
+	.attachment(stream, "example.txt", "text/plain")
+	.trace();
+</pre></div>
+
+If you wish to include non text base files, or just want keep your data outside of the log file, then [attachments](- "c:assertTrue=addAttachment(#fixture)") allow you to do this.
+
 ### Exceptions
-Exceptions are formatted within a [collapsible section](- "c:assertTrue=throwException()") that presents the error message by default but will allow the user to drill down into the stack trace.  
 
-    LOGGER.error("Something when wrong", new Exception("me"));
+<div><pre concordion:set="#fixture">
+LOGGER.error("Something when wrong", new Exception("me"));
+</pre></div>
 
+Exceptions are formatted within a [collapsible section](- "c:assertTrue=throwException(#fixture)") that presents the error message by default but will allow the user to drill down into the stack trace.
+ 
 ### Grouping Log Statements
 
 A test often involves a series of steps to complete a task.  This extension provides two mechanisms to group log statements under a step.  
+   
+<div><pre concordion:set="#fixture">
+// Using a step marker will always work, regardless of the setting of the StepRecorder property
+LOGGER.step("My step here");
+</pre></div>
 
-Configuration...
-    
-    // Using a step marker will always work, regardless of the setting of the StepRecorder property
-    LOGGER.step("My step here");
-    
+This will add a [step](- "c:assertTrue=addStep(#fixture)") to the log.
+
+See (Configuration)[LogBackConfiguration.html] for an example of using the log level to achieve the same result.
+
 ### Location Aware Logging
-All log statements show the location and line number of the class and line number where the logging statement was called.  By setting the locationAwareParent() to the current class then the location of any the log statement will [appear to be the calling method](- "c:assertTrue=locationAware()").
 
-    Helper.writeLog("hello");
-		
-	public class Helper {
-		private static final ReportLogger LOGGER = ReportLoggerFactory.getReportLogger(PageHelper.class);
+When debugging tests it is often desireable to know where something happened within your tests and the SLF4J/LogBack combination can provide the line and file of each logging statement out of the box.  This is not necessary that helpful on helper classes used by tests so we have the option of telling the logger to log the location as that of the calling class rather than the current class.
 
-		public static writeLog(String message) {
-			logger.with()
-				.message(message)
-				.locationAwareParent(Helper.class)
+For example, if we have a helper class that sets the locationAwareParent() to the current class...
+ 
+<div><pre concordion:set="#helperclass">	
+import org.slf4j.ext.ReportLogger;
+import org.slf4j.ext.ReportLoggerFactory;
+
+public class LocationHelper {
+	private final ReportLogger logger = ReportLoggerFactory.getReportLogger(this.getClass().getName());
+
+	public void logLocationAware() {
+		logger.with()
+				.htmlMessage("<b>This is a location aware logged entry</b>")
+				.locationAwareParent(this)
 				.trace();
-		}
-    }
+	}
+	
+	public void logLocationAware2() {
+		logger.with()
+				.htmlMessage("<b>This is also a location aware logged entry</b>")
+				.locationAwareParent(LocationHelper.class)
+				.trace();
+	}
+}
+</pre></div>
+
+That is used by a test...
+
+<div><pre concordion:set="#fixture">
+new LocationHelper().logLocationAware();
+</pre></div>
+
+Then log statements will show the location and line number of the class where the [logging statement was called](- "c:assertTrue=locationAware(#helperclass, #fixture)").  
+
+**Note** use the locationAwareParent(Class) version when attempting this in a base class and want logging to appear as if it was called from the parent.
 
     

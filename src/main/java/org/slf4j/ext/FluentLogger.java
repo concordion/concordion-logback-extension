@@ -1,5 +1,7 @@
 package org.slf4j.ext;
 
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Iterator;
 
 import org.concordion.ext.ScreenshotTaker;
@@ -7,6 +9,7 @@ import org.concordion.ext.loggingFormatter.ILoggingAdaptor;
 import org.slf4j.Logger;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
+import org.slf4j.helpers.AttachmentMarker;
 import org.slf4j.helpers.BaseDataMarker;
 import org.slf4j.helpers.DataMarker;
 import org.slf4j.helpers.HtmlMarker;
@@ -77,20 +80,6 @@ public class FluentLogger {
 		marker.add(reference);
 	}
 
-	// TODO Think about using object tag to embed files
-	// <script language="javascript" type="text/javascript">
-	// function resizeIframe(obj) {
-	// var height = obj.contentWindow.document.body.scrollHeight;
-	// if (height > 200) height = 200;
-	//
-	// obj.style.height = 0;
-	// obj.style.height = height + 'px';
-	// }
-	// </script>
-	// <a href="test.txt">Open File</a>
-	// <object width="100%" height="50" type="text/plain" data="test.txt" border="1" onload="resizeIframe(this)"><a href="test.txt">test.txt</a></object>
-	//
-	//
 	public FluentLogger htmlMessage(String format, Object... arguments) {
 		addMarker(new HtmlMessageMarker(format));
 
@@ -166,6 +155,12 @@ public class FluentLogger {
 		return this;
 	}
 
+	public FluentLogger attachment(InputStream inputStream, String filename, String type) {
+		addMarker(new AttachmentMarker(getLoggingAdaptor().getLogFile().getPath(), inputStream, filename, type));
+
+		return this;
+	}
+	
 	public FluentLogger marker(Marker marker) {
 		addMarker(marker);
 		return this;
