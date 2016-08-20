@@ -13,6 +13,7 @@ import org.concordion.api.BeforeSpecification;
 
 import ch.qos.logback.classic.PatternLayout;
 import test.concordion.ProcessingResult;
+import test.concordion.logback.DummyScreenshotTaker;
 import test.concordion.logback.LogBackHelper;
 import test.concordion.logback.StoryboardMarkerFactory;
 
@@ -126,7 +127,7 @@ public class Extension extends BaseFixture {
 
 		getLogger().with()
 				.marker(StoryboardMarkerFactory.storyboard("DummyPage"))
-				.screenshot()
+				.screenshot(new DummyScreenshotTaker())
 				.trace();
 
 		String log = exampleStoryboardListener.getStreamContent();
