@@ -44,7 +44,7 @@ public final class MediaType {
 	/**
 	 * As described in <a href="http://www.ietf.org/rfc/rfc3023.txt">RFC 3023</a>, this constant
 	 * ({@code text/xml}) is used for XML documents that are "readable by casual users."
-	 * {@link #APPLICATION_XML_UTF_8} is provided for documents that are intended for applications.
+	 * {@link #APPLICATION_XML} is provided for documents that are intended for applications.
 	 */
 	public static final MediaType XML = createConstantUtf8(TEXT_TYPE, "xml");
 
