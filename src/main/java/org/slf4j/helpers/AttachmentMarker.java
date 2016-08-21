@@ -45,11 +45,11 @@ public class AttachmentMarker extends BaseDataMarker<AttachmentMarker> {
 		//
 		buf.append("<a href=\"").append(data).append("\">").append("View").append("</a>");
 		
-		buf.append("<object width=\"100%\" height=\"50\" border=\"1\"");
+		buf.append("<div class=\"resizeable\"><object class=\"resizeable\"");
 		buf.append(" type=\"").append(type).append("\"");
 		buf.append(" data=\"").append(data).append("\"");
 		buf.append(">");
-		buf.append("</object>");
+		buf.append("</object></div>");
 
 		return buf.toString();
 	}

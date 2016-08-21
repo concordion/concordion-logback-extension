@@ -136,7 +136,7 @@ InputStream stream = new ByteArrayInputStream("Example".getBytes(StandardCharset
 
 LOGGER.with()
 	.message("Show this attachment")
-	.attachment(stream, "example.txt", "text/plain")
+	.attachment(stream, "example.txt", MediaType.PLAIN_TEXT)
 	.trace();
 </pre></div>
 

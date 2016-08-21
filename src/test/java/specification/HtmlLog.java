@@ -177,14 +177,16 @@ public class HtmlLog extends BaseFixture {
 		String imports = 
 			"import java.io.InputStream;" + System.lineSeparator() +
 			"import java.io.ByteArrayInputStream;" + System.lineSeparator() +
+			"import org.slf4j.ext.MediaType;" + System.lineSeparator() +			
 			"import java.nio.charset.StandardCharsets;" + System.lineSeparator() + System.lineSeparator();
+				
 		String fixture = FIXTURE_START + javaFragment + FIXTURE_STOP;
 		
 		fixture = fixture.replace("public class Test {", imports + "public class Test {");
 		
 		processHtmlAndJava(HTML_FRAGMENT, fixture);
 
-		return checkLogContains("<object width=", true);
+		return checkLogContains("<object class=\"resizeable\" ", true);
 	}
 	
 	public boolean addStep(String javaFragment) throws Exception {

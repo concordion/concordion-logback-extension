@@ -155,8 +155,12 @@ public class FluentLogger {
 		return this;
 	}
 
-	public FluentLogger attachment(InputStream inputStream, String filename, String type) {
-		addMarker(new AttachmentMarker(getLoggingAdaptor().getLogFile().getPath(), inputStream, filename, type));
+	public FluentLogger attachment(InputStream inputStream, String filename, MediaType mediaType) {
+		return attachment(inputStream, filename, mediaType.toString());
+	}
+	
+	public FluentLogger attachment(InputStream inputStream, String filename, String mediaType) {
+		addMarker(new AttachmentMarker(getLoggingAdaptor().getLogFile().getPath(), inputStream, filename, mediaType.toString()));
 
 		return this;
 	}

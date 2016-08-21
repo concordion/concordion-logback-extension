@@ -113,4 +113,16 @@ img.sizewidth {
 img.sizeheight {
     width: auto;
 }
+
+/* Embedded Object */
+div.resizeable {
+	border: 2px solid; 
+	resize:both; 
+	overflow: hidden;
+}
+
+object.resizeable {
+	width: 100%; 
+	height: 100%;
+}
 </style>
