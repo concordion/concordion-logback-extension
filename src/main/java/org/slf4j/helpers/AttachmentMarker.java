@@ -29,7 +29,7 @@ public class AttachmentMarker extends BaseDataMarker<AttachmentMarker> {
 	public String getFormattedData() {
 		StringBuilder buf = new StringBuilder();
 
-		// TODO Think about using object tag to embed files
+		// TODO Do we want auto resizing of attachment?
 		// <script language="javascript" type="text/javascript">
 		// function resizeIframe(obj) {
 		// var height = obj.contentWindow.document.body.scrollHeight;

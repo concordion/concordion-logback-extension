@@ -140,24 +140,6 @@ public class HtmlLog extends BaseFixture {
 		return result;
 	}
 	
-//	TODO: Storyboard will need to be able to link to this entry
-//	TODO: Display XML just like Internet Explorer?
-//
-//	* http://www.geekzilla.co.uk/ViewD245BBE0-2EAB-44C0-9119-8038467926EE.htm
-//	* http://www.codeproject.com/Articles/24299/XML-String-Browser-just-like-Internet-Explorer-usi
-//
-//	or maybe add link an open as file?
-//
-//	* http://www.w3schools.com/tags/tag_embed.asp
-//
-//	And Status Icons
-//
-//	*  http://fontawesome.io
-//
-//	need to figure out which ones to use - will need to look at extent reports
-//
-//	clone https://github.com/anshooarora/extentreports and search for fa-check-circle-o
-
 	public boolean addData(String javaFragment) throws Exception {
 		resetLogListener();
 		

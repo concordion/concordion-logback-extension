@@ -1,7 +1,7 @@
 package org.slf4j.ext;
 
 /**
- * TODO Nigel, what do you think of this...
+ * TODO Is it ok to steal this code?
  * 
  * Represents an <a href="http://en.wikipedia.org/wiki/Internet_media_type">Internet Media Type</a>
  * (also known as a MIME Type or Content Type), a complete list can be found <a href="http://www.freeformatter.com/mime-types-list.html">here</a>.

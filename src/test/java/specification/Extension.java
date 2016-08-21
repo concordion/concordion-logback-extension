@@ -142,7 +142,6 @@ public class Extension extends BaseFixture {
 		exampleLogListener.reset();
 		exampleStoryboardListener.resetStream();
 
-		// TODO Nigel: Does this duplicate parallel runner adequately?
 		List<Callable<WorkerThread>> tests = new ArrayList<Callable<WorkerThread>>();
 
 		tests.add(new WorkerThread(0));

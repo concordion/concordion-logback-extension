@@ -1,7 +1,6 @@
 package org.slf4j.ext;
 
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Iterator;
 
 import org.concordion.ext.ScreenshotTaker;
