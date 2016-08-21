@@ -25,7 +25,7 @@ import ch.qos.logback.classic.Level;
 import test.concordion.JavaSourceCompiler;
 import test.concordion.ProcessingResult;
 import test.concordion.TestRig;
-import test.concordion.logback.ExampleLogListener;
+import test.concordion.logback.LayoutFormattedLogListener;
 import test.concordion.logback.ExampleStoryboardListener;
 import test.concordion.logback.LogBackHelper;
 
@@ -36,7 +36,7 @@ import test.concordion.logback.LogBackHelper;
 public class BaseFixture {
 	private final ReportLogger logger = ReportLoggerFactory.getReportLogger(this.getClass().getName());
 	private final Logger tooltipLogger = LoggerFactory.getLogger("TOOLTIP_" + this.getClass().getName());
-	protected ExampleLogListener exampleLogListener = new ExampleLogListener();
+	protected LayoutFormattedLogListener exampleLogListener = new LayoutFormattedLogListener();
 	protected ExampleStoryboardListener exampleStoryboardListener = new ExampleStoryboardListener();
 	private JavaSourceCompiler compiler;
     private static final Pattern CLASS_NAME_PATTERN = Pattern.compile("class\\s*(.*?)\\s*(\\{|extends)");

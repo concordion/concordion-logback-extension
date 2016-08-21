@@ -7,12 +7,11 @@ import org.concordion.api.extension.ConcordionExtension;
 import org.concordion.ext.loggingFormatter.ILoggingAdaptor;
 import org.concordion.ext.loggingFormatter.LogbackAdaptor;
 import org.concordion.ext.loggingFormatter.LoggingFormatterSpecificationListener;
-import org.concordion.logback.LogFilter;
 import org.concordion.logback.LoggingListener;
+import org.concordion.logback.MarkerFilter;
 import org.slf4j.LoggerFactory;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
-import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.spi.FilterAttachable;
 
 /**
@@ -86,13 +85,13 @@ public class LoggingFormatterExtension implements ConcordionExtension {
 	 */
 	public LoggingFormatterExtension registerListener(LoggingListener logListener) {
 		if (logListener instanceof FilterAttachable<?>) {
-			LogFilter filter = new LogFilter();
+			MarkerFilter filter = new MarkerFilter();
 			
 			filter.setFilterMarkers(logListener.getFilterMarkers());
 			filter.setThread(Thread.currentThread().getName());
 			filter.start();
 			
-			((FilterAttachable<ILoggingEvent>) logListener).addFilter(filter);
+			logListener.addFilter(filter);
 		}
 
 		logListener.start();
