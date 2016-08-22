@@ -14,9 +14,20 @@ ext {
 	inceptionYear = '2014'
 }
 
-dependencies {
-	compile 'org.slf4j:slf4j-ext:1.7.21'
 
+sourceSets {
+    integration
+}
+
+dependencies {
+	//TODO Nigel: Is there a better way to include this in both integration and main source sets?
+	integrationCompileOnly 'org.slf4j:slf4j-ext:1.7.21'
+    integrationCompileOnly 'ch.qos.logback:logback-classic:1.1.7'
+    
+    compile sourceSets.integration.output
+    
+	compile 'org.slf4j:slf4j-ext:1.7.21'
+	
 	compile 'ch.qos.logback:logback-classic:1.1.7'
 	compile "org.concordion:concordion-logging-tooltip-extension:1.1.2"
 	compile 'org.apache.commons:commons-io:1.3.2'
@@ -25,6 +36,26 @@ dependencies {
 	compileOnly 'commons-lang:commons-lang:2.6'
 }
 
+// build integration jar
+task integrationJar(type: Jar) {
+    from sourceSets.integration.output
+}
+
+// Include integration source set in sources jar
+sourcesJar  { 
+    from sourceSets.integration.allSource
+} 
+ 
+// publish integration jar
+publishing { 
+	publications { 
+        main(MavenPublication) {
+            artifact integrationJar { 
+            	classifier "integration" 
+            }
+		}
+	}
+}
 
 test.dependsOn cleanTest
 test {
