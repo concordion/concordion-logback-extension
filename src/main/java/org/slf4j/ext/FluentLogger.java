@@ -1,5 +1,6 @@
 package org.slf4j.ext;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Iterator;
 
@@ -164,7 +165,15 @@ public class FluentLogger {
 
 		return this;
 	}
+
+	public FluentLogger attachment(String input, String filename, MediaType mediaType) {
+		return attachment(new ByteArrayInputStream(input.getBytes()), filename, mediaType.toString());
+	}
 	
+	public FluentLogger attachment(String input, String filename, String mediaType) {
+		return attachment(new ByteArrayInputStream(input.getBytes()), filename, mediaType);
+	}
+
 	public FluentLogger marker(Marker marker) {
 		addMarker(marker);
 		return this;

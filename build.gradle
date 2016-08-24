@@ -23,6 +23,7 @@ dependencies {
 	//TODO Nigel: Is there a better way to include this in both integration and main source sets?
 	integrationCompileOnly 'org.slf4j:slf4j-ext:1.7.21'
     integrationCompileOnly 'ch.qos.logback:logback-classic:1.1.7'
+    integrationCompileOnly 'org.concordion:concordion:2.0.2'
     
     compile sourceSets.integration.output
     

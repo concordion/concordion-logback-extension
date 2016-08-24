@@ -1,19 +1,20 @@
 package org.concordion.slf4j.markers;
 
+import org.concordion.api.listener.ThrowableCaughtEvent;
 import org.slf4j.helpers.ConcordionMarker;
 
 public class ThrowableCaughtMarker extends ConcordionMarker {
 	private static final long serialVersionUID = 8750307001902436743L;
 
-	private final Throwable throwable;
+	private final ThrowableCaughtEvent event;
 
-	public ThrowableCaughtMarker(Throwable throwable) {
+	public ThrowableCaughtMarker(ThrowableCaughtEvent event) {
 		super(ReportLoggerMarkers.THROWABLE_CAUGHT_MARKER_NAME);
 
-		this.throwable = throwable;
+		this.event = event;
 	}
 
-	public Throwable getThrowable() {
-		return throwable;
+	public ThrowableCaughtEvent getEvent() {
+		return event;
 	}
 }

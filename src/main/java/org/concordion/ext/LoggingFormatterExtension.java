@@ -49,7 +49,10 @@ public class LoggingFormatterExtension implements ConcordionExtension {
 		concordionExtender.withSpecificationProcessingListener(listener);
 		concordionExtender.withExampleListener(listener);
 		concordionExtender.withThrowableListener(listener);
-		
+		concordionExtender.withAssertEqualsListener(listener);
+		concordionExtender.withAssertTrueListener(listener);
+		concordionExtender.withAssertFalseListener(listener);
+
 		String path = LoggingFormatterExtension.class.getPackage().getName();
 		path = path.replaceAll("\\.", "/");
 		path = "/" + path;

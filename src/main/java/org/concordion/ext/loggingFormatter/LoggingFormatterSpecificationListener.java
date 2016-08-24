@@ -10,6 +10,11 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.concordion.api.Element;
 import org.concordion.api.Resource;
+import org.concordion.api.listener.AssertEqualsListener;
+import org.concordion.api.listener.AssertFailureEvent;
+import org.concordion.api.listener.AssertFalseListener;
+import org.concordion.api.listener.AssertSuccessEvent;
+import org.concordion.api.listener.AssertTrueListener;
 import org.concordion.api.listener.ExampleEvent;
 import org.concordion.api.listener.ExampleListener;
 import org.concordion.api.listener.SpecificationProcessingEvent;
@@ -17,12 +22,14 @@ import org.concordion.api.listener.SpecificationProcessingListener;
 import org.concordion.api.listener.ThrowableCaughtEvent;
 import org.concordion.api.listener.ThrowableCaughtListener;
 import org.concordion.ext.ScreenshotTaker;
+import org.concordion.slf4j.markers.FailureReportedMarker;
 import org.concordion.slf4j.markers.ReportLoggerMarkers;
+import org.concordion.slf4j.markers.ThrowableCaughtMarker;
 import org.slf4j.ext.FluentLogger;
 import org.slf4j.ext.ReportLogger;
 import org.slf4j.ext.ReportLoggerFactory;
 
-public class LoggingFormatterSpecificationListener implements SpecificationProcessingListener, ExampleListener, ThrowableCaughtListener {
+public class LoggingFormatterSpecificationListener implements SpecificationProcessingListener, ExampleListener, ThrowableCaughtListener, AssertEqualsListener, AssertTrueListener, AssertFalseListener {
 	private static final ReportLogger LOGGER = ReportLoggerFactory.getReportLogger(LoggingFormatterSpecificationListener.class);
 	private final ILoggingAdaptor loggingAdaptor;
 	private final Resource stylesheetResource;
@@ -236,14 +243,43 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 	@Override
 	public void throwableCaught(ThrowableCaughtEvent event) {
 		Throwable cause = event.getThrowable();
-
-		FluentLogger logger = LOGGER.with().message(cause.getMessage());
+		
+		//event.getExpression()
+		FluentLogger logger = LOGGER.with()
+				.message("Exception thrown while evaluating expression '{}:\r\n\t{}", event.getExpression(), cause.getMessage())
+				.marker(new ThrowableCaughtMarker(event));
 
 		if (FluentLogger.hasScreenshotTaker()) {
 			logger.screenshot();
-			logger.marker(ReportLoggerMarkers.throwableCaught(cause));
 		}
 
 		logger.error(cause);
+	}
+
+	@Override
+	public void successReported(AssertSuccessEvent event) {
+	}
+	
+	@Override
+	public void failureReported(AssertFailureEvent event) {
+		StringBuilder sb = new StringBuilder().append("Test failed");
+		
+		if(event.getExpected() != null) {
+			sb.append("\n").append("Expected: ").append(event.getExpected());
+		}
+		
+		if(event.getActual() != null) {
+			sb.append("\n").append("Actual: ").append(event.getActual().toString());
+		}
+
+		FluentLogger logger = LOGGER.with()
+				.message(sb.toString())
+				.marker(new FailureReportedMarker(event));
+
+		if (FluentLogger.hasScreenshotTaker()) {
+			logger.screenshot();
+		}
+
+		logger.error();
 	}
 }
