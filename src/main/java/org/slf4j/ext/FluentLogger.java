@@ -5,15 +5,16 @@ import java.util.Iterator;
 
 import org.concordion.ext.ScreenshotTaker;
 import org.concordion.ext.loggingFormatter.ILoggingAdaptor;
+import org.concordion.slf4j.markers.AttachmentMarker;
+import org.concordion.slf4j.markers.BaseDataMarker;
+import org.concordion.slf4j.markers.DataMarker;
+import org.concordion.slf4j.markers.HtmlMarker;
+import org.concordion.slf4j.markers.HtmlMessageMarker;
+import org.concordion.slf4j.markers.ReportLoggerMarkers;
+import org.concordion.slf4j.markers.ScreenshotMarker;
 import org.slf4j.Logger;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
-import org.slf4j.helpers.AttachmentMarker;
-import org.slf4j.helpers.BaseDataMarker;
-import org.slf4j.helpers.DataMarker;
-import org.slf4j.helpers.HtmlMarker;
-import org.slf4j.helpers.HtmlMessageMarker;
-import org.slf4j.helpers.ScreenshotMarker;
 import org.slf4j.spi.LocationAwareLogger;
 
 public class FluentLogger {
@@ -266,7 +267,7 @@ public class FluentLogger {
 	private void prepare() {
 		if (format == null) {
 			// Tell logger to ignore lines with no message - we're probably just wanting to notify an extension of some event
-			addMarker(ReportLogger.PROGRESS_MARKER);
+			addMarker(ReportLoggerMarkers.PROGRESS_MARKER);
 		}
 
 		prepareData(marker);
@@ -278,7 +279,7 @@ public class FluentLogger {
 			return;
 		}
 
-		if (reference.getName().equals(ReportLogger.DATA_MARKER.getName())) {
+		if (reference.getName().equals(ReportLoggerMarkers.DATA_MARKER_NAME)) {
 			((BaseDataMarker<?>) reference).prepareData();
 		}
 

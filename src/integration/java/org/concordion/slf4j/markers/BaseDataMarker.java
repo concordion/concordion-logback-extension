@@ -1,15 +1,15 @@
-package org.slf4j.helpers;
+package org.concordion.slf4j.markers;
 
 import org.slf4j.Marker;
-import org.slf4j.ext.ReportLogger;
+import org.slf4j.helpers.ConcordionMarker;
 
-public abstract class BaseDataMarker<T> extends BasicMarker {
+public abstract class BaseDataMarker<T> extends ConcordionMarker {
 	private static final long serialVersionUID = 8750307001902436743L;
 
 	protected String data;
 
 	public BaseDataMarker(String data) {
-		super(ReportLogger.DATA_MARKER.getName());
+		super(ReportLoggerMarkers.DATA_MARKER_NAME);
 
 		this.data = data;
 	}

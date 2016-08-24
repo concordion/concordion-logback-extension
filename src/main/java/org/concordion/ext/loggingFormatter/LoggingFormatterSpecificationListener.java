@@ -17,6 +17,7 @@ import org.concordion.api.listener.SpecificationProcessingListener;
 import org.concordion.api.listener.ThrowableCaughtEvent;
 import org.concordion.api.listener.ThrowableCaughtListener;
 import org.concordion.ext.ScreenshotTaker;
+import org.concordion.slf4j.markers.ReportLoggerMarkers;
 import org.slf4j.ext.FluentLogger;
 import org.slf4j.ext.ReportLogger;
 import org.slf4j.ext.ReportLoggerFactory;
@@ -240,6 +241,7 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 
 		if (FluentLogger.hasScreenshotTaker()) {
 			logger.screenshot();
+			logger.marker(ReportLoggerMarkers.throwableCaught(cause));
 		}
 
 		logger.error(cause);

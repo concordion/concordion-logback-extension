@@ -24,10 +24,8 @@
  */
 package org.slf4j.ext;
 
-import org.concordion.ext.ScreenshotTaker;
+import org.concordion.slf4j.markers.ReportLoggerMarkers;
 import org.slf4j.Logger;
-import org.slf4j.Marker;
-import org.slf4j.MarkerFactory;
 
 /**
  * A utility that provides standard mechanisms for logging certain kinds of
@@ -36,12 +34,6 @@ import org.slf4j.MarkerFactory;
  * @author Andrew Sumner
  */
 public class ReportLogger extends LoggerWrapper {
-	public static Marker TOOLTIP_MARKER = MarkerFactory.getMarker("TOOLTIP");
-
-	public static Marker PROGRESS_MARKER = MarkerFactory.getMarker("PROGRESS");
-	public static Marker STEP_MARKER = MarkerFactory.getMarker("STEP");
-	//public static Marker HTML_MESSAGE_MARKER = MarkerFactory.getMarker("HTML");
-	public static Marker DATA_MARKER = MarkerFactory.getMarker("DATA");
 
 	/**
 	 * Given an underlying logger, construct an XLogger
@@ -62,7 +54,7 @@ public class ReportLogger extends LoggerWrapper {
 	 *            a list of arguments
 	 */
 	public void progress(String format, Object... arguments) {
-		logger.info(PROGRESS_MARKER, format, arguments);
+		logger.info(ReportLoggerMarkers.PROGRESS_MARKER, format, arguments);
 	}
 
 	/**
@@ -74,7 +66,7 @@ public class ReportLogger extends LoggerWrapper {
 	 *            a list of arguments
 	 */
 	public void step(String format, Object... arguments) {
-		logger.info(STEP_MARKER, format, arguments);
+		logger.info(ReportLoggerMarkers.STEP_MARKER, format, arguments);
 	}
 
 	/**
@@ -95,18 +87,6 @@ public class ReportLogger extends LoggerWrapper {
 	 *            a list of arguments
 	 */
 	public void tooltip(String format, Object... arguments) {
-		debug(TOOLTIP_MARKER, format, arguments);
-	}
-	
-	public void setScreenshotTaker(ScreenshotTaker screenshotTaker) {
-		FluentLogger.addScreenshotTaker(screenshotTaker);
-	}
-	
-	public void removeScreenshotTaker() {
-		FluentLogger.removeScreenshotTaker();
-	}
-	
-	public boolean hasScreenshotTaker() {
-		return FluentLogger.hasScreenshotTaker();
+		debug(ReportLoggerMarkers.TOOLTIP_MARKER, format, arguments);
 	}
 }

@@ -24,6 +24,7 @@
  */
 package org.slf4j.ext;
 
+import org.concordion.ext.ScreenshotTaker;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -41,6 +42,18 @@ import org.slf4j.LoggerFactory;
  * @author Andrew Sumner
  */
 public class ReportLoggerFactory {
+
+	public static void setScreenshotTaker(ScreenshotTaker screenshotTaker) {
+		FluentLogger.addScreenshotTaker(screenshotTaker);
+	}
+
+	public static void removeScreenshotTaker() {
+		FluentLogger.removeScreenshotTaker();
+	}
+
+	public static boolean hasScreenshotTaker() {
+		return FluentLogger.hasScreenshotTaker();
+	}
 
     /**
 	 * Get an ReportLogger instance by name.

@@ -75,8 +75,8 @@ getLoggingExtension().setScreenshotTaker(new DummyScreenshotTaker());
 ... the [logging extension](- "c:assertTrue=registerExtension(#fixture)")
 
 <div><pre concordion:set="#fixture">
-// Registering via ReportLogger
-getLogger().setScreenshotTaker(new DummyScreenshotTaker());
+// Registering via ReportLoggerFactory
+ReportLoggerFactory.setScreenshotTaker(new DummyScreenshotTaker());
 </pre></div>
 
 ... or directly with the [report logger](- "c:assertTrue=registerExtension(#fixture)") 
@@ -86,14 +86,14 @@ getLogger().setScreenshotTaker(new DummyScreenshotTaker());
 Logging of the screenshots can be performed:
 
 <div><pre concordion:set="#fixture">
-LOGGER.setScreenshotTaker(new DummyScreenshotTaker());
+ReportLoggerFactory.setScreenshotTaker(new DummyScreenshotTaker());
 
 LOGGER.with()
 	.message("Clicking 'Login'")
 	.screenshot()
 	.trace();
 
-LOGGER.removeScreenshotTaker();
+ReportLoggerFactory.removeScreenshotTaker();
 </pre></div>
 
 ... using the pre-registered [screenshot taker](- "c:assertTrue=hasScreenshot(#fixture)") 

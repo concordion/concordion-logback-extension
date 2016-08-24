@@ -4,7 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import org.concordion.logback.LoggingListener;
-import org.slf4j.helpers.ScreenshotMarker;
+import org.concordion.slf4j.markers.ScreenshotMarker;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
 

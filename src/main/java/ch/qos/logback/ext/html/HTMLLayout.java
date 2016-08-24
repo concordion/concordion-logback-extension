@@ -13,12 +13,12 @@ import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.concordion.ext.loggingFormatter.LogbackAdaptor;
+import org.concordion.slf4j.markers.BaseDataMarker;
+import org.concordion.slf4j.markers.DataMarker;
+import org.concordion.slf4j.markers.HtmlMessageMarker;
+import org.concordion.slf4j.markers.ReportLoggerMarkers;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
-import org.slf4j.ext.ReportLogger;
-import org.slf4j.helpers.BaseDataMarker;
-import org.slf4j.helpers.DataMarker;
-import org.slf4j.helpers.HtmlMessageMarker;
 import org.slf4j.helpers.MessageFormatter;
 
 import ch.qos.logback.classic.LoggerContext;
@@ -127,22 +127,22 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
     }
 
     public String doLayout(ILoggingEvent event) {
-		if (containsMarker(event, ReportLogger.PROGRESS_MARKER)) {
+		if (containsMarker(event, ReportLoggerMarkers.PROGRESS_MARKER)) {
 			return "";
 		}
 
         StringBuilder buf = new StringBuilder();
         startNewTableIfLimitReached(buf);
 
-		if (containsMarker(event, ReportLogger.STEP_MARKER.getName()) || event.getLevel() == stepRecorder.getLevel()) {
+		if (containsMarker(event, ReportLoggerMarkers.STEP_MARKER.getName()) || event.getLevel() == stepRecorder.getLevel()) {
 			appendStepToBuffer(buf, event);
         	return buf.toString();
         }
         
 		appendMessageToBuffer(buf, event);
         
-        if (containsMarker(event, ReportLogger.DATA_MARKER)) {
-			appendDataToBuffer(buf, (BaseDataMarker<?>) getMarker(event.getMarker(), ReportLogger.DATA_MARKER.getName()));
+		if (containsMarker(event, ReportLoggerMarkers.DATA_MARKER_NAME)) {
+			appendDataToBuffer(buf, (BaseDataMarker<?>) getMarker(event.getMarker(), ReportLoggerMarkers.DATA_MARKER_NAME));
         }
 
         if (event.getThrowableProxy() != null) {

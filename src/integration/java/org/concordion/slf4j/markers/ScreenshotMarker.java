@@ -1,4 +1,4 @@
-package org.slf4j.helpers;
+package org.concordion.slf4j.markers;
 
 import java.awt.Dimension;
 import java.io.File;
@@ -22,6 +22,14 @@ public class ScreenshotMarker extends BaseDataMarker<ScreenshotMarker> {
 
 		this.logFile = logFile;
 		this.screenshotTaker = screenshotTaker;
+	}
+
+	public String getFile() {
+		return data;
+	}
+
+	public Dimension getImageSize() {
+		return imageSize;
 	}
 
 	@Override
