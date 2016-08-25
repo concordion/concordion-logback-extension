@@ -13,7 +13,7 @@ pre {
     tab-size:         4; 
 }
 
-table { margin-left: 2em; margin-right: 2em; border-collapse: collapse; border: 1px solid #ddd; width: 100%;}
+table { margin-left: 2em; margin-right: 2em; border-collapse: collapse; border: 1px solid #ddd; table-layout: fixed; }
 TD { padding: .5ex 1ex; border-top: 1px solid #ddd; }
 
 TR.header { font-weight: bold; background: lightyellow; border-bottom: 3px solid #ddd; }
