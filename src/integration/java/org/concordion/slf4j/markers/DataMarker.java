@@ -11,7 +11,7 @@ public class DataMarker extends BaseDataMarker<DataMarker> {
 
 	@Override
 	public String getFormattedData() {
-		return Transform.escapeTags(data);
+		return "</pre>" + Transform.escapeTags(data) + "</pre>";
 	}
 
 	@Override

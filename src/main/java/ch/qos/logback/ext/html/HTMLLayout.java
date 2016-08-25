@@ -283,11 +283,9 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 		
 		try {
 			buf.append(LINE_SEPARATOR);
-			buf.append("<pre>");
 
 			buf.append(data.getFormattedData());
 			
-			buf.append("</pre>");
 			buf.append(LINE_SEPARATOR);
 		} catch (Exception e) {
 			buf.append(e.getMessage());

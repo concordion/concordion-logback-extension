@@ -23,7 +23,6 @@ import org.concordion.api.listener.ThrowableCaughtEvent;
 import org.concordion.api.listener.ThrowableCaughtListener;
 import org.concordion.ext.ScreenshotTaker;
 import org.concordion.slf4j.markers.FailureReportedMarker;
-import org.concordion.slf4j.markers.ReportLoggerMarkers;
 import org.concordion.slf4j.markers.ThrowableCaughtMarker;
 import org.slf4j.ext.FluentLogger;
 import org.slf4j.ext.ReportLogger;
@@ -244,9 +243,8 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 	public void throwableCaught(ThrowableCaughtEvent event) {
 		Throwable cause = event.getThrowable();
 		
-		//event.getExpression()
 		FluentLogger logger = LOGGER.with()
-				.message("Exception thrown while evaluating expression '{}:\r\n\t{}", event.getExpression(), cause.getMessage())
+				.message("Exception thrown while evaluating expression '{}':\r\n\t{}", event.getExpression(), cause.getMessage())
 				.marker(new ThrowableCaughtMarker(event));
 
 		if (FluentLogger.hasScreenshotTaker()) {

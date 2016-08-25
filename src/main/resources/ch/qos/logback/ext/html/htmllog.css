@@ -13,7 +13,7 @@ pre {
     tab-size:         4; 
 }
 
-table { margin-left: 2em; margin-right: 2em; border-collapse: collapse; border: 1px solid #ddd; }
+table { margin-left: 2em; margin-right: 2em; border-collapse: collapse; border: 1px solid #ddd; width: 100%;}
 TD { padding: .5ex 1ex; border-top: 1px solid #ddd; }
 
 TR.header { font-weight: bold; background: lightyellow; border-bottom: 3px solid #ddd; }
@@ -123,6 +123,15 @@ div.resizeable {
 
 object.resizeable {
 	width: 100%; 
-	height: 100%;
+	height: 150px;
+}
+
+xmp.resizeable {
+	border: 2px solid; 
+	resize:both; 
+	overflow: hidden;
+	width: 100%; 
+	height: 150px;
+	margin: 0px;
 }
 </style>

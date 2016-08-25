@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.Reader;
 
 import org.slf4j.MDC;
 
@@ -34,6 +36,32 @@ public class AttachmentMarker extends BaseDataMarker<AttachmentMarker> {
 	public String getFormattedData() {
 		StringBuilder buf = new StringBuilder();
 
+		buf.append("<a href=\"").append(data).append("\">").append("View").append("</a>");
+
+		// XML files are not handled by the object tag, so use the XMP tag for this  
+		if (filename.endsWith(".xml")) {
+			
+			buf.append("<xmp class=\"resizeable\">");
+
+			try {
+				stream.reset();
+
+				final char[] buffer = new char[1024];
+				Reader in = new InputStreamReader(stream, "UTF-8");
+				int len = in.read(buffer, 0, buffer.length);
+				while (len != -1) {
+					buf.append(buffer, 0, len);
+					len = in.read(buffer, 0, buffer.length);
+				}
+			} catch (IOException e) {
+				// Revert to using object tag
+				buf.append(e.getMessage());
+			}
+
+			buf.append("</xmp>");
+			return buf.toString();
+		}
+
 		// TODO Do we want auto resizing of attachment?
 		// <script language="javascript" type="text/javascript">
 		// function resizeIframe(obj) {
@@ -48,8 +76,8 @@ public class AttachmentMarker extends BaseDataMarker<AttachmentMarker> {
 		// <object width="100%" height="50" type="text/plain" data="test.txt" border="1" onload="resizeIframe(this)"><a href="test.txt">test.txt</a></object>
 		//
 		//
-		buf.append("<a href=\"").append(data).append("\">").append("View").append("</a>");
 		
+
 		buf.append("<div class=\"resizeable\"><object class=\"resizeable\"");
 		buf.append(" type=\"").append(type).append("\"");
 		buf.append(" data=\"").append(data).append("\"");
@@ -63,6 +91,7 @@ public class AttachmentMarker extends BaseDataMarker<AttachmentMarker> {
 	public void prepareData() {
 		try {
 			writeStream();
+
 		} catch (Exception e) {
 			data = e.getMessage();
 		}
