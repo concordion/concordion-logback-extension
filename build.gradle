@@ -48,6 +48,14 @@ sourcesJar  {
 } 
  
 // publish integration jar
+publishSnapshot {
+	dependsOn = ['test', 'integrationJar', 'publishMavenJavaPublicationToMavenRepository']
+}
+
+publishRelease {
+	dependsOn = ['sourcesJar', 'javadocJar', 'publishDocs', 'integrationJar', 'release']
+}
+
 publishing { 
 	publications { 
         main(MavenPublication) {
