@@ -10,6 +10,7 @@ import org.concordion.ext.loggingFormatter.LoggingFormatterSpecificationListener
 import org.concordion.logback.LoggingListener;
 import org.concordion.logback.MarkerFilter;
 import org.slf4j.LoggerFactory;
+
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.core.spi.FilterAttachable;
@@ -87,6 +88,9 @@ public class LoggingFormatterExtension implements ConcordionExtension {
 	 * @return A self reference
 	 */
 	public LoggingFormatterExtension registerListener(LoggingListener logListener) {
+		listener.registerThrowableCaughtMarker(logListener.getThrowableCaughtMarker());
+		listener.registerFailureReportedMarker(logListener.getFailureReportedMarker());
+
 		if (logListener instanceof FilterAttachable<?>) {
 			MarkerFilter filter = new MarkerFilter();
 			

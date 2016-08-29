@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import org.concordion.logback.LoggingListener;
+import org.slf4j.Marker;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.Layout;
@@ -56,5 +57,17 @@ public class LayoutFormattedLogListener extends LoggingListener {
 
 	public void setConsoleLayout(Layout<ILoggingEvent> layout) {
 		this.consoleLayout = layout;
+	}
+
+	@Override
+	public Marker getThrowableCaughtMarker() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Marker getFailureReportedMarker() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -21,7 +21,7 @@ import org.slf4j.spi.LocationAwareLogger;
 public class FluentLogger {
 	private static ThreadLocal<ILoggingAdaptor> loggingAdaptors = new ThreadLocal<ILoggingAdaptor>();
 	private static ThreadLocal<ScreenshotTaker> screenshotTakers = new ThreadLocal<ScreenshotTaker>();
-	
+
 	private final Logger logger;
 	// Is instance of location aware logger
 	private final boolean instanceofLAL;
@@ -156,6 +156,14 @@ public class FluentLogger {
 		return this;
 	}
 
+	public FluentLogger attachment(String input, String filename, MediaType mediaType) {
+		return attachment(new ByteArrayInputStream(input.getBytes()), filename, mediaType.toString());
+	}
+
+	public FluentLogger attachment(String input, String filename, String mediaType) {
+		return attachment(new ByteArrayInputStream(input.getBytes()), filename, mediaType);
+	}
+
 	public FluentLogger attachment(InputStream inputStream, String filename, MediaType mediaType) {
 		return attachment(inputStream, filename, mediaType.toString());
 	}
@@ -164,14 +172,6 @@ public class FluentLogger {
 		addMarker(new AttachmentMarker(getLoggingAdaptor().getLogFile().getPath(), inputStream, filename, mediaType.toString()));
 
 		return this;
-	}
-
-	public FluentLogger attachment(String input, String filename, MediaType mediaType) {
-		return attachment(new ByteArrayInputStream(input.getBytes()), filename, mediaType.toString());
-	}
-	
-	public FluentLogger attachment(String input, String filename, String mediaType) {
-		return attachment(new ByteArrayInputStream(input.getBytes()), filename, mediaType);
 	}
 
 	public FluentLogger marker(Marker marker) {

@@ -15,6 +15,10 @@ import ch.qos.logback.core.AppenderBase;
 public abstract class LoggingListener extends AppenderBase<ILoggingEvent> {
 
 	public abstract String[] getFilterMarkers();
+
+	public abstract Marker getThrowableCaughtMarker();
+
+	public abstract Marker getFailureReportedMarker();
 	
 	protected Marker findMarker(Marker reference, String name) {
 		if (reference == null) {

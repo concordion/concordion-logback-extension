@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 
 import org.apache.commons.io.FileUtils;
@@ -22,8 +24,7 @@ import org.concordion.api.listener.SpecificationProcessingListener;
 import org.concordion.api.listener.ThrowableCaughtEvent;
 import org.concordion.api.listener.ThrowableCaughtListener;
 import org.concordion.ext.ScreenshotTaker;
-import org.concordion.slf4j.markers.FailureReportedMarker;
-import org.concordion.slf4j.markers.ThrowableCaughtMarker;
+import org.slf4j.Marker;
 import org.slf4j.ext.FluentLogger;
 import org.slf4j.ext.ReportLogger;
 import org.slf4j.ext.ReportLoggerFactory;
@@ -35,6 +36,9 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 	private boolean useLogFileViewer = false;
 	private String testPath = "";
 			
+	private List<Marker> throwableCaughtMarkers = new ArrayList<Marker>();
+	private List<Marker> failureReporteMarkers = new ArrayList<Marker>();
+
 	public void setUseLogFileViewer(boolean useLogFileViewer) {
 		this.useLogFileViewer = useLogFileViewer;
 	}
@@ -45,6 +49,18 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 	
 	public ILoggingAdaptor getLoggingAdaptor() {
 		return this.loggingAdaptor;
+	}
+
+	public void registerThrowableCaughtMarker(Marker marker) {
+		if (marker != null) {
+			throwableCaughtMarkers.add(marker);
+		}
+	}
+
+	public void registerFailureReportedMarker(Marker marker) {
+		if (marker != null) {
+			failureReporteMarkers.add(marker);
+		}
 	}
 
 	public LoggingFormatterSpecificationListener(ILoggingAdaptor loggingAdaptor, Resource stylesheetResource) {
@@ -244,11 +260,14 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 		Throwable cause = event.getThrowable();
 		
 		FluentLogger logger = LOGGER.with()
-				.message("Exception thrown while evaluating expression '{}':\r\n\t{}", event.getExpression(), cause.getMessage())
-				.marker(new ThrowableCaughtMarker(event));
+				.message("Exception thrown while evaluating expression '{}':\r\n\t{}", event.getExpression(), cause.getMessage());
 
 		if (FluentLogger.hasScreenshotTaker()) {
 			logger.screenshot();
+		}
+
+		for (Marker marker : throwableCaughtMarkers) {
+			logger.marker(marker);
 		}
 
 		logger.error(cause);
@@ -271,12 +290,16 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 		}
 
 		FluentLogger logger = LOGGER.with()
-				.message(sb.toString())
-				.marker(new FailureReportedMarker(event));
+				.message(sb.toString());
 
 		if (FluentLogger.hasScreenshotTaker()) {
 			logger.screenshot();
 		}
+
+		for (Marker marker : failureReporteMarkers) {
+			logger.marker(marker);
+		}
+
 
 		logger.error();
 	}

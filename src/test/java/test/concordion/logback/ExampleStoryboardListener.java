@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import org.concordion.logback.LoggingListener;
 import org.concordion.slf4j.markers.ScreenshotMarker;
+import org.slf4j.Marker;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
 
@@ -42,5 +43,17 @@ public class ExampleStoryboardListener extends LoggingListener {
 
 	public void resetStream() {
 		stream.reset();
+	}
+
+	@Override
+	public Marker getThrowableCaughtMarker() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Marker getFailureReportedMarker() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
