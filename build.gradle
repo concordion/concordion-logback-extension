@@ -46,19 +46,10 @@ task integrationJar(type: Jar) {
 sourcesJar  { 
     from sourceSets.integration.allSource
 } 
- 
-// publish integration jar
-publishSnapshot {
-	dependsOn = ['test', 'integrationJar', 'publishMavenJavaPublicationToMavenRepository']
-}
-
-publishRelease {
-	dependsOn = ['sourcesJar', 'javadocJar', 'publishDocs', 'integrationJar', 'release']
-}
 
 publishing { 
 	publications { 
-        main(MavenPublication) {
+        mavenJava(MavenPublication) {
             artifact integrationJar { 
             	classifier "integration" 
             }
