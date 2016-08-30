@@ -48,7 +48,6 @@ public class AttachmentMarker extends BaseDataMarker<AttachmentMarker> {
 		if (filename.endsWith(".xml")) {
 			
 			buf.append("<xmp class=\"resizeable\">");
-			buf.append(LINE_SEPARATOR);
 
 			try {
 				stream.reset();
@@ -65,7 +64,6 @@ public class AttachmentMarker extends BaseDataMarker<AttachmentMarker> {
 				buf.append(e.getMessage());
 			}
 
-			buf.append(LINE_SEPARATOR);
 			buf.append("</xmp>");
 		} else {
 
