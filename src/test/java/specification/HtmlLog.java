@@ -74,8 +74,14 @@ public class HtmlLog extends BaseFixture {
 	}
 
 	public boolean canUseReportLogger(String javaFragment, String logMessage) throws Exception {
+		getLogger().trace("trace");
+		getLogger().debug("debug");
+		getLogger().info("info");
+		getLogger().warn("warn");
+		getLogger().error("error");
+		
 		resetLogListener();
-
+		
 		processHtmlAndJava(HTML_FRAGMENT, javaFragment);
 
 		return checkLogContains("<td class=\"Message\">" + logMessage + "</td>", true);
@@ -173,7 +179,7 @@ public class HtmlLog extends BaseFixture {
 
 		processHtmlAndJava(HTML_FRAGMENT, FIXTURE_START + javaFragment + FIXTURE_STOP);
 
-		return checkLogContains("<td colspan=\"5\">My step here</td>", true);
+		return checkLogContains("<th colspan=\"6\">My step here</th>", true);
 	}
 
 	public boolean throwException(String javaFragment) throws Exception {

@@ -75,7 +75,7 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 	public void beforeProcessingSpecification(final SpecificationProcessingEvent event) {
 		testPath = event.getResource().getPath();
 
-		loggingAdaptor.startSpecificationLogFile(testPath, event.getResource().getRelativePath(stylesheetResource));
+		loggingAdaptor.startSpecificationLogFile(testPath, null); //event.getResource().getRelativePath(stylesheetResource));
 	}
 
 	@Override

@@ -48,8 +48,10 @@ public class LogbackAdaptor implements ILoggingAdaptor
 		String path = baseFolder + getPath(testPath);
 
 		// Add path to css style sheet to logger context for later use
-		LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
-		lc.putProperty(LAYOUT_STYLESHEET, stylesheet);
+		if (stylesheet != null) {
+			LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+			lc.putProperty(LAYOUT_STYLESHEET, stylesheet);
+		}
 		
 		testStack.push(path);
 

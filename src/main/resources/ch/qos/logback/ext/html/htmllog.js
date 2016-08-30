@@ -1,4 +1,32 @@
 <script type="text/javascript">
+
+window.onload = function() {
+	var anchors = document.getElementsByClassName("expand");
+	for(var i = 0; i < anchors.length; i++) {
+		var anchor = anchors[i];
+		anchor.onclick = function() {
+			toggleVisibility(this);
+		}
+	}
+}
+	
+function toggleVisibility(e) {
+	var companion = e.parentNode.parentNode.nextElementSibling;
+	
+	if (hasClass(companion, 'companion')) {
+		if (companion.style.display == 'table-row') {
+			companion.style.display = 'none';
+		} else {
+			companion.style.display = 'table-row';
+		}		
+	}
+}
+
+function hasClass(element, cls) {
+    return (' ' + element.className + ' ').indexOf(' ' + cls + ' ') > -1;
+}
+
+
 /* Stack Trace Toggling */
 
 function getElementById(id) {

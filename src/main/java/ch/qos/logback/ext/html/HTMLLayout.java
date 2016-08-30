@@ -157,12 +157,10 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
     }
 
 	public void appendStepToBuffer(StringBuilder buf, ILoggingEvent event) {
-		counter = 0;
-
 		buf.append(LINE_SEPARATOR);
 		buf.append("<tr class=\"step\">");
         buf.append(LINE_SEPARATOR);
-		buf.append("<td colspan=\"").append(columnCount + 1).append("\">");
+		buf.append("<th colspan=\"").append(columnCount + 1).append("\">");
         
 		if (event.getMarker() instanceof DataMarker) {
 			buf.append(event.getFormattedMessage());
@@ -170,7 +168,7 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 			buf.append(Transform.escapeTags(event.getFormattedMessage()));
 		}
         
-        buf.append("</td>");
+        buf.append("</th>");
 		buf.append(LINE_SEPARATOR);
 		buf.append("</tr>");
 	}
@@ -183,26 +181,11 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 		boolean escapeTags = true;
 		Field field = null;
 		String originalMessage = null;
-		boolean odd = true;
 		
-		if (((counter++) & 1) == 0) {
-			odd = false;
-		}
-
-        String level = event.getLevel().toString().toLowerCase();
-
         buf.append(LINE_SEPARATOR);
-        buf.append("<tr class=\"");
-        buf.append(level);
-        if (odd) {
-            buf.append(" odd\">");
-        } else {
-            buf.append(" even\">");
-        }
+        buf.append("<tr class=\"record\">");
         buf.append(LINE_SEPARATOR);
-		buf.append("<td class=\"indent ").append(event.getLevel().toString().toLowerCase()).append("\">");
-		buf.append("<i class=\"").append(Icon.getIcon(event.getLevel())).append("\"></i>");
-		buf.append("</td>");
+		buf.append("<td></td>");
 		
 		if (containsMarker(event, HtmlMessageMarker.MARKER_NAME)) {
 			// Replace plain log message with HTML formatted version 
@@ -259,8 +242,13 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 	}
 
 	private void appendEventToBuffer(StringBuilder buf, Converter<ILoggingEvent> c, ILoggingEvent event, boolean escapeTags) {
+		String name = computeConverterName(c);
+		
         buf.append("<td class=\"");
-        buf.append(computeConverterName(c));
+        buf.append(name);
+        if (name.equalsIgnoreCase("Level")) {
+        	buf.append(" ").append(event.getLevel().toString().toLowerCase());	
+        }
         buf.append("\">");
 		if (escapeTags) {
 			buf.append(TransformText.escapeText(Transform.escapeTags(c.convert(event))));
@@ -277,9 +265,9 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 		}
 
 		buf.append(LINE_SEPARATOR);
-		buf.append("<tr>");
+		buf.append("<tr class=\"companion\">");
 		buf.append(LINE_SEPARATOR);
-		buf.append("<td class=\"indent\"></td><td colspan=\"").append(columnCount).append("\" class=\"data\">");
+		buf.append("<td class=\"indent\"></td><td colspan=\"").append(columnCount).append("\" class=\"output\">");
 		
 		try {
 			buf.append(LINE_SEPARATOR);
@@ -366,12 +354,12 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
         StringBuilder sbuf = new StringBuilder();
 //        sbuf.append("<hr/>");
 //        sbuf.append(LINE_SEPARATOR);
-        sbuf.append("<p>Log session start time ");
+        sbuf.append("<h1>Log session start time ");
         sbuf.append(new java.util.Date());
-        sbuf.append("</p><p></p>");
+        sbuf.append("</h1><p></p>");
         sbuf.append(LINE_SEPARATOR);
         sbuf.append(LINE_SEPARATOR);
-        sbuf.append("<table cellspacing=\"0\">");
+        sbuf.append("<table>");
         sbuf.append(LINE_SEPARATOR);
 
         buildHeaderRowForTable(sbuf);
@@ -382,7 +370,10 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
     private void buildHeaderRowForTable(StringBuilder sbuf) {
 		Converter<?> c = head;
         String name;
-		sbuf.append("<tr class=\"header\"><td style=\"width:50px\">Step</td>");
+        sbuf.append("<thead>");
+        sbuf.append(LINE_SEPARATOR);
+        
+		sbuf.append("<tr><th class=\"Row\">Row</th>");
         sbuf.append(LINE_SEPARATOR);
         
         if (format == Format.COLUMN) {
@@ -392,18 +383,22 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 	                c = c.getNext();
 	                continue;
 	            }
-	            // sbuf.append("<td class=\"").append(name).append("\">");
-	            sbuf.append("<td>");
+	            
+	            sbuf.append("<th class=\"").append(name).append("\">");
 	            sbuf.append(name.replaceAll("(.)([A-Z])", "$1&nbsp;$2"));
-	            sbuf.append("</td>");
+	            sbuf.append("</th>");
 	            sbuf.append(LINE_SEPARATOR);
 	            c = c.getNext();
 	        }
         } else {
-			sbuf.append("<td>Message</td>");
+			sbuf.append("<th>Message</th>");
         }
         
         sbuf.append("</tr>");
+        sbuf.append(LINE_SEPARATOR);
+        sbuf.append("</thead>");
+        sbuf.append(LINE_SEPARATOR);
+        sbuf.append("<tbody>");
         sbuf.append(LINE_SEPARATOR);
     }
 

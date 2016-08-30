@@ -22,7 +22,7 @@ import ch.qos.logback.core.spi.FilterAttachable;
  */
 public class LoggingFormatterExtension implements ConcordionExtension {
 	private final LoggingFormatterSpecificationListener listener;
-	private final Resource stylesheetResource;
+//	private final Resource stylesheetResource;
 	
 	/**
 	 * Constructor - defaults to using LogbackAdaptor.
@@ -37,8 +37,8 @@ public class LoggingFormatterExtension implements ConcordionExtension {
 	 * @param loggingAdaptor Custom logging adaptor
 	 */
 	public LoggingFormatterExtension(ILoggingAdaptor loggingAdaptor) {
-		stylesheetResource = new Resource("/font-awesome/css/font-awesome.css");
-		listener = new LoggingFormatterSpecificationListener(loggingAdaptor, stylesheetResource);
+		//stylesheetResource = new Resource("/font-awesome/css/font-awesome.css");
+		listener = new LoggingFormatterSpecificationListener(loggingAdaptor, null);
 	}
 
 	public ILoggingAdaptor getLoggingAdaptor() {
@@ -58,13 +58,7 @@ public class LoggingFormatterExtension implements ConcordionExtension {
 		path = path.replaceAll("\\.", "/");
 		path = "/" + path;
 
-		concordionExtender.withLinkedCSS("/font-awesome-4.6.3/css/font-awesome.css", stylesheetResource);
-		concordionExtender.withResource("/font-awesome-4.6.3/fonts/fontawesome-webfont.eot", new Resource("/font-awesome/fonts/fontawesome-webfont.eot"));
-		concordionExtender.withResource("/font-awesome-4.6.3/fonts/fontawesome-webfont.svg", new Resource("/font-awesome/fonts/fontawesome-webfont.svg"));
-		concordionExtender.withResource("/font-awesome-4.6.3/fonts/fontawesome-webfont.ttf", new Resource("/font-awesome/fonts/fontawesome-webfont.ttf"));
-		concordionExtender.withResource("/font-awesome-4.6.3/fonts/fontawesome-webfont.woff", new Resource("/font-awesome/fonts/fontawesome-webfont.woff"));
-		concordionExtender.withResource("/font-awesome-4.6.3/fonts/fontawesome-webfont.woff2", new Resource("/font-awesome/fonts/fontawesome-webfont.woff2"));
-		concordionExtender.withResource("/font-awesome-4.6.3/fonts/FontAwesome.otf", new Resource("/font-awesome/fonts/FontAwesome.otf"));
+		//concordionExtender.withLinkedCSS("/font-awesome-4.6.3/css/font-awesome.css", stylesheetResource);
 	}
 	
 	/**
