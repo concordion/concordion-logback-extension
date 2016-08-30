@@ -1,5 +1,7 @@
 package ch.qos.logback.ext.html;
 
+import static ch.qos.logback.core.CoreConstants.LINE_SEPARATOR;
+
 /**
  * Logback: the reliable, generic, fast and flexible logging framework.
  * Copyright (C) 1999-2015, QOS.ch. All rights reserved.
@@ -29,8 +31,12 @@ public class HTMLThrowableRenderer implements IThrowableRenderer<ILoggingEvent> 
 
     public void render(StringBuilder sbuf, ILoggingEvent event) {
 		IThrowableProxy tp = event.getThrowableProxy();
-		// sbuf.append("<tr><td></td><td class=\"Exception\" colspan=\"").append(columnCount).append("\">");
-		sbuf.append("<tr><td class=\"indent\"></td><td class=\"exceptionMessage\" colspan=\"").append(columnCount).append("\">");
+		
+		sbuf.append(LINE_SEPARATOR);
+		sbuf.append("<tr class=\"companion\">");
+		sbuf.append(LINE_SEPARATOR);
+		sbuf.append("<td class=\"indent\"></td><td colspan=\"").append(columnCount).append("\" class=\"output exceptionMessage\">");
+
         while (tp != null) {
 			exceptionCount++;
             render(sbuf, tp);
