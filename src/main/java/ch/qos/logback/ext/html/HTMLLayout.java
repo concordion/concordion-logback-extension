@@ -158,7 +158,7 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 
 	public void appendStepToBuffer(StringBuilder buf, ILoggingEvent event) {
 		buf.append(LINE_SEPARATOR);
-		buf.append("<tr class=\"step\">");
+		buf.append("<tr class=\"record step\">");
         buf.append(LINE_SEPARATOR);
 		buf.append("<th colspan=\"").append(columnCount + 1).append("\">");
         

@@ -65,6 +65,12 @@ table tbody tr.record td:first-child::before {
     min-width: 1em;
     margin-right: 0.5em;
 }
+table tbody tr.record th:first-child::before {
+    content: counter(lineNumber) ".";
+    min-width: 1em;
+    margin-right: 0.5em;
+    margin-left: -6px;
+}
 
 table tbody td {
  color:#414141;
