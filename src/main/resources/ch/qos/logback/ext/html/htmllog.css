@@ -209,6 +209,7 @@ TD.Exception { background: #A2AEE8; font-family: courier, monospace; }
 */
 
 TH.Message { width: 100%; }
+TD.Message { word-break: break-all; }
 
 .greyed { color: #999; }
 
