@@ -1,5 +1,7 @@
 package org.concordion.slf4j.markers;
 
+import static ch.qos.logback.core.CoreConstants.LINE_SEPARATOR;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -37,11 +39,16 @@ public class AttachmentMarker extends BaseDataMarker<AttachmentMarker> {
 		StringBuilder buf = new StringBuilder();
 
 		buf.append("<a href=\"").append(data).append("\">").append("View").append("</a>");
+		buf.append(LINE_SEPARATOR);
+
+		buf.append("<div class=\"resizeable\">");
+		buf.append(LINE_SEPARATOR);
 
 		// XML files are not handled by the object tag, so use the XMP tag for this  
 		if (filename.endsWith(".xml")) {
 			
 			buf.append("<xmp class=\"resizeable\">");
+			buf.append(LINE_SEPARATOR);
 
 			try {
 				stream.reset();
@@ -58,31 +65,33 @@ public class AttachmentMarker extends BaseDataMarker<AttachmentMarker> {
 				buf.append(e.getMessage());
 			}
 
+			buf.append(LINE_SEPARATOR);
 			buf.append("</xmp>");
-			return buf.toString();
+		} else {
+
+			// TODO Do we want auto resizing of attachment?
+			// <script language="javascript" type="text/javascript">
+			// function resizeIframe(obj) {
+			// var height = obj.contentWindow.document.body.scrollHeight;
+			// if (height > 200) height = 200;
+			//
+			// obj.style.height = 0;
+			// obj.style.height = height + 'px';
+			// }
+			// </script>
+			// <a href="test.txt">Open File</a>
+			// <object width="100%" height="50" type="text/plain" data="test.txt" border="1" onload="resizeIframe(this)"><a href="test.txt">test.txt</a></object>
+			//
+			//
+			buf.append("<object class=\"resizeable\"");
+			buf.append(" type=\"").append(type).append("\"");
+			buf.append(" data=\"").append(data).append("\"");
+			buf.append(">");
+			buf.append("</object>");
 		}
-
-		// TODO Do we want auto resizing of attachment?
-		// <script language="javascript" type="text/javascript">
-		// function resizeIframe(obj) {
-		// var height = obj.contentWindow.document.body.scrollHeight;
-		// if (height > 200) height = 200;
-		//
-		// obj.style.height = 0;
-		// obj.style.height = height + 'px';
-		// }
-		// </script>
-		// <a href="test.txt">Open File</a>
-		// <object width="100%" height="50" type="text/plain" data="test.txt" border="1" onload="resizeIframe(this)"><a href="test.txt">test.txt</a></object>
-		//
-		//
 		
-
-		buf.append("<div class=\"resizeable\"><object class=\"resizeable\"");
-		buf.append(" type=\"").append(type).append("\"");
-		buf.append(" data=\"").append(data).append("\"");
-		buf.append(">");
-		buf.append("</object></div>");
+		buf.append(LINE_SEPARATOR);
+		buf.append("</div>");
 
 		return buf.toString();
 	}
