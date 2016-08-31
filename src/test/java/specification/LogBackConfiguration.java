@@ -3,7 +3,6 @@ package specification;
 import org.concordion.api.AfterSpecification;
 import org.concordion.api.BeforeSpecification;
 
-import ch.qos.logback.ext.html.Format;
 import ch.qos.logback.ext.html.HTMLLayout;
 import ch.qos.logback.ext.html.StepRecorder;
 import test.concordion.logback.LogBackHelper;
@@ -48,7 +47,6 @@ public class LogBackConfiguration extends BaseFixture {
 
 	private void copy(HTMLLayout src, HTMLLayout dest) {
 		dest.setStylesheet(src.getStylesheet());
-		dest.setFormat(src.getFormat());
 		dest.setPattern(src.getPattern());
 		dest.setStepRecorder(src.getStepRecorder());
 	}
@@ -60,7 +58,6 @@ public class LogBackConfiguration extends BaseFixture {
 
 		resetLogListener();
 
-		layout.setFormat(Format.COLUMN.name());
 		layout.setPattern("%date{HH:mm:ss.SSS}%message%file%line");
 
 		getLogger().debug("multiColumnLayout example");
@@ -68,22 +65,6 @@ public class LogBackConfiguration extends BaseFixture {
 		restoreHtmlLayout();
 
 		return checkLogContains("<td class=\"Message\">multiColumnLayout example</td>", result);
-	}
-
-	// Log statement is in a single table column
-	public boolean singleColumnLayout() {
-		boolean result = true;
-
-		resetLogListener();
-
-		layout.setFormat(Format.STRING.name());
-		layout.setPattern("%message");
-
-		getLogger().debug("singleColumnLayout example");
-
-		restoreHtmlLayout();
-
-		return checkLogContains("<td>singleColumnLayout example</td>", result);
 	}
 
 	public boolean recordStepsUsingLogLevel() {

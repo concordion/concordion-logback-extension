@@ -54,7 +54,6 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 
     private IThrowableRenderer<ILoggingEvent> throwableRenderer;
     private StepRecorder stepRecorder = StepRecorder.STEP_MARKER;
-	private Format format = Format.COLUMN;
 	private int columnCount;
 	private PatternLayout stringLayout = null;
 	private String stylesheet = "";
@@ -77,14 +76,6 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 
 	public String getStepRecorder() {
 		return stepRecorder.name();
-	}
-
-	public void setFormat(String value) {
-		format = Format.valueOf(value);
-	}
-	
-	public String getFormat() {
-		return format.name();
 	}
 
 	public void setStylesheet(String value) {
@@ -205,30 +196,10 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 		}
 		
 		Converter<ILoggingEvent> c = head;
-		if (format == Format.COLUMN) {
-			while (c != null) {
-				appendEventToBuffer(buf, c, event, escapeTags);
-				c = c.getNext();
-			}
-		} else {
-			buf.append("<td>");
-			
-			if (stringLayout == null) {
-				stringLayout = new PatternLayout();
-				stringLayout.setPattern(this.getPattern());
-				stringLayout.setContext(this.getContext());
-				stringLayout.start();
-			}
-			
-			String text = stringLayout.doLayout(event);
-
-			if (escapeTags) {
-				buf.append(Transform.escapeTags(text));
-			} else {
-				buf.append(text);
-			}
-			buf.append("</td>");
-        }
+		while (c != null) {
+			appendEventToBuffer(buf, c, event, escapeTags);
+			c = c.getNext();
+		}
         
 		if (field != null) {
 			try {
@@ -376,22 +347,18 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 		sbuf.append("<tr><th class=\"Row\">Row</th>");
         sbuf.append(LINE_SEPARATOR);
         
-        if (format == Format.COLUMN) {
-	        while (c != null) {
-	            name = computeConverterName(c);
-	            if (name == null) {
-	                c = c.getNext();
-	                continue;
-	            }
-	            
-	            sbuf.append("<th class=\"").append(name).append("\">");
-	            sbuf.append(name.replaceAll("(.)([A-Z])", "$1&nbsp;$2"));
-	            sbuf.append("</th>");
-	            sbuf.append(LINE_SEPARATOR);
-	            c = c.getNext();
-	        }
-        } else {
-			sbuf.append("<th>Message</th>");
+		while (c != null) {
+			name = computeConverterName(c);
+			if (name == null) {
+				c = c.getNext();
+				continue;
+			}
+
+			sbuf.append("<th class=\"").append(name).append("\">");
+			sbuf.append(name.replaceAll("(.)([A-Z])", "$1&nbsp;$2"));
+			sbuf.append("</th>");
+			sbuf.append(LINE_SEPARATOR);
+			c = c.getNext();
         }
         
         sbuf.append("</tr>");
@@ -440,11 +407,7 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 	}
 	
 	private int getColumnCount() {
-		if (format == Format.COLUMN) {
-			return pattern.length() - pattern.replace("%", "").length();
-		} else {
-			return 1;
-		}
+		return pattern.length() - pattern.replace("%", "").length();
 	}
 
 	public static String readFile(String filename) {

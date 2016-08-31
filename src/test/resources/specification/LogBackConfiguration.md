@@ -66,28 +66,15 @@ This pattern will be found in the FILE-PER-TEST appender configuration.
 ### HTML Log Patternn
 Conversion words should not add exception information to the message (eg %exception, %throwable, %rootException, etc) as this information is automatically appended by HTMLLayout in a new table row below the logging statement.
 
-There is a choice between two different layout formats, multi-column or single-column modes.  The is specified by updating the format property for the HTMLLayout:
-
-**&#8658; Multiple Column Layout**
-
 Each conversion word in the layout pattern will be shown in a [separate column](- "c:assertTrue=multiColumnLayout()").  
 
 One notable exception about the use of PatternLayout with HTMLLayout is that conversion words should not be separated by space characters or more generally by literal text. Each specifier found in the pattern will result in a separate column. Likewise a separate column will be generated for each block of literal text found in the pattern, potentially wasting valuable real-estate on your screen.
 
     <layout class="org.concordion.logback.HTMLLayout">>
-      <format>COLUMN</format>>
       <pattern>%date{HH:mm:ss.SSS}%message%file%line</pattern>>
     </layout>>
 
-**&#8658; Single Column Layout**
 
-The log message as defined by the layout pattern will be shown in a [single column](- "c:assertTrue=singleColumnLayout()").  This is much like your traditional log pattern except displayed in a table.
-
-    <layout class="org.concordion.logback.HTMLLayout">
-      <format>STRING</format>
-      <pattern>%date{HH:mm:ss.SSS} %message [%file:%line]</pattern>
-    </layout>>
-    
 ### Grouping Log Statements
 
 A test often involves a series of steps to complete a task.  This extension provides two mechanisms to group log statements under a step.  
