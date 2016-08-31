@@ -55,7 +55,6 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
     private IThrowableRenderer<ILoggingEvent> throwableRenderer;
     private StepRecorder stepRecorder = StepRecorder.STEP_MARKER;
 	private int columnCount;
-	private PatternLayout stringLayout = null;
 	private String stylesheet = "";
 	
     /**
@@ -151,7 +150,7 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 		buf.append(LINE_SEPARATOR);
 		buf.append("<tr class=\"record step\">");
         buf.append(LINE_SEPARATOR);
-		buf.append("<th colspan=\"").append(columnCount + 1).append("\">");
+		buf.append("<td colspan=\"").append(columnCount + 1).append("\">");
         
 		if (event.getMarker() instanceof DataMarker) {
 			buf.append(event.getFormattedMessage());
@@ -159,7 +158,7 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 			buf.append(Transform.escapeTags(event.getFormattedMessage()));
 		}
         
-        buf.append("</th>");
+		buf.append("</td>");
 		buf.append(LINE_SEPARATOR);
 		buf.append("</tr>");
 	}

@@ -78,15 +78,11 @@ table tbody td {
  text-align:left;
 }
 
-table tbody th {
- text-align:left;
- padding:2px;
- color:#fff;
- padding:2px 12px;
- height:25px;
- background-color: #a3c159;
- font-weight: normal;
+TR.step {
+ background: #a3c159; /* For browsers that do not support gradients */
+ background: linear-gradient(to bottom, white, #a3c159); 	
 }
+
 
 table tbody tr td .toggle {
   width: 62px;
@@ -186,7 +182,7 @@ table tbody tr.record:hover {
 }
 
 
-TR.step { font-weight: bold; background-color: #a3c159; color:#fff; }
+//TR.step { background: linear-gradient(to bottom, white, #a3c159); color:#fff; }
 //TR.step:hover { background: lightgoldenrodyellow; }
 //TR.step TD { padding-top: 8px; padding-bottom: 4px; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; }
 //TD.indent { } //background: white; border-top: none; border-right: 1px solid #ddd; text-align: center; }

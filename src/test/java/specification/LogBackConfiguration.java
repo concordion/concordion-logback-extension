@@ -79,7 +79,7 @@ public class LogBackConfiguration extends BaseFixture {
 
 		restoreHtmlLayout();
 
-		result = checkLogContains("<th colspan=\"6\">Step</th>", result);
+		result = checkLogContains("<td colspan=\"6\">Step</td>", result);
 		result = checkLogContains("<td class=\"Message\">Statement</td>", result);
 
 		return result;
@@ -97,7 +97,7 @@ public class LogBackConfiguration extends BaseFixture {
 
 		restoreHtmlLayout();
 
-		result = checkLogContains("<th colspan=\"6\">Step</th>", result);
+		result = checkLogContains("<td colspan=\"6\">Step</td>", result);
 		result = checkLogContains("<td class=\"Message\">Statement</td>", result);
 
 		return result;
