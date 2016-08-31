@@ -203,7 +203,7 @@ public class HtmlLog extends BaseFixture {
 
 		processHtmlAndJava(HTML_FRAGMENT, helperClass, FIXTURE_START + javaFragment + FIXTURE_STOP);
 
-		return checkLogContains("<td class=\"FileOfCaller\">Test.java</td>", true);
+		return checkLogContains("<td class=\"FileOfCaller\" title=\"Test.java\">Test.java</td>", true);
 
 		// Parent Class
 		// logParentClassLocationAware();

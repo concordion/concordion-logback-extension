@@ -24,6 +24,8 @@ import org.slf4j.helpers.MessageFormatter;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.PatternLayout;
 import ch.qos.logback.classic.pattern.DateConverter;
+import ch.qos.logback.classic.pattern.FileOfCallerConverter;
+import ch.qos.logback.classic.pattern.LevelConverter;
 import ch.qos.logback.classic.pattern.MDCConverter;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.helpers.Transform;
@@ -216,10 +218,17 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 		
         buf.append("<td class=\"");
         buf.append(name);
-        if (name.equalsIgnoreCase("Level")) {
+
+		if (c instanceof LevelConverter) {
         	buf.append(" ").append(event.getLevel().toString().toLowerCase());	
         }
-        buf.append("\">");
+		buf.append("\"");
+
+		if (c instanceof FileOfCallerConverter) {
+			buf.append(" title=\"").append(c.convert(event)).append("\"");
+		}
+
+		buf.append(">");
 		if (escapeTags) {
 			buf.append(TransformText.escapeText(Transform.escapeTags(c.convert(event))));
 		} else {
