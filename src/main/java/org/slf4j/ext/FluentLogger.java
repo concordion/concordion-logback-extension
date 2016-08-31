@@ -82,17 +82,22 @@ public class FluentLogger {
 	}
 
 	public FluentLogger htmlMessage(String format, Object... arguments) {
-		addMarker(new HtmlMessageMarker(format));
+		addMarker(new HtmlMessageMarker(format, arguments));
 
-		// Remove HTML tags
+		// Prepare message/arguments for console and other appenders that may not like HTML
+		// ... remove HTML tags from message
 		this.format = format.replaceAll("<.*?>", "");
-		this.arguments = arguments;
 
-//		for (int i = 0; i < this.arguments.length; i++) {
-//			if (this.arguments[i] instanceof String) {
-//				this.arguments[i] = StringEscapeUtils.unescapeHtml4((String) this.arguments[i]);
-//			}
-//		}
+		// ... remove special HTML characters from arguments
+		this.arguments = arguments.clone();
+
+		for (int i = 0; i < this.arguments.length; i++) {
+			if (this.arguments[i] instanceof String) {
+				if (this.arguments[i] instanceof String) {
+					this.arguments[i] = this.arguments[i].toString().replaceAll("&#.*?;", "");
+				}
+			}
+		}
 		
 		return this;
 	}

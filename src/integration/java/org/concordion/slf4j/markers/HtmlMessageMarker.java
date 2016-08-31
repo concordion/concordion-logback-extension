@@ -7,14 +7,20 @@ public class HtmlMessageMarker extends ConcordionMarker {
 	public static final String MARKER_NAME = "HTML_MESSAGE"; 
 	
 	private String format;
+	private Object[] arguments;
 
-	public HtmlMessageMarker(String format) {
+	public HtmlMessageMarker(String format, Object... arguments) {
 		super(MARKER_NAME);
 
 		this.format = format;
+		this.arguments = arguments;
 	}
 
 	public String getFormat() {
 		return format;
+	}
+
+	public Object[] getArguments() {
+		return arguments;
 	}
 }

@@ -189,7 +189,7 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 				
 				field = event.getClass().getDeclaredField("formattedMessage");
 				field.setAccessible(true);
-				field.set(event, getFormattedMessage(marker.getFormat(), event.getArgumentArray()));
+				field.set(event, getFormattedMessage(marker.getFormat(), marker.getArguments()));
 			} catch (Throwable e) {
 				// Silently ignore
 			}

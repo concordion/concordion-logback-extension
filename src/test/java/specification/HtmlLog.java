@@ -74,11 +74,14 @@ public class HtmlLog extends BaseFixture {
 	}
 
 	public boolean canUseReportLogger(String javaFragment, String logMessage) throws Exception {
+		final String FUNKY_ARROW = "&#8658;";
+
 		getLogger().trace("trace");
 		getLogger().debug("debug");
 		getLogger().info("info");
 		getLogger().warn("warn");
 		getLogger().error("error");
+		getLogger().with().htmlMessage("This '{}' is a funky arrow", FUNKY_ARROW).info();
 		
 		resetLogListener();
 		
