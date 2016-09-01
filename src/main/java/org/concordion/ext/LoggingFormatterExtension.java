@@ -77,7 +77,11 @@ public class LoggingFormatterExtension implements ConcordionExtension {
 	 * @return A self reference
 	 */
 	public LoggingFormatterExtension registerListener(LoggingListener logListener) {
-		listener.registerMarker(logListener.getConcordionEventMarker());
+		if (logListener.getHandleFailureAndThrowableEvents()) {
+			listener.registerMarker(logListener.getConcordionEventMarker());
+		} else {
+			listener.setHandleFailureAndThrowableEvents(false);
+		}
 
 		if (logListener instanceof FilterAttachable<?>) {
 			MarkerFilter filter = new MarkerFilter();
@@ -99,53 +103,16 @@ public class LoggingFormatterExtension implements ConcordionExtension {
 		return this;
 	}
 	
+	/**
+	 * Set the screenshot taker to use when adding screenshot.  If using the Logging extension
+	 * to add screenshots then this does not need to be set.
+	 * 
+	 * @param screenshotTaker Screenshot taker
+	 * @return A self reference
+	 */
 	public LoggingFormatterExtension setScreenshotTaker(ScreenshotTaker screenshotTaker) {
 		listener.setScreenshotTaker(screenshotTaker);
 		
-		return this;
-	}
-
-	/**
-	 * A screenshot of the current page will be automatically added to the storyboard (as long as
-	 * the screenshot taker has been set) when:
-	 * <ul>
-	 * <li>an example completes</li>
-	 * <li>a container is closed (either automatically or by calling closeContainer())</li>
-	 * </ul>
-	 * 
-	 * <p>
-	 * If not using the example command then final screenshots must be added manually.
-	 * </p>
-	 * <p>
-	 * This setting is also obeyed by containers that are configured to auto close such as the section container.
-	 * </p>
-	 * 
-	 * @param value
-	 *            <code>true</code> to take screenshot (default), <code>false</code> to not take screenshot
-	 * @return A self reference
-	 */
-	public LoggingFormatterExtension setTakeScreenshotOnExampleCompletion(final boolean value) {
-		listener.setTakeScreenshotOnExampleCompletion(value);
-		return this;
-	}
-
-	/**
-	 * If configured to take final screenshot for example (see {@link #setTakeScreenshotOnExampleCompletion(boolean)}), this
-	 * will override that behaviour until:
-	 * 
-	 * <ul>
-	 * <li>an example completes</li>
-	 * <li>a container is closed (either automatically or by calling closeContainer())</li>
-	 * </ul>
-	 * 
-	 * <p>
-	 * This also prevents screenshots being taken if a test fails or an exception is thrown.
-	 * </p>
-	 * 
-	 * @return A self reference
-	 */
-	public LoggingFormatterExtension skipFinalScreenshot() {
-		listener.setSkipFinalScreenshot();
 		return this;
 	}
 }

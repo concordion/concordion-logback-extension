@@ -33,8 +33,7 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 	private static final ReportLogger LOGGER = ReportLoggerFactory.getReportLogger(LoggingFormatterSpecificationListener.class);
 	private final ILoggingAdaptor loggingAdaptor;
 	private boolean useLogFileViewer = false;
-	private boolean takeScreenshotOnExampleCompletion = true;
-	private boolean skipFinalScreenshot = false;
+	private boolean handleFailureAndThrowableEvents = true;
 	private String testPath = "";
 			
 	private List<Marker> markers = new ArrayList<Marker>();
@@ -43,17 +42,14 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 		this.useLogFileViewer = useLogFileViewer;
 	}
 
-	public void setTakeScreenshotOnExampleCompletion(boolean value) {
-		this.takeScreenshotOnExampleCompletion = value;
+	public void setHandleFailureAndThrowableEvents(boolean handleFailureAndThrowableEvents) {
+		this.handleFailureAndThrowableEvents = handleFailureAndThrowableEvents;
 	}
-
-	public void setSkipFinalScreenshot() {
-		this.skipFinalScreenshot = true;
-	}
-
+	
 	public void setScreenshotTaker(ScreenshotTaker screenshotTaker) {
 		FluentLogger.addScreenshotTaker(screenshotTaker);
 	}
+	
 	public ILoggingAdaptor getLoggingAdaptor() {
 		return this.loggingAdaptor;
 	}
@@ -218,8 +214,6 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 
 	@Override
 	public void afterExample(ExampleEvent event) {
-		takeFinalScreenshotForExample("Example Completed");
-
 		try {
 			if (loggingAdaptor.logFileExists()) {
 				appendLogFileLinkToExample(event, loggingAdaptor.getLogFile());
@@ -240,53 +234,20 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 		event.getElement().prependChild(anchor);
 	}
 
-	/*
-	 * private String getExampleTitle(Element element) {
-	 * String title = element.getAttributeValue("example", "http://www.concordion.org/2007/concordion");
-	 * 
-	 * for (int i = 1; i < 5; i++) {
-	 * Element header = element.getFirstChildElement("h" + String.valueOf(i));
-	 * 
-	 * if (header != null) {
-	 * title = header.getText();
-	 * break;
-	 * }
-	 * }
-	 * 
-	 * return title;
-	 * }
-	 */
-	
-	private void takeFinalScreenshotForExample(String title) {
-		if (skipFinalScreenshot)
-			return;
-		if (!takeScreenshotOnExampleCompletion)	return;
-		if (!ReportLoggerFactory.hasScreenshotTaker()) return;
-
-		// TODO The storyboard extension had these, is there any way to duplicate this?
-		// if (lastScreenShotWasThrowable) return;
-
-		FluentLogger logger = LOGGER.with()
-				.message(title)
-				.screenshot();
-
-		for (Marker marker : markers) {
-			logger.marker(marker);
-		}
-
-		logger.debug();
-	}
-
 ////////////////////////////// Throwable Listener //////////////////////////////
 	
 	@Override
 	public void throwableCaught(ThrowableCaughtEvent event) {
+		if (!handleFailureAndThrowableEvents) {
+			return;
+		}
+		
 		Throwable cause = event.getThrowable();
 		
 		FluentLogger logger = LOGGER.with()
 				.message("Exception thrown while evaluating expression '{}':\r\n\t{}", event.getExpression(), cause.getMessage());
 
-		if (!skipFinalScreenshot && FluentLogger.hasScreenshotTaker()) {
+		if (FluentLogger.hasScreenshotTaker()) {
 			logger.screenshot();
 		}
 
@@ -303,6 +264,10 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 	
 	@Override
 	public void failureReported(AssertFailureEvent event) {
+		if (!handleFailureAndThrowableEvents) {
+			return;
+		}
+		
 		StringBuilder sb = new StringBuilder().append("Test failed");
 		
 		if(event.getExpected() != null) {
@@ -316,14 +281,13 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 		FluentLogger logger = LOGGER.with()
 				.message(sb.toString());
 
-		if (!skipFinalScreenshot && FluentLogger.hasScreenshotTaker()) {
+		if (FluentLogger.hasScreenshotTaker()) {
 			logger.screenshot();
 		}
 
 		for (Marker marker : markers) {
 			logger.marker(marker);
 		}
-
 
 		logger.error();
 	}

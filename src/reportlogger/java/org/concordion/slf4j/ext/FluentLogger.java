@@ -37,10 +37,6 @@ public class FluentLogger {
 		loggingAdaptors.set(loggingAdaptor);
 	}
 
-//	public static boolean hasLoggingAdaptor() {
-//		return loggingAdaptors.get() != null;
-//	}
-
 	public static ILoggingAdaptor getLoggingAdaptor() {
 		return loggingAdaptors.get();
 	}

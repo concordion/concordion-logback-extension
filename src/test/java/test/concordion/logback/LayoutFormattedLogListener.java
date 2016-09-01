@@ -64,4 +64,10 @@ public class LayoutFormattedLogListener extends LoggingListener {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public boolean getHandleFailureAndThrowableEvents() {
+		// TODO Auto-generated method stub
+		return true;
+	}
 }

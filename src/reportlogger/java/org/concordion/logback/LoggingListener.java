@@ -24,8 +24,8 @@ public abstract class LoggingListener extends AppenderBase<ILoggingEvent> {
 	public abstract String[] getFilterMarkers();
 
 	/**
-	 * Implement this to provide a marker that will be attached to any logging statements that the logging extension
-	 * creates.
+	 * Provide a marker that will be attached to any logging statements that the logging extension
+	 * creates. Is only used if {@link #getHandleFailureAndThrowableEvents()} returns true;
 	 * 
 	 * <p>
 	 * For example if the logging extension was to log a screenshot on example completion then the provided
@@ -35,6 +35,20 @@ public abstract class LoggingListener extends AppenderBase<ILoggingEvent> {
 	 * @return A marker
 	 */
 	public abstract Marker getConcordionEventMarker();
+	
+	/**
+	 * Instruct logging extension on whether it should log Concordions FailureReported and ThrowableCaught events.
+	 * This affects the behaviour of {@link #getConcordionEventMarker()}. 
+	 * 
+	 * <p>
+	 * <b>Note</b>: If returning false then the logging extensions default behaviour of logging all 
+	 * exceptions will be overridden and it will be up to the extension using this log listener to ensure that 
+	 * those events are logged appropriately.
+	 * </p>
+	 *  
+	 * @return True to allow the logging extension to log the events, false to prevent it.
+	 */
+	public abstract boolean getHandleFailureAndThrowableEvents();
 
 	protected Marker findMarker(Marker reference, String name) {
 		if (reference == null) {
