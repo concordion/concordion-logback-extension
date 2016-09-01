@@ -150,7 +150,7 @@ function doFilter(className, checked) {
 		  nextrow = nextrow.nextElementSibling;
 	  }
 	  if (nextrow != null && !hasClass(nextrow, className)) {
-		  nextrow.style.borderBottom = borderSetting;
+		  nextrow.style.borderTop = borderSetting;
 	  }
 	  
 	  all[i].style.display = displaySetting;
