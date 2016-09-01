@@ -182,7 +182,8 @@ public class HtmlLog extends BaseFixture {
 
 		processHtmlAndJava(HTML_FRAGMENT, FIXTURE_START + javaFragment + FIXTURE_STOP);
 
-		return checkLogContains("<td colspan=\"6\">My step here</td>", true);
+		boolean result = checkLogContains("<td colspan=\"6\">", true);
+		return checkLogContains(". My step here</td>", result);
 	}
 
 	public boolean throwException(String javaFragment) throws Exception {

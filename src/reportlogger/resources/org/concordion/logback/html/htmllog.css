@@ -4,7 +4,6 @@ html {
 	font-family: Arial, Helvetica, verdana sans-serif;
 	font-size:0.9em;
 	font-style: normal;
-   //font-size: 11pt;
 }
 
 body {
@@ -25,7 +24,7 @@ table {
  background-color:#fff;
  border-collapse: collapse;
  width: calc(100%);
- counter-reset: lineNumber;
+ /* counter-reset: lineNumber; */
 }
 
 table thead th {
@@ -51,15 +50,18 @@ tfoot {
 }
 */
 
+/*
 table tbody tr.record {
  counter-increment: lineNumber;
 }
+*/
 
 table tbody tr {
  background-color:#fff;
  border-bottom: 1px solid #f0f0f0;
 }
 
+/*
 table tbody tr.record td:first-child::before {
     content: counter(lineNumber) ".";
     min-width: 1em;
@@ -71,6 +73,7 @@ table tbody tr.record th:first-child::before {
     margin-right: 0.5em;
     margin-left: -6px;
 }
+*/
 
 table tbody td {
  color:#414141;
@@ -297,5 +300,21 @@ xmp.resizeable {
 	margin: 0px;
 	width: 100px;
 }
+
+.alignleft {
+	display:inline-block;
+}
+
+/* TODO Get header (and first row of table) to stay at top of screen and set this back as it was */
+.alignright {
+	position: fixed;
+	right: 0;
+	background-color: white;
+	
+	display:inline-block;
+	//float: right;
+	margin-right: 40px;
+}
+
 
 </style>

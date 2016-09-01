@@ -129,4 +129,31 @@ function showScreenPopup(src) {
 function hideScreenPopup() {
 	document.getElementById('ScreenshotPopup').style.visibility = 'hidden';
 }
+
+/* Log Filtering */
+function filterDebug(cb) {
+	doFilter("debug", cb.checked);
+}
+function filterTrace(cb) {
+	doFilter("trace", cb.checked);
+}
+
+function doFilter(className, checked) {
+	var displaySetting = checked ? "" : "none";
+	var borderSetting = checked ? "1px solid #f0f0f0" : "1px dotted black";
+	
+	var all = document.querySelectorAll("TR." + className);
+	for (var i = 0; i < all.length; i++) {
+	  
+	  var nextrow = all[i].nextElementSibling;
+	  if (nextrow != null && hasClass(nextrow, "companion")) {
+		  nextrow = nextrow.nextElementSibling;
+	  }
+	  if (nextrow != null && !hasClass(nextrow, className)) {
+		  nextrow.style.borderBottom = borderSetting;
+	  }
+	  
+	  all[i].style.display = displaySetting;
+	}
+}
 </script>

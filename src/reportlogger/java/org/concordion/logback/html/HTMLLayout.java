@@ -126,6 +126,8 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
         StringBuilder buf = new StringBuilder();
         startNewTableIfLimitReached(buf);
 
+		counter++;
+
 		if (containsMarker(event, ReportLoggerMarkers.STEP_MARKER.getName()) || event.getLevel() == stepRecorder.getLevel()) {
 			appendStepToBuffer(buf, event);
         	return buf.toString();
@@ -134,7 +136,7 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 		appendMessageToBuffer(buf, event);
         
 		if (containsMarker(event, ReportLoggerMarkers.DATA_MARKER_NAME)) {
-			appendDataToBuffer(buf, (BaseDataMarker<?>) getMarker(event.getMarker(), ReportLoggerMarkers.DATA_MARKER_NAME));
+			appendDataToBuffer(buf, event, (BaseDataMarker<?>) getMarker(event.getMarker(), ReportLoggerMarkers.DATA_MARKER_NAME));
         }
 
         if (event.getThrowableProxy() != null) {
@@ -153,7 +155,8 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 		buf.append("<tr class=\"record step\">");
         buf.append(LINE_SEPARATOR);
 		buf.append("<td colspan=\"").append(columnCount + 1).append("\">");
-        
+		buf.append(counter).append(". ");
+
 		if (event.getMarker() instanceof DataMarker) {
 			buf.append(event.getFormattedMessage());
 		} else {
@@ -175,9 +178,9 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 		String originalMessage = null;
 		
         buf.append(LINE_SEPARATOR);
-        buf.append("<tr class=\"record\">");
+		buf.append("<tr class=\"record ").append(event.getLevel().toString().toLowerCase()).append("\">");
         buf.append(LINE_SEPARATOR);
-		buf.append("<td></td>");
+		buf.append("<td>").append(counter).append(".</td>");
 		
 		if (containsMarker(event, HtmlMessageMarker.MARKER_NAME)) {
 			// Replace plain log message with HTML formatted version 
@@ -195,7 +198,7 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 				// Silently ignore
 			}
 		}
-		
+
 		Converter<ILoggingEvent> c = head;
 		while (c != null) {
 			appendEventToBuffer(buf, c, event, escapeTags);
@@ -238,13 +241,13 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
         buf.append(LINE_SEPARATOR);
     }
 	
-	public void appendDataToBuffer(StringBuilder buf, BaseDataMarker<?> data) {
+	public void appendDataToBuffer(StringBuilder buf, ILoggingEvent event, BaseDataMarker<?> data) {
 		if (!data.hasData()) {
 			return;
 		}
 
 		buf.append(LINE_SEPARATOR);
-		buf.append("<tr class=\"companion\">");
+		buf.append("<tr class=\"companion ").append(event.getLevel().toString().toLowerCase()).append("\">");
 		buf.append(LINE_SEPARATOR);
 		buf.append("<td class=\"indent\"></td><td colspan=\"").append(columnCount).append("\" class=\"output\">");
 		
@@ -321,6 +324,9 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 		sbuf.append(LINE_SEPARATOR);
 		sbuf.append("<body>");
 		sbuf.append(LINE_SEPARATOR);
+
+		// sbuf.append("<label class=\"alignright\"><input id=\"chkDebug\" type=\"checkbox\" onclick=\"filterDebug(this);\" checked>Show 'DEBUG' level statements</label>");
+		sbuf.append("<label class=\"alignright\"><input id=\"chkTrace\" type=\"checkbox\" onclick=\"filterTrace(this);\" checked>Show 'TRACE' level statements</label>");
 
 		// Required for screenshot popup
 		sbuf.append("<img id=\"ScreenshotPopup\" class=\"screenshot\" />");
