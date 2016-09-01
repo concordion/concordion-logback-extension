@@ -16,42 +16,38 @@ ext {
 
 
 sourceSets {
-    integration
+    reportlogger
 }
 
 dependencies {
-	//TODO Nigel: Is there a better way to include this in both integration and main source sets?
-	integrationCompileOnly 'org.slf4j:slf4j-ext:1.7.21'
-    integrationCompileOnly 'ch.qos.logback:logback-classic:1.1.7'
-    integrationCompileOnly 'org.concordion:concordion:2.0.2'
+	reportloggerCompile 'org.slf4j:slf4j-ext:1.7.21'
+    reportloggerCompile 'ch.qos.logback:logback-classic:1.1.7'
+    reportloggerCompile 'org.apache.commons:commons-io:1.3.2'
+        
+    compile sourceSets.reportlogger.output
+    compile sourceSets.reportlogger.compileClasspath
     
-    compile sourceSets.integration.output
-    
-	compile 'org.slf4j:slf4j-ext:1.7.21'
-	
-	compile 'ch.qos.logback:logback-classic:1.1.7'
 	compile "org.concordion:concordion-logging-tooltip-extension:1.1.2"
-	compile 'org.apache.commons:commons-io:1.3.2'
-	
+		
 	// Only needed for javadocs :-(
 	compileOnly 'commons-lang:commons-lang:2.6'
 }
 
-// build integration jar
-task integrationJar(type: Jar) {
-    from sourceSets.integration.output
+// build reportlogger jar
+task reportloggerJar(type: Jar) {
+    from sourceSets.reportlogger.output
 }
 
-// Include integration source set in sources jar
+// Include reportlogger source set in sources jar
 sourcesJar  { 
-    from sourceSets.integration.allSource
+    from sourceSets.reportlogger.allSource
 } 
 
 publishing { 
 	publications { 
         mavenJava(MavenPublication) {
-            artifact integrationJar { 
-            	classifier "integration" 
+            artifact reportloggerJar { 
+            	classifier 'reportlogger' 
             }
 		}
 	}
