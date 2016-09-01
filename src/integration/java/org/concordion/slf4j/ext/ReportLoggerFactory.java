@@ -22,7 +22,7 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.slf4j.ext;
+package org.concordion.slf4j.ext;
 
 import org.concordion.ext.ScreenshotTaker;
 import org.slf4j.LoggerFactory;

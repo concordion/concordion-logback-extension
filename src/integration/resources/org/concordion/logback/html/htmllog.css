@@ -207,7 +207,7 @@ TD.Exception { background: #A2AEE8; font-family: courier, monospace; }
 TH.Message { width: 100%; }
 TD.Message { word-break: break-all; }
 TD.FileOfCaller {  
-	max-width: 9em;
+	max-width: 19em;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap; 

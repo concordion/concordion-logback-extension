@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.URL;
 
+import org.concordion.logback.html.HTMLLayout;
 import org.slf4j.LoggerFactory;
 
 import ch.qos.logback.classic.Logger;
@@ -21,7 +22,6 @@ import ch.qos.logback.core.Layout;
 import ch.qos.logback.core.encoder.LayoutWrappingEncoder;
 import ch.qos.logback.core.joran.spi.JoranException;
 import ch.qos.logback.core.util.StatusPrinter;
-import ch.qos.logback.ext.html.HTMLLayout;
 
 public class LogBackHelper {
 	private static String HTML_FILE_APPENDER = "HTML-FILE-PER-TEST";

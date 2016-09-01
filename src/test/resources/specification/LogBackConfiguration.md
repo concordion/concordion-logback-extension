@@ -70,7 +70,7 @@ Each conversion word in the layout pattern will be shown in a [separate column](
 
 One notable exception about the use of PatternLayout with HTMLLayout is that conversion words should not be separated by space characters or more generally by literal text. Each specifier found in the pattern will result in a separate column. Likewise a separate column will be generated for each block of literal text found in the pattern, potentially wasting valuable real-estate on your screen.
 
-    <layout class="org.concordion.logback.HTMLLayout">>
+    <layout class="org.concordion.logback.html.HTMLLayout">>
       <pattern>%date{HH:mm:ss.SSS}%message%file%line</pattern>>
     </layout>>
 

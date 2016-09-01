@@ -14,12 +14,28 @@ import ch.qos.logback.core.AppenderBase;
  */
 public abstract class LoggingListener extends AppenderBase<ILoggingEvent> {
 
+	/**
+	 * Implement this to provide a list of markers that this listener wants to deal with.
+	 * 
+	 * This listener will then only receive logging events for those log messages that contain that marker.
+	 * 
+	 * @return A list of markers.
+	 */
 	public abstract String[] getFilterMarkers();
 
-	public abstract Marker getThrowableCaughtMarker();
+	/**
+	 * Implement this to provide a marker that will be attached to any logging statements that the logging extension
+	 * creates.
+	 * 
+	 * <p>
+	 * For example if the logging extension was to log a screenshot on example completion then the provided
+	 * marker will be attached to the log event.
+	 * </p>
+	 * 
+	 * @return A marker
+	 */
+	public abstract Marker getConcordionEventMarker();
 
-	public abstract Marker getFailureReportedMarker();
-	
 	protected Marker findMarker(Marker reference, String name) {
 		if (reference == null) {
 			return null;

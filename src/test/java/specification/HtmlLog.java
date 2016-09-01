@@ -2,17 +2,17 @@ package specification;
 
 import org.concordion.api.AfterSpecification;
 import org.concordion.api.BeforeSpecification;
+import org.concordion.logback.html.HTMLLayout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.qos.logback.ext.html.HTMLLayout;
 import test.concordion.logback.LogBackHelper;
 
 public class HtmlLog extends BaseFixture {
 	private static final String HTML_FRAGMENT = "<span concordion:execute=\"logSomething()\"></span>";
 	private static final String FIXTURE_CLASSNAME = "Test";
-	private static final String FIXTURE_START = "import org.slf4j.ext.ReportLogger;" + System.lineSeparator()
-			+ "import org.slf4j.ext.ReportLoggerFactory;" + System.lineSeparator()
+	private static final String FIXTURE_START = "import org.concordion.slf4j.ext.ReportLogger;" + System.lineSeparator()
+			+ "import org.concordion.slf4j.ext.ReportLoggerFactory;" + System.lineSeparator()
 			+ "import test.concordion.logback.DummyScreenshotTaker;" + System.lineSeparator() + System.lineSeparator()
 			+ "public class Test {" + System.lineSeparator()
 			+ "    private static final ReportLogger LOGGER = ReportLoggerFactory.getReportLogger(Test.class);"
@@ -165,7 +165,7 @@ public class HtmlLog extends BaseFixture {
 		resetLogListener();
 
 		String imports = "import java.io.InputStream;" + System.lineSeparator() + "import java.io.ByteArrayInputStream;"
-				+ System.lineSeparator() + "import org.slf4j.ext.MediaType;" + System.lineSeparator()
+				+ System.lineSeparator() + "import org.concordion.slf4j.ext.MediaType;" + System.lineSeparator()
 				+ "import java.nio.charset.StandardCharsets;" + System.lineSeparator() + System.lineSeparator();
 
 		String fixture = FIXTURE_START + javaFragment + FIXTURE_STOP;

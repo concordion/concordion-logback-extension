@@ -1,4 +1,4 @@
-package org.slf4j.ext;
+package org.concordion.slf4j.ext;
 
 /**
  * TODO Is it ok to steal this code?

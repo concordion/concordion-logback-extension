@@ -1,4 +1,4 @@
-package ch.qos.logback.ext.html;
+package org.concordion.logback.html;
 
 import static ch.qos.logback.core.CoreConstants.LINE_SEPARATOR;
 

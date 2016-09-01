@@ -2,9 +2,9 @@ package specification;
 
 import org.concordion.api.AfterSpecification;
 import org.concordion.api.BeforeSpecification;
+import org.concordion.logback.html.HTMLLayout;
+import org.concordion.logback.html.StepRecorder;
 
-import ch.qos.logback.ext.html.HTMLLayout;
-import ch.qos.logback.ext.html.StepRecorder;
 import test.concordion.logback.LogBackHelper;
 
 public class LogBackConfiguration extends BaseFixture {

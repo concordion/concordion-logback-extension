@@ -1,4 +1,4 @@
-package org.concordion.logback;
+package org.concordion.logback.filter;
 
 import org.slf4j.Marker;
 

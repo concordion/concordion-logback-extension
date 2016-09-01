@@ -14,12 +14,12 @@ import org.concordion.ext.ScreenshotTaker;
 import org.concordion.ext.loggingFormatter.ILoggingAdaptor;
 import org.concordion.ext.loggingFormatter.LogbackAdaptor;
 import org.concordion.integration.junit4.ConcordionRunner;
+import org.concordion.slf4j.ext.FluentLogger;
+import org.concordion.slf4j.ext.ReportLogger;
+import org.concordion.slf4j.ext.ReportLoggerFactory;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.ext.FluentLogger;
-import org.slf4j.ext.ReportLogger;
-import org.slf4j.ext.ReportLoggerFactory;
 
 import ch.qos.logback.classic.Level;
 import test.concordion.JavaSourceCompiler;

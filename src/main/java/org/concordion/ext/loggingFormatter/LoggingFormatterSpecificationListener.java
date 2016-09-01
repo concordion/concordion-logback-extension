@@ -24,42 +24,44 @@ import org.concordion.api.listener.SpecificationProcessingListener;
 import org.concordion.api.listener.ThrowableCaughtEvent;
 import org.concordion.api.listener.ThrowableCaughtListener;
 import org.concordion.ext.ScreenshotTaker;
+import org.concordion.slf4j.ext.FluentLogger;
+import org.concordion.slf4j.ext.ReportLogger;
+import org.concordion.slf4j.ext.ReportLoggerFactory;
 import org.slf4j.Marker;
-import org.slf4j.ext.FluentLogger;
-import org.slf4j.ext.ReportLogger;
-import org.slf4j.ext.ReportLoggerFactory;
 
 public class LoggingFormatterSpecificationListener implements SpecificationProcessingListener, ExampleListener, ThrowableCaughtListener, AssertEqualsListener, AssertTrueListener, AssertFalseListener {
 	private static final ReportLogger LOGGER = ReportLoggerFactory.getReportLogger(LoggingFormatterSpecificationListener.class);
 	private final ILoggingAdaptor loggingAdaptor;
 	private final Resource stylesheetResource;
 	private boolean useLogFileViewer = false;
+	private boolean takeScreenshotOnExampleCompletion = true;
+	private boolean skipFinalScreenshot = false;
 	private String testPath = "";
 			
-	private List<Marker> throwableCaughtMarkers = new ArrayList<Marker>();
-	private List<Marker> failureReporteMarkers = new ArrayList<Marker>();
+	private List<Marker> markers = new ArrayList<Marker>();
 
 	public void setUseLogFileViewer(boolean useLogFileViewer) {
 		this.useLogFileViewer = useLogFileViewer;
 	}
 
+	public void setTakeScreenshotOnExampleCompletion(boolean value) {
+		this.takeScreenshotOnExampleCompletion = value;
+	}
+
+	public void setSkipFinalScreenshot() {
+		this.skipFinalScreenshot = true;
+	}
+
 	public void setScreenshotTaker(ScreenshotTaker screenshotTaker) {
 		FluentLogger.addScreenshotTaker(screenshotTaker);
 	}
-	
 	public ILoggingAdaptor getLoggingAdaptor() {
 		return this.loggingAdaptor;
 	}
 
-	public void registerThrowableCaughtMarker(Marker marker) {
+	public void registerMarker(Marker marker) {
 		if (marker != null) {
-			throwableCaughtMarkers.add(marker);
-		}
-	}
-
-	public void registerFailureReportedMarker(Marker marker) {
-		if (marker != null) {
-			failureReporteMarkers.add(marker);
+			markers.add(marker);
 		}
 	}
 
@@ -75,7 +77,13 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 	public void beforeProcessingSpecification(final SpecificationProcessingEvent event) {
 		testPath = event.getResource().getPath();
 
-		loggingAdaptor.startSpecificationLogFile(testPath, null); //event.getResource().getRelativePath(stylesheetResource));
+		String resourcePath = null;
+
+		if (stylesheetResource != null) {
+			resourcePath = event.getResource().getRelativePath(stylesheetResource);
+		}
+
+		loggingAdaptor.startSpecificationLogFile(testPath, resourcePath);
 	}
 
 	@Override
@@ -218,6 +226,8 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 
 	@Override
 	public void afterExample(ExampleEvent event) {
+		takeFinalScreenshotForExample("Example Completed");
+
 		try {
 			if (loggingAdaptor.logFileExists()) {
 				appendLogFileLinkToExample(event, loggingAdaptor.getLogFile());
@@ -231,28 +241,50 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 		String logURL = createViewer(log);
 
 		Element anchor = new Element("a");
-		anchor.addAttribute("style", "font-weight: bold; text-decoration: none; color: #89C; float: right; display: inline-block; margin-top: 20px;");
+		anchor.addAttribute("style", "font-size: 10px; font-weight: bold; text-decoration: none; color: #89C; float: right; display: inline-block; margin-top: 20px;");
 		anchor.addAttribute("href", logURL);
 		anchor.appendText("Log File");
 
 		event.getElement().prependChild(anchor);
 	}
 
-	public String getExampleTitle(Element element) {
-		String title = element.getAttributeValue("example", "http://www.concordion.org/2007/concordion"); 
-		
-		for (int i = 1; i < 5; i++) {
-			Element header = element.getFirstChildElement("h" + String.valueOf(i));
-			
-			if (header != null) {
-				title = header.getText();
-				break;
-			}		
+	/*
+	 * private String getExampleTitle(Element element) {
+	 * String title = element.getAttributeValue("example", "http://www.concordion.org/2007/concordion");
+	 * 
+	 * for (int i = 1; i < 5; i++) {
+	 * Element header = element.getFirstChildElement("h" + String.valueOf(i));
+	 * 
+	 * if (header != null) {
+	 * title = header.getText();
+	 * break;
+	 * }
+	 * }
+	 * 
+	 * return title;
+	 * }
+	 */
+	
+	private void takeFinalScreenshotForExample(String title) {
+		if (skipFinalScreenshot)
+			return;
+		if (!takeScreenshotOnExampleCompletion)	return;
+		if (!ReportLoggerFactory.hasScreenshotTaker()) return;
+
+		// TODO The storyboard extension had these, is there any way to duplicate this?
+		// if (lastScreenShotWasThrowable) return;
+
+		FluentLogger logger = LOGGER.with()
+				.message(title)
+				.screenshot();
+
+		for (Marker marker : markers) {
+			logger.marker(marker);
 		}
 
-		return title;
+		logger.debug();
 	}
-	
+
 ////////////////////////////// Throwable Listener //////////////////////////////
 	
 	@Override
@@ -262,11 +294,11 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 		FluentLogger logger = LOGGER.with()
 				.message("Exception thrown while evaluating expression '{}':\r\n\t{}", event.getExpression(), cause.getMessage());
 
-		if (FluentLogger.hasScreenshotTaker()) {
+		if (!skipFinalScreenshot && FluentLogger.hasScreenshotTaker()) {
 			logger.screenshot();
 		}
 
-		for (Marker marker : throwableCaughtMarkers) {
+		for (Marker marker : markers) {
 			logger.marker(marker);
 		}
 
@@ -292,11 +324,11 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 		FluentLogger logger = LOGGER.with()
 				.message(sb.toString());
 
-		if (FluentLogger.hasScreenshotTaker()) {
+		if (!skipFinalScreenshot && FluentLogger.hasScreenshotTaker()) {
 			logger.screenshot();
 		}
 
-		for (Marker marker : failureReporteMarkers) {
+		for (Marker marker : markers) {
 			logger.marker(marker);
 		}
 

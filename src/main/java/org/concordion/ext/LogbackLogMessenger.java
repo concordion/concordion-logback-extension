@@ -15,8 +15,8 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.OutputStreamAppender;
 
 /**
- * Configures a @link OutputStreamAppender to store new log messages from Logback 
- * for delivery to @Link LoggingTooltipExtension
+ * Configures a {@link OutputStreamAppender} to store new log messages from Logback
+ * for delivery to {@link LoggingTooltipExtension}
  */
 public class LogbackLogMessenger implements LogMessenger {
 	private OutputStreamAppender<ILoggingEvent> streamAppender = null;

@@ -1,4 +1,4 @@
-package org.slf4j.ext;
+package org.concordion.slf4j.ext;
 
 public interface ScreenshotFormatting {
 	public void formatPageForScreenshot();

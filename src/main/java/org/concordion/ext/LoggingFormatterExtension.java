@@ -1,14 +1,13 @@
 package org.concordion.ext;
 
 
-import org.concordion.api.Resource;
 import org.concordion.api.extension.ConcordionExtender;
 import org.concordion.api.extension.ConcordionExtension;
 import org.concordion.ext.loggingFormatter.ILoggingAdaptor;
 import org.concordion.ext.loggingFormatter.LogbackAdaptor;
 import org.concordion.ext.loggingFormatter.LoggingFormatterSpecificationListener;
 import org.concordion.logback.LoggingListener;
-import org.concordion.logback.MarkerFilter;
+import org.concordion.logback.filter.MarkerFilter;
 import org.slf4j.LoggerFactory;
 
 import ch.qos.logback.classic.Level;
@@ -22,7 +21,6 @@ import ch.qos.logback.core.spi.FilterAttachable;
  */
 public class LoggingFormatterExtension implements ConcordionExtension {
 	private final LoggingFormatterSpecificationListener listener;
-//	private final Resource stylesheetResource;
 	
 	/**
 	 * Constructor - defaults to using LogbackAdaptor.
@@ -37,7 +35,6 @@ public class LoggingFormatterExtension implements ConcordionExtension {
 	 * @param loggingAdaptor Custom logging adaptor
 	 */
 	public LoggingFormatterExtension(ILoggingAdaptor loggingAdaptor) {
-		//stylesheetResource = new Resource("/font-awesome/css/font-awesome.css");
 		listener = new LoggingFormatterSpecificationListener(loggingAdaptor, null);
 	}
 
@@ -57,8 +54,6 @@ public class LoggingFormatterExtension implements ConcordionExtension {
 		String path = LoggingFormatterExtension.class.getPackage().getName();
 		path = path.replaceAll("\\.", "/");
 		path = "/" + path;
-
-		//concordionExtender.withLinkedCSS("/font-awesome-4.6.3/css/font-awesome.css", stylesheetResource);
 	}
 	
 	/**
@@ -82,8 +77,7 @@ public class LoggingFormatterExtension implements ConcordionExtension {
 	 * @return A self reference
 	 */
 	public LoggingFormatterExtension registerListener(LoggingListener logListener) {
-		listener.registerThrowableCaughtMarker(logListener.getThrowableCaughtMarker());
-		listener.registerFailureReportedMarker(logListener.getFailureReportedMarker());
+		listener.registerMarker(logListener.getConcordionEventMarker());
 
 		if (logListener instanceof FilterAttachable<?>) {
 			MarkerFilter filter = new MarkerFilter();
@@ -108,6 +102,50 @@ public class LoggingFormatterExtension implements ConcordionExtension {
 	public LoggingFormatterExtension setScreenshotTaker(ScreenshotTaker screenshotTaker) {
 		listener.setScreenshotTaker(screenshotTaker);
 		
+		return this;
+	}
+
+	/**
+	 * A screenshot of the current page will be automatically added to the storyboard (as long as
+	 * the screenshot taker has been set) when:
+	 * <ul>
+	 * <li>an example completes</li>
+	 * <li>a container is closed (either automatically or by calling closeContainer())</li>
+	 * </ul>
+	 * 
+	 * <p>
+	 * If not using the example command then final screenshots must be added manually.
+	 * </p>
+	 * <p>
+	 * This setting is also obeyed by containers that are configured to auto close such as the section container.
+	 * </p>
+	 * 
+	 * @param value
+	 *            <code>true</code> to take screenshot (default), <code>false</code> to not take screenshot
+	 * @return A self reference
+	 */
+	public LoggingFormatterExtension setTakeScreenshotOnExampleCompletion(final boolean value) {
+		listener.setTakeScreenshotOnExampleCompletion(value);
+		return this;
+	}
+
+	/**
+	 * If configured to take final screenshot for example (see {@link #setTakeScreenshotOnExampleCompletion(boolean)}), this
+	 * will override that behaviour until:
+	 * 
+	 * <ul>
+	 * <li>an example completes</li>
+	 * <li>a container is closed (either automatically or by calling closeContainer())</li>
+	 * </ul>
+	 * 
+	 * <p>
+	 * This also prevents screenshots being taken if a test fails or an exception is thrown.
+	 * </p>
+	 * 
+	 * @return A self reference
+	 */
+	public LoggingFormatterExtension skipFinalScreenshot() {
+		listener.setSkipFinalScreenshot();
 		return this;
 	}
 }

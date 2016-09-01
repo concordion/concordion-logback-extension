@@ -1,7 +1,7 @@
 package test.concordion.logback;
 
-import org.slf4j.ext.ReportLogger;
-import org.slf4j.ext.ReportLoggerFactory;
+import org.concordion.slf4j.ext.ReportLogger;
+import org.concordion.slf4j.ext.ReportLoggerFactory;
 
 public class LocationHelper {
 	private final ReportLogger logger = ReportLoggerFactory.getReportLogger(this.getClass().getName());

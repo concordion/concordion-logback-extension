@@ -1,4 +1,4 @@
-package ch.qos.logback.ext.html;
+package org.concordion.logback.html;
 
 /**
  * Utility class for transforming strings.

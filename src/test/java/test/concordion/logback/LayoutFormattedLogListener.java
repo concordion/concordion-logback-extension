@@ -60,13 +60,7 @@ public class LayoutFormattedLogListener extends LoggingListener {
 	}
 
 	@Override
-	public Marker getThrowableCaughtMarker() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Marker getFailureReportedMarker() {
+	public Marker getConcordionEventMarker() {
 		// TODO Auto-generated method stub
 		return null;
 	}

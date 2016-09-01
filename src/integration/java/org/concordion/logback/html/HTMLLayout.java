@@ -1,4 +1,4 @@
-package ch.qos.logback.ext.html;
+package org.concordion.logback.html;
 
 // TODO: Expand/Collapse button for Data; Copy Text Button for Data; Link = Eye on example.
 

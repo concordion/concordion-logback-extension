@@ -22,8 +22,8 @@ Before using this the logger, LogBack must be configured.  See [LogBack Configur
 When the logger is configured to [use the HTML appender](- "c:assertTrue=isHtmlAppenderConfigured()") you can continue to use the [standard logger](- "c:assertTrue=canUseClassicLogger()") to log to the HTML log file.  However, to use the advanced logging features you will need to use the ReportLogger which can be setup as follows:   
 
 <div><pre concordion:set="#fixture">
-import org.slf4j.ext.ReportLogger;
-import org.slf4j.ext.ReportLoggerFactory;
+import org.concordion.slf4j.ext.ReportLogger;
+import org.concordion.slf4j.ext.ReportLoggerFactory;
 
 public class Test {
     private static final ReportLogger LOGGER = ReportLoggerFactory.getReportLogger(Test.class);
@@ -170,8 +170,8 @@ When debugging tests it is often desireable to know where something happened wit
 For example, if we have a helper class that sets the locationAwareParent() to the current class...
  
 <div><pre concordion:set="#helperclass">	
-import org.slf4j.ext.ReportLogger;
-import org.slf4j.ext.ReportLoggerFactory;
+import org.concordion.slf4j.ext.ReportLogger;
+import org.concordion.slf4j.ext.ReportLoggerFactory;
 
 public class LocationHelper {
 	private final ReportLogger logger = ReportLoggerFactory.getReportLogger(this.getClass().getName());

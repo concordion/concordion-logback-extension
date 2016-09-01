@@ -22,10 +22,11 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.slf4j.ext;
+package org.concordion.slf4j.ext;
 
 import org.concordion.slf4j.markers.ReportLoggerMarkers;
 import org.slf4j.Logger;
+import org.slf4j.ext.LoggerWrapper;
 
 /**
  * A utility that provides standard mechanisms for logging certain kinds of
