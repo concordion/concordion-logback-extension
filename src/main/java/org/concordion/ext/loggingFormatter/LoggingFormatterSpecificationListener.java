@@ -11,7 +11,6 @@ import java.util.regex.Matcher;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.concordion.api.Element;
-import org.concordion.api.Resource;
 import org.concordion.api.listener.AssertEqualsListener;
 import org.concordion.api.listener.AssertFailureEvent;
 import org.concordion.api.listener.AssertFalseListener;
@@ -24,6 +23,7 @@ import org.concordion.api.listener.SpecificationProcessingListener;
 import org.concordion.api.listener.ThrowableCaughtEvent;
 import org.concordion.api.listener.ThrowableCaughtListener;
 import org.concordion.ext.ScreenshotTaker;
+import org.concordion.slf4j.ILoggingAdaptor;
 import org.concordion.slf4j.ext.FluentLogger;
 import org.concordion.slf4j.ext.ReportLogger;
 import org.concordion.slf4j.ext.ReportLoggerFactory;
@@ -32,7 +32,6 @@ import org.slf4j.Marker;
 public class LoggingFormatterSpecificationListener implements SpecificationProcessingListener, ExampleListener, ThrowableCaughtListener, AssertEqualsListener, AssertTrueListener, AssertFalseListener {
 	private static final ReportLogger LOGGER = ReportLoggerFactory.getReportLogger(LoggingFormatterSpecificationListener.class);
 	private final ILoggingAdaptor loggingAdaptor;
-	private final Resource stylesheetResource;
 	private boolean useLogFileViewer = false;
 	private boolean takeScreenshotOnExampleCompletion = true;
 	private boolean skipFinalScreenshot = false;
@@ -65,9 +64,8 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 		}
 	}
 
-	public LoggingFormatterSpecificationListener(ILoggingAdaptor loggingAdaptor, Resource stylesheetResource) {
+	public LoggingFormatterSpecificationListener(ILoggingAdaptor loggingAdaptor) {
 		this.loggingAdaptor = loggingAdaptor;
-		this.stylesheetResource = stylesheetResource;
 		
 		FluentLogger.addLoggingAdaptor(this.loggingAdaptor);
 	}
@@ -77,13 +75,7 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 	public void beforeProcessingSpecification(final SpecificationProcessingEvent event) {
 		testPath = event.getResource().getPath();
 
-		String resourcePath = null;
-
-		if (stylesheetResource != null) {
-			resourcePath = event.getResource().getRelativePath(stylesheetResource);
-		}
-
-		loggingAdaptor.startSpecificationLogFile(testPath, resourcePath);
+		loggingAdaptor.startSpecificationLogFile(testPath);
 	}
 
 	@Override

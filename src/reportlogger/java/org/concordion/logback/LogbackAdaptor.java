@@ -1,9 +1,10 @@
-package org.concordion.ext.loggingFormatter;
+package org.concordion.logback;
 
 import java.io.File;
 import java.util.Iterator;
 import java.util.Stack;
 
+import org.concordion.slf4j.ILoggingAdaptor;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
@@ -14,6 +15,8 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.Appender;
 import ch.qos.logback.core.FileAppender;
 import ch.qos.logback.core.util.StatusPrinter;
+
+// TODO The implementation (and names of some of the interface methods) is tied into Concordion, can we make these a bit more generic?
 
 /**
  * Class to handle setting/removing MDC on per test case basis. This helps us log each test case into it's own log file. 
@@ -44,14 +47,15 @@ public class LogbackAdaptor implements ILoggingAdaptor
 	 * Adds the test name to MDC so that sift appender can use it and log the new log events to a different file
 	 */
 	@Override
-	public void startSpecificationLogFile(String testPath, String stylesheet) {
+	public void startSpecificationLogFile(String testPath) {
 		String path = baseFolder + getPath(testPath);
 
-		// Add path to css style sheet to logger context for later use
-		if (stylesheet != null) {
-			LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
-			lc.putProperty(LAYOUT_STYLESHEET, stylesheet);
-		}
+		// Add path to a custom css style sheet to logger context for later use
+		// - not used any more but keeping code just in case
+		// if (stylesheet != null) {
+		// LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+		// lc.putProperty(LAYOUT_STYLESHEET, stylesheet);
+		// }
 		
 		testStack.push(path);
 

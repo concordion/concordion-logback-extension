@@ -12,7 +12,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
-import org.concordion.ext.loggingFormatter.LogbackAdaptor;
+import org.concordion.logback.LogbackAdaptor;
 import org.concordion.slf4j.markers.BaseDataMarker;
 import org.concordion.slf4j.markers.DataMarker;
 import org.concordion.slf4j.markers.HtmlMessageMarker;

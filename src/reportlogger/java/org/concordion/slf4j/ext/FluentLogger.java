@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.util.Iterator;
 
 import org.concordion.ext.ScreenshotTaker;
-import org.concordion.ext.loggingFormatter.ILoggingAdaptor;
+import org.concordion.slf4j.ILoggingAdaptor;
 import org.concordion.slf4j.markers.AttachmentMarker;
 import org.concordion.slf4j.markers.BaseDataMarker;
 import org.concordion.slf4j.markers.DataMarker;

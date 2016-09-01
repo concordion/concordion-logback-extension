@@ -1,4 +1,4 @@
-package org.concordion.ext.loggingFormatter;
+package org.concordion.slf4j;
 
 import java.io.File;
 
@@ -15,7 +15,7 @@ public interface ILoggingAdaptor
 	 * @param testPath Path of the current test
 	 * @param stylesheet Name of a style sheet to append to the log file 
 	 */
-	public void startSpecificationLogFile(String testPath, String stylesheet);
+	public void startSpecificationLogFile(String testPath);
 	
 	/**
 	 * Update logger so that logging statements for a specific example are directed to specified file

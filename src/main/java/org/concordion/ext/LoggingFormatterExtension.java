@@ -3,11 +3,11 @@ package org.concordion.ext;
 
 import org.concordion.api.extension.ConcordionExtender;
 import org.concordion.api.extension.ConcordionExtension;
-import org.concordion.ext.loggingFormatter.ILoggingAdaptor;
-import org.concordion.ext.loggingFormatter.LogbackAdaptor;
 import org.concordion.ext.loggingFormatter.LoggingFormatterSpecificationListener;
+import org.concordion.logback.LogbackAdaptor;
 import org.concordion.logback.LoggingListener;
 import org.concordion.logback.filter.MarkerFilter;
+import org.concordion.slf4j.ILoggingAdaptor;
 import org.slf4j.LoggerFactory;
 
 import ch.qos.logback.classic.Level;
@@ -35,7 +35,7 @@ public class LoggingFormatterExtension implements ConcordionExtension {
 	 * @param loggingAdaptor Custom logging adaptor
 	 */
 	public LoggingFormatterExtension(ILoggingAdaptor loggingAdaptor) {
-		listener = new LoggingFormatterSpecificationListener(loggingAdaptor, null);
+		listener = new LoggingFormatterSpecificationListener(loggingAdaptor);
 	}
 
 	public ILoggingAdaptor getLoggingAdaptor() {
