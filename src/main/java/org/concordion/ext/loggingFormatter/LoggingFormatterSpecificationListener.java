@@ -227,7 +227,7 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 		String logURL = createViewer(log);
 
 		Element anchor = new Element("a");
-		anchor.addAttribute("style", "font-size: 10px; font-weight: bold; text-decoration: none; color: #89C; float: right; display: inline-block; margin-top: 20px;");
+		anchor.addAttribute("style", "font-size: 9pt; font-weight: bold; float: right; display: inline-block; margin-top: 20px; text-decoration: none; color: #89C;");
 		anchor.addAttribute("href", logURL);
 		anchor.appendText("Log File");
 
