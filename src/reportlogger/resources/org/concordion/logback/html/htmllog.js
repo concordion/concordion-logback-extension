@@ -144,13 +144,9 @@ function doFilter(className, checked) {
 	
 	var all = document.querySelectorAll("TR." + className);
 	for (var i = 0; i < all.length; i++) {
-	  
-	  var nextrow = all[i].nextElementSibling;
-	  if (nextrow != null && hasClass(nextrow, "companion")) {
-		  nextrow = nextrow.nextElementSibling;
-	  }
-	  if (nextrow != null && !hasClass(nextrow, className)) {
-		  nextrow.style.borderTop = borderSetting;
+	  var prevrow = all[i].previousElementSibling;
+	  if (prevrow != null && !hasClass(prevrow, className)) {
+		  prevrow.style.borderBottom = borderSetting;
 	  }
 	  
 	  all[i].style.display = displaySetting;
