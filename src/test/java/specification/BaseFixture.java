@@ -104,6 +104,19 @@ public class BaseFixture {
 		return exampleLogListener.getLog();
 	}
 	
+	protected String getConsoleMessage() {
+		String message = exampleLogListener.getConsoleLog();
+
+		int index = message.indexOf(" - ");
+
+		if (index > 0) {
+			return message.substring(index + 3);
+		} else {
+			return message;
+		}
+
+	}
+
 	protected String getLogMessage() {
 		String message = exampleLogListener.getLog(); 
 		

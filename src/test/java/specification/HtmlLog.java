@@ -58,6 +58,14 @@ public class HtmlLog extends BaseFixture {
 	private void resetLogListener() {
 		exampleLogListener.reset();
 	}
+
+	public String getConsoleMessage() {
+		return super.getConsoleMessage();
+	}
+
+	public String getLogMessage() {
+		return super.getLogMessage();
+	}
 	//// END Helper Methods
 
 	// HTML-FILE-PER-TEST appender is attached to the root logger
@@ -108,7 +116,6 @@ public class HtmlLog extends BaseFixture {
 
 		return checkLogContains("<td class=\"Message\">" + logMessage + "</td>", true);
 	}
-
 	public String getLogMessage(String javaFragment) throws Exception {
 		resetLogListener();
 
@@ -117,13 +124,17 @@ public class HtmlLog extends BaseFixture {
 		return getLogMessage();
 	}
 
-	public boolean consoleLogIsPlainText(String javaFragment) throws Exception {
+	public void processConsoleExample(String javaFragment) throws Exception {
 		resetLogListener();
 		attchConsoleLayout();
 
 		processHtmlAndJava(HTML_FRAGMENT, FIXTURE_START + javaFragment + FIXTURE_STOP);
 
 		releaseConsoleLayout();
+	}
+
+	public boolean consoleLogIsPlainText(String javaFragment) throws Exception {
+		processConsoleExample(javaFragment);
 
 		return checkConsoleLogContains(FIXTURE_CLASSNAME + " - This is BOLD");
 	}
@@ -193,7 +204,7 @@ public class HtmlLog extends BaseFixture {
 
 		processHtmlAndJava(HTML_FRAGMENT, fixture);
 
-		return checkLogContains("<object class=\"resizeable\" ", true);
+		return checkLogContains("<xmp class=\"resizeable fadeout\"", true);
 	}
 
 	public boolean addStep(String javaFragment) throws Exception {

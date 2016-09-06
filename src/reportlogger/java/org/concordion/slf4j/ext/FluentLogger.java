@@ -31,8 +31,8 @@ public class FluentLogger {
 	
 	private String overrideFQCN = null;
 	private Marker marker = null;
-	private String format;
-	private Object[] arguments;
+	private String format = null;
+	private Object[] arguments = null;
 
 	public static void addLoggingAdaptor(ILoggingAdaptor loggingAdaptor) {
 		loggingAdaptors.set(loggingAdaptor);
@@ -81,17 +81,19 @@ public class FluentLogger {
 	public FluentLogger htmlMessage(String format, Object... arguments) {
 		addMarker(new HtmlMessageMarker(format, arguments));
 
-		// Prepare message/arguments for console and other appenders that may not like HTML
-		// ... remove HTML tags from message
-		this.format = format.replaceAll("<.*?>", "");
+		if (this.format == null && this.arguments == null) {
+			// Prepare message/arguments for console and other appenders that may not like HTML
+			// ... remove HTML tags from message
+			this.format = format.replaceAll("<.*?>", "");
 
-		// ... remove special HTML characters from arguments
-		this.arguments = arguments.clone();
+			// ... remove special HTML characters from arguments
+			this.arguments = arguments.clone();
 
-		for (int i = 0; i < this.arguments.length; i++) {
-			if (this.arguments[i] instanceof String) {
+			for (int i = 0; i < this.arguments.length; i++) {
 				if (this.arguments[i] instanceof String) {
-					this.arguments[i] = this.arguments[i].toString().replaceAll("&#.*?;", "");
+					if (this.arguments[i] instanceof String) {
+						this.arguments[i] = this.arguments[i].toString().replaceAll("&#.*?;", "");
+					}
 				}
 			}
 		}
