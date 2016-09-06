@@ -149,6 +149,7 @@ public class BaseFixture {
 			getLogger().with()
 					.message("Actual result not equal to expected")
 					.data("[Expected]: {}\r\n\r\n[Actual]: {}", expected, actual)
+					.locationAwareParent(BaseFixture.class)
 					.error();
 
 			return false;
@@ -162,6 +163,7 @@ public class BaseFixture {
 			getLogger().with()
 					.message("Actual result not equal to expected")
 					.data("[Expected]: {}\r\n\r\n[Actual]: {}", expected, actual)
+					.locationAwareParent(BaseFixture.class)
 					.error();
 
 			return false;

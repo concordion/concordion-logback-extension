@@ -72,7 +72,7 @@ LOGGER.with()
 	.trace();
 </pre></div>
 
-This [example](- "consoleLogIsPlainText(#fixture)") will append [This is not bold](- "?=getConsoleMessage()") to the console and [&lt;b&gt;This is BOLD&lt;/b&gt;](- "?=getLogMessage()") to the log file. 
+This [example](- "processConsoleExample(#fixture)") will append [This is not bold](- "?=getConsoleMessage()") to the console and [&lt;b&gt;This is BOLD&lt;/b&gt;](- "?=getLogMessage()") to the log file. 
 
 ### Screenshots
 To include screenshots in your logs you must provide a class that implements ScreenShotTaker.  See the demo project for an example of a Selenium screenshot taker. 

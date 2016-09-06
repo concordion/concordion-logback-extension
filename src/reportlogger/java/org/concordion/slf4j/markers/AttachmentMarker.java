@@ -38,7 +38,7 @@ public class AttachmentMarker extends BaseDataMarker<AttachmentMarker> {
 	public String getFormattedData() {
 		StringBuilder buf = new StringBuilder();
 
-		buf.append("<div class=\"alignright\">").append(LINE_SEPARATOR);
+		buf.append("<div class=\"attachmentMenu\">").append(LINE_SEPARATOR);
 		buf.append("<a href=\"").append(data).append("\" target=\"_blank\">Open</a>&nbsp;&nbsp;").append(LINE_SEPARATOR);
 		buf.append("<a href=\"#\" onclick=\"toggleContent(this); return false;\">Expand</a>").append(LINE_SEPARATOR);
 		buf.append("</div>").append(LINE_SEPARATOR);

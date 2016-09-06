@@ -337,8 +337,6 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 	@Override
     public String getPresentationHeader() {
         StringBuilder sbuf = new StringBuilder();
-//        sbuf.append("<hr/>");
-//        sbuf.append(LINE_SEPARATOR);
         sbuf.append("<h1>Log session start time ");
         sbuf.append(new java.util.Date());
         sbuf.append("</h1><p></p>");
@@ -380,7 +378,6 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
         sbuf.append("</thead>");
         sbuf.append(LINE_SEPARATOR);
         sbuf.append("<tbody>");
-        sbuf.append(LINE_SEPARATOR);
     }
 
 	private boolean containsMarker(ILoggingEvent event, Marker marker) {
