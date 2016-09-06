@@ -106,7 +106,8 @@ public class HtmlLog extends BaseFixture {
 								+ "Ut enim ad minim veniam, \r\nquis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\r\n"
 								+ "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. \r\n"
 								+ "Excepteur sint occaecat cupidatat non proident, \r\n"
-								+ "sunt in culpa qui officia deserunt mollit anim id est laborum.</tag>",
+								+ "sunt in culpa qui officia deserunt mollit anim id est laborum.</tag>\r\n"
+								+ "<ns4:manage xmlns:ns4=\"http://MSD_WD/ManageIncomeBPMService.tws\" xmlns:ns2=\"http://msd.govt.nz/integration/utils/technical/schema/messaging/v1\" xmlns:ns3=\"http://msd.govt.nz/bpm/derived/income/schema/manageincome/v1\">",
 						"data.xml", MediaType.XML)
 				.info();
 		

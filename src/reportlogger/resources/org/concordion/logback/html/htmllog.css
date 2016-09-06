@@ -322,7 +322,7 @@ object.resizeable {
 xmp.resizeable {
 	box-sizing: border-box;
 	margin: 0px;
-	max-width: 0; /* XMP tag not obeying parent size without this */
+	max-width: 0; /* XMP tag not obeying parent size without this - TODO not working in IE */
 	width: calc(100%); /* Allows fadeout to pickup width of this element */
 }
 
@@ -355,9 +355,12 @@ xmp.resizeable {
     top:60px;
     left:0;
     height:40px;
-    width:100%;
-    /* background: -webkit-linear-gradient(#fff, #000); */
-    background: linear-gradient(rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100%);
+    width:2000px; /* Force extra wide as cannot get flexible width with xmp.resizeable */
+    background: -webkit-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100%);
+    background: -moz-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100%);
+	background: -ms-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100%);
+    background: -o-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100%);
+    background: linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100%);
 }
 
 </style>
