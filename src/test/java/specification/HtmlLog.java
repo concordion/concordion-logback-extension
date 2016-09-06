@@ -3,6 +3,7 @@ package specification;
 import org.concordion.api.AfterSpecification;
 import org.concordion.api.BeforeSpecification;
 import org.concordion.logback.html.HTMLLayout;
+import org.concordion.slf4j.ext.MediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -82,6 +83,24 @@ public class HtmlLog extends BaseFixture {
 		getLogger().warn("warn");
 		getLogger().error("error");
 		getLogger().with().htmlMessage("This '{}' is a funky arrow", FUNKY_ARROW).info();
+		getLogger().with().message("This is an attachment")
+				.attachment(
+						"<tag>Lorem ipsum dolor sit amet, \r\n"
+								+ "consectetur adipisicing elit,\r\n"
+								+ "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. \r\n"
+								+ "Ut enim ad minim veniam, \r\nquis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\r\n"
+								+ "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. \r\n"
+								+ "Excepteur sint occaecat cupidatat non proident, \r\n"
+								+ "sunt in culpa qui officia deserunt mollit anim id est laborum.</tag>"
+								+ "<tag>Lorem ipsum dolor sit amet, \r\n"
+								+ "consectetur adipisicing elit,\r\n"
+								+ "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. \r\n"
+								+ "Ut enim ad minim veniam, \r\nquis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\r\n"
+								+ "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. \r\n"
+								+ "Excepteur sint occaecat cupidatat non proident, \r\n"
+								+ "sunt in culpa qui officia deserunt mollit anim id est laborum.</tag>",
+						"data.xml", MediaType.XML)
+				.info();
 		
 		resetLogListener();
 		

@@ -25,8 +25,8 @@ import ch.qos.logback.classic.Level;
 import test.concordion.JavaSourceCompiler;
 import test.concordion.ProcessingResult;
 import test.concordion.TestRig;
-import test.concordion.logback.LayoutFormattedLogListener;
 import test.concordion.logback.ExampleStoryboardListener;
+import test.concordion.logback.LayoutFormattedLogListener;
 import test.concordion.logback.LogBackHelper;
 
 /**
@@ -133,7 +133,11 @@ public class BaseFixture {
 
 	protected boolean checkEqual(String expected, String actual, boolean currentResult) {
 		if (!actual.equals(expected)) {
-			getLogger().error("Actual result not equal to expected: [Expected]: {}, [Actual]: {}", expected, actual);
+			getLogger().with()
+					.message("Actual result not equal to expected")
+					.data("[Expected]: {}\r\n\r\n[Actual]: {}", expected, actual)
+					.error();
+
 			return false;
 		}
 
@@ -142,7 +146,11 @@ public class BaseFixture {
 	
 	protected boolean checkContains(String expected, String actual, boolean currentResult) {
 		if (!actual.contains(expected)) {
-			getLogger().error("Actual result does not contain expected: [Expected]: {}, [Actual]: {}", expected, actual);
+			getLogger().with()
+					.message("Actual result not equal to expected")
+					.data("[Expected]: {}\r\n\r\n[Actual]: {}", expected, actual)
+					.error();
+
 			return false;
 		}
 
@@ -156,13 +164,6 @@ public class BaseFixture {
 		rig.withResource(new Resource("/org/concordion/ext/resource/bubble.gif"), "");
 		rig.withResource(new Resource("/org/concordion/ext/resource/bubble_filler.gif"), "");
 		rig.withResource(new Resource("/org/concordion/ext/resource/i16.png"), "");
-		rig.withResource(new Resource("/font-awesome-4.6.3/css/font-awesome.css"), "");
-		rig.withResource(new Resource("/font-awesome-4.6.3/fonts/fontawesome-webfont.eot"), "");
-		rig.withResource(new Resource("/font-awesome-4.6.3/fonts/fontawesome-webfont.svg"), "");
-		rig.withResource(new Resource("/font-awesome-4.6.3/fonts/fontawesome-webfont.ttf"), "");
-		rig.withResource(new Resource("/font-awesome-4.6.3/fonts/fontawesome-webfont.woff"), "");
-		rig.withResource(new Resource("/font-awesome-4.6.3/fonts/fontawesome-webfont.woff2"), "");
-		rig.withResource(new Resource("/font-awesome-4.6.3/fonts/FontAwesome.otf"), "");
 
 		return rig;
 	}

@@ -16,6 +16,7 @@ import org.concordion.slf4j.markers.ScreenshotMarker;
 import org.slf4j.Logger;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
+import org.slf4j.helpers.MessageFormatter;
 import org.slf4j.spi.LocationAwareLogger;
 
 public class FluentLogger {
@@ -104,8 +105,9 @@ public class FluentLogger {
 		return this;
 	}
 
-	public FluentLogger data(String data) {
-		addMarker(new DataMarker(data));
+	public FluentLogger data(String format, Object... arguments) {
+		String formattedMessage = MessageFormatter.arrayFormat(format, arguments).getMessage();
+		addMarker(new DataMarker(formattedMessage));
 		return this;
 	}
 

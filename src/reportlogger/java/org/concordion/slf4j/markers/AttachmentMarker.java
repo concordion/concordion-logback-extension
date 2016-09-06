@@ -38,16 +38,20 @@ public class AttachmentMarker extends BaseDataMarker<AttachmentMarker> {
 	public String getFormattedData() {
 		StringBuilder buf = new StringBuilder();
 
-		buf.append("<a href=\"").append(data).append("\">").append("View").append("</a>");
-		buf.append(LINE_SEPARATOR);
+		buf.append("<div class=\"floatright\">").append(LINE_SEPARATOR);
+		buf.append("<a href=\"").append(data).append("\" target=\"_blank\">Open</a>&nbsp;&nbsp;").append(LINE_SEPARATOR);
+		buf.append("<a href=\"#\" onclick=\"toggleContent(this); return false;\">Expand</a>").append(LINE_SEPARATOR);
+		buf.append("</div>").append(LINE_SEPARATOR);
 
 		buf.append("<div class=\"resizeable\">");
 		buf.append(LINE_SEPARATOR);
 
-		// XML files are not handled by the object tag, so use the XMP tag for this  
-		if (filename.endsWith(".xml")) {
-			
-			buf.append("<xmp class=\"resizeable\">");
+		// XML files are not handled by the object tag, so use the XMP tag for this. Doing same for other text based files
+		// on the off-chance they have greater/less than characters
+		boolean useXMP = (type.contains("text") || type.contains("xml") || type.contains("json") || type.contains("javascript"));
+		if (useXMP) {
+			// The format of this needs to remain in sync with DataMarker
+			buf.append("<xmp class=\"resizeable fadeout\">");
 
 			try {
 				stream.reset();
