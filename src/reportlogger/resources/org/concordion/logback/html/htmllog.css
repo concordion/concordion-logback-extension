@@ -338,6 +338,7 @@ xmp.resizeable {
 	display: inline-block; //
 	float: right;
 	margin-right: 40px;
+	z-index: 1000;
 }
 
 .floatright {
