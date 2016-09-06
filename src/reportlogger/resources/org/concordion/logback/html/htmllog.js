@@ -186,8 +186,7 @@ function toggleContent(el) {
 				} else {
 					removeClass(resizeEl, "fadeout");
 				}
-			}
-						
+			}			
 
 			break;
 		}

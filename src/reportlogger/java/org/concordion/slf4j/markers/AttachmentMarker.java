@@ -38,7 +38,7 @@ public class AttachmentMarker extends BaseDataMarker<AttachmentMarker> {
 	public String getFormattedData() {
 		StringBuilder buf = new StringBuilder();
 
-		buf.append("<div class=\"floatright\">").append(LINE_SEPARATOR);
+		buf.append("<div class=\"alignright\">").append(LINE_SEPARATOR);
 		buf.append("<a href=\"").append(data).append("\" target=\"_blank\">Open</a>&nbsp;&nbsp;").append(LINE_SEPARATOR);
 		buf.append("<a href=\"#\" onclick=\"toggleContent(this); return false;\">Expand</a>").append(LINE_SEPARATOR);
 		buf.append("</div>").append(LINE_SEPARATOR);
@@ -51,7 +51,7 @@ public class AttachmentMarker extends BaseDataMarker<AttachmentMarker> {
 		boolean useXMP = (type.contains("text") || type.contains("xml") || type.contains("json") || type.contains("javascript"));
 		if (useXMP) {
 			// The format of this needs to remain in sync with DataMarker
-			buf.append("<xmp class=\"resizeable fadeout\">");
+			buf.append("<xmp class=\"fadeout\">");
 
 			try {
 				stream.reset();
@@ -85,7 +85,7 @@ public class AttachmentMarker extends BaseDataMarker<AttachmentMarker> {
 			// <object width="100%" height="50" type="text/plain" data="test.txt" border="1" onload="resizeIframe(this)"><a href="test.txt">test.txt</a></object>
 			//
 			//
-			buf.append("<object class=\"resizeable\"");
+			buf.append("<object");
 			buf.append(" type=\"").append(type).append("\"");
 			buf.append(" data=\"").append(data).append("\"");
 			buf.append(">");

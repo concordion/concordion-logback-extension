@@ -325,8 +325,8 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 		sbuf.append("<body>");
 		sbuf.append(LINE_SEPARATOR);
 
-		// sbuf.append("<label class=\"alignright\"><input id=\"chkDebug\" type=\"checkbox\" onclick=\"filterDebug(this);\" checked>Show 'DEBUG' level statements</label>");
-		sbuf.append("<label class=\"alignright\"><input id=\"chkTrace\" type=\"checkbox\" onclick=\"filterTrace(this);\" checked>Show 'TRACE' level statements</label>");
+		// sbuf.append("<label class=\"floattopright\"><input id=\"chkDebug\" type=\"checkbox\" onclick=\"filterDebug(this);\" checked>Show 'DEBUG' level statements</label>");
+		sbuf.append("<label class=\"floattopright\"><input id=\"chkTrace\" type=\"checkbox\" onclick=\"filterTrace(this);\" checked>Show 'TRACE' level statements</label>");
 
 		// Required for screenshot popup
 		sbuf.append("<img id=\"ScreenshotPopup\" class=\"screenshot\" />");

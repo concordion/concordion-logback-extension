@@ -23,7 +23,7 @@
 	.alignleft {
 		display:inline-block;
 	}
-	.alignright {
+	.floatright {
 		display:inline-block;
 		float: right;
 		margin-right: 40px;
@@ -142,7 +142,7 @@
 <body>
 <div class="header-fixed" >
 	<h1 class="alignleft">Log File Viewer</h1>
-	<table class="levelkey alignright">
+	<table class="levelkey floatright">
 		<tr>
 			<td class="trace-color">Trace</td>
 			<td class="debug-color">Debug</td>
@@ -155,7 +155,7 @@
 	<p>
 		<label class="alignleft"><input id="chkDebug" type="checkbox" onclick="filterDebug(this);" checked>Show 'DEBUG' level statements</label>
 		<label class="alignleft"><input id="chkTrace" type="checkbox" onclick="filterTrace(this);" checked>Show 'TRACE' level statements</label>
-		<span class="alignright"><a href="LOG_FILE_NAME">Raw Log File</a></span>
+		<span class="floatright"><a href="LOG_FILE_NAME">Raw Log File</a></span>
 	</p>
 	<hr style="clear: both;">
 </div>

@@ -313,17 +313,22 @@ div.resizeable {
 	max-height: 100px;
 }
 
-object.resizeable {
+div.resizeable>object {
+	box-sizing: border-box;
 	margin: 0px;
 	width: auto;
 	height: auto;
 }
 
-xmp.resizeable {
+div.resizeable>xmp {
 	box-sizing: border-box;
 	margin: 0px;
-	max-width: 0; /* XMP tag not obeying parent size without this - TODO not working in IE */
-	width: calc(100%); /* Allows fadeout to pickup width of this element */
+	width: 0; /* XMP tag not obeying parent size without this */
+}
+
+/* IE & EDGE hack for above */
+_:-ms-lang(x), div.resizeable>xmp { 
+	white-space: pre-wrap; 
 }
 
 .alignleft {
@@ -331,17 +336,17 @@ xmp.resizeable {
 }
 
 /* TODO Get header (and first row of table) to stay at top of screen and set this back as it was */
-.alignright {
+.floattopright {
 	position: fixed;
 	right: 0;
 	background-color: white;
-	display: inline-block; //
+	display: inline-block;
 	float: right;
 	margin-right: 40px;
 	z-index: 1000;
 }
 
-.floatright {
+.alignright {
 	text-align: right;
 }
 
