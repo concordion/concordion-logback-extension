@@ -1,4 +1,28 @@
 <script type="text/javascript">
+/*
+ * TODO This may allow fixed header at top of page - works with chrome but firefox and edge body cells loose their
+ * width.  Possibly setting body cell min-width to header width during onload, then header width during onresize
+ * might do the trick.
+ 
+//window.onresize = function() {
+window.onload = function() {
+	var table = document.getElementsByTagName("table")[0];
+	var thead = table.getElementsByTagName("thead")[0];
+	var htr = thead.getElementsByTagName("tr")[0];
+	
+	htr.style.position = "fixed";
+	htr.style.zIndex = "1000";
+	
+	var tbody = table.getElementsByTagName("tbody")[0];
+	var btr = tbody.getElementsByTagName("tr")[0];
+	
+	for(var i = 0; i < btr.cells.length; i++) {
+	var w1 = btr.cells[i].getBoundingClientRect().width;
+	var w2 = btr.cells[i].offsetWidth;
+		htr.cells[i].width = w2 + 'px';
+	}
+}
+*/
 
 function hasClass(element, cls) {
 	return element.classList ? element.classList.contains(cls) : (' ' + element.className + ' ').indexOf(' ' + cls + ' ') > -1;
