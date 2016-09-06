@@ -322,8 +322,8 @@ object.resizeable {
 xmp.resizeable {
 	box-sizing: border-box;
 	margin: 0px;
-	/* width: 100px; /* XMP tag not obeying parent size without this */
-	width: calc(100%);
+	max-width: 0; /* XMP tag not obeying parent size without this */
+	width: calc(100%); /* Allows fadeout to pickup width of this element */
 }
 
 .alignleft {
