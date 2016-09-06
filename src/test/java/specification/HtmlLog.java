@@ -205,7 +205,7 @@ public class HtmlLog extends BaseFixture {
 
 		processHtmlAndJava(HTML_FRAGMENT, fixture);
 
-		return checkLogContains("<xmp class=\"resizeable fadeout\"", true);
+		return checkLogContains("<xmp class=\"fadeout\"", true);
 	}
 
 	public boolean addStep(String javaFragment) throws Exception {
