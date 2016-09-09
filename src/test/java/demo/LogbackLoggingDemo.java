@@ -1,7 +1,10 @@
 package demo;
 
+import org.concordion.api.AfterExample;
 import org.concordion.api.AfterSpecification;
+import org.concordion.api.BeforeExample;
 import org.concordion.api.BeforeSpecification;
+import org.concordion.api.ExampleName;
 
 import specification.BaseFixture;
 
@@ -48,5 +51,15 @@ public class LogbackLoggingDemo extends BaseFixture {
 	@AfterSpecification
 	public void after() {
 		getLogger().info("after spec demo");
+	}
+	
+	@BeforeExample
+	public void beforeExample(@ExampleName String exampleName) {
+		getLogger().info("before example: " + exampleName);
+	}
+	
+	@AfterExample
+	public void afterExample(@ExampleName String exampleName) {
+		getLogger().info("after example: " + exampleName);
 	}
 }
