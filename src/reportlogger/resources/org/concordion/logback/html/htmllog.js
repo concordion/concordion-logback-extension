@@ -162,6 +162,8 @@ function doFilter(className, checked) {
 	var displaySetting = checked ? "" : "none";
 	var borderSetting = checked ? "1px solid #f0f0f0" : "1px dotted black";
 
+	var scrollToElement = getFirstVisibleRow(className);
+	
 	var all = document.querySelectorAll("TR." + className);
 	for (var i = 0; i < all.length; i++) {
 		var prevrow = all[i].previousElementSibling;
@@ -171,6 +173,36 @@ function doFilter(className, checked) {
 
 		all[i].style.display = displaySetting;
 	}
+	
+	// Attempt to keep the currently selected row visible
+	if (scrollToElement) {
+		scrollToElement.scrollIntoView();
+	}
+}
+
+function getFirstVisibleRow(className) { 
+	var element = null;
+	
+	if (document.caretPositionFromPoint) {
+		var range = document.caretPositionFromPoint(0, 5);
+		element = range.offsetNode.parentElement;
+		
+	} else if (document.caretRangeFromPoint) {
+		var range = document.caretRangeFromPoint(0, 5);
+		element = range.startContainer.parentNode;
+	} else if (document.elementFromPoint) {
+		element = document.elementFromPoint(100, 5).parentElement;
+	}
+ 	
+	while (element != null && (element.tagName.toLowerCase() != 'tr' || hasClass(element, className))) {
+		if (element.tagName.toLowerCase() == 'tr') {
+			element = element.previousElementSibling;
+		} else {
+			element = element.parentElement;
+		}
+	}
+	
+	return element;
 }
 
 /* Expand / Collapse embedded content */
