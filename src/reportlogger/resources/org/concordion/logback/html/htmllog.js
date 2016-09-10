@@ -190,6 +190,7 @@ function getFirstVisibleRow(className) {
 	} else if (document.caretRangeFromPoint) {
 		var range = document.caretRangeFromPoint(0, 5);
 		element = range.startContainer.parentNode;
+		
 	} else if (document.elementFromPoint) {
 		element = document.elementFromPoint(100, 5).parentElement;
 	}
