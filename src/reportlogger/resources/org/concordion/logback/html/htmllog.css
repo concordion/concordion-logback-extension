@@ -199,14 +199,14 @@ div.resizeable>object {
 	height: auto;
 }
 
-div.resizeable>xmp {
+xmp {
 	box-sizing: border-box;
 	margin: 0px;
 	width: 0; /* XMP tag not obeying parent size without this */
 }
 
 /* IE & EDGE hack for above */
-_:-ms-lang(x), div.resizeable>xmp { 
+_:-ms-lang(x), xmp { 
 	white-space: pre-wrap; 
 }
 
