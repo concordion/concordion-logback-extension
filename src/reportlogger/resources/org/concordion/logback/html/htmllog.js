@@ -219,7 +219,7 @@ function toggleContent(el) {
 				el.text = "Expand";
 
 			} else {
-				resizeEl.style.maxHeight = viewport().height - 50 + 'px';
+				resizeEl.style.maxHeight = viewport().height - 100 + 'px';
 				//console.log(resizeEl.style.maxHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0) * .8);
 				console.log(viewport());
 				resizeEl.style.overflow = "auto";
