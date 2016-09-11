@@ -187,7 +187,7 @@ public class HtmlLog extends BaseFixture {
 		boolean result = true;
 
 		result = checkLogContains("<td class=\"Message\">Sending SOAP request</td>", result);
-		result = checkLogContains("<pre>&lt;soapenv&gt;...&lt;/soapenv&gt;</pre>", result);
+		result = checkLogContains("<xmp>&lt;soapenv&gt;...&lt;/soapenv&gt;</xmp>", result);
 
 		return result;
 	}
