@@ -71,7 +71,7 @@ public class AttachmentMarker extends BaseDataMarker<AttachmentMarker> {
 			buf.append("</xmp>");
 		} else {
 
-			// TODO Do we want auto resizing of attachment?
+			// Do we want auto resizing of attachment?
 			// <script language="javascript" type="text/javascript">
 			// function resizeIframe(obj) {
 			// var height = obj.contentWindow.document.body.scrollHeight;

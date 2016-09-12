@@ -61,13 +61,11 @@ public class LayoutFormattedLogListener extends LoggingListener {
 
 	@Override
 	public Marker getConcordionEventMarker() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public boolean getHandleFailureAndThrowableEvents() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 }

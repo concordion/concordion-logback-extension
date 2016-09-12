@@ -1,7 +1,5 @@
 package org.concordion.logback.html;
 
-// TODO: Expand/Collapse button for Data; Copy Text Button for Data; Link = Eye on example.
-
 import static ch.qos.logback.core.CoreConstants.LINE_SEPARATOR;
 
 import java.io.IOException;
