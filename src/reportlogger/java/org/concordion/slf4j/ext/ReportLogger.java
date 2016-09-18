@@ -83,7 +83,12 @@ public class ReportLogger extends LoggerWrapper {
 	}
 	
 	/**
-	 * Access custom reporting methods such as data, html, and screenshots.
+	 * Buffer the desired log entry until you push it using {@link ReportLogger#writeBufferedMessage()}
+	 * or another log entry is written forcing this one to write.
+	 * 
+	 * <p>
+	 * TODO: Implement a listener so this applies to all log entries - not just those ones using ReportLogger.
+	 * </p>
 	 * 
 	 * @return A FluentLogger
 	 */
@@ -94,10 +99,16 @@ public class ReportLogger extends LoggerWrapper {
 		return bufferedLogger;
 	}
 	
+	/**
+	 * @return True if a buffered message is waiting to be written.
+	 */
 	public boolean hasBufferedMessage() {
 		return bufferedLogger != null;
 	}
 	
+	/**
+	 * Write the buffered entry to the logs.
+	 */
 	public void writeBufferedMessage() {
 		if (hasBufferedMessage()) {
 			bufferedLogger.writeBufferedEntry();
@@ -105,10 +116,16 @@ public class ReportLogger extends LoggerWrapper {
 		}
 	}
 	
+	/**
+	 * Clear the buffered entry, it will not get written to the logs.
+	 */
 	public void clearBufferedMessage() {
 		bufferedLogger = null;
 	}
 	
+	/**
+	 * @return The buffered log entry so it can be updated.
+	 */
 	public FluentLogger getBufferedMessage() {
 		return bufferedLogger;
 	}
