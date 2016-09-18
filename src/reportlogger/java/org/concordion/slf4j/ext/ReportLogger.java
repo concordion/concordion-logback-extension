@@ -35,7 +35,8 @@ import org.slf4j.ext.LoggerWrapper;
  * @author Andrew Sumner
  */
 public class ReportLogger extends LoggerWrapper {
-
+	private static FluentLogger bufferedLogger = null;
+	
 	/**
 	 * Given an underlying logger, construct an XLogger
 	 * 
@@ -76,9 +77,42 @@ public class ReportLogger extends LoggerWrapper {
 	 * @return A FluentLogger
 	 */
 	public FluentLogger with() {
+		writeBufferedMessage();
+		
 		return new FluentLogger(logger, instanceofLAL);
 	}
-
+	
+	/**
+	 * Access custom reporting methods such as data, html, and screenshots.
+	 * 
+	 * @return A FluentLogger
+	 */
+	public FluentLogger withBuffered() {
+		writeBufferedMessage();
+		
+		bufferedLogger = new FluentLogger(logger, instanceofLAL, true);
+		return bufferedLogger;
+	}
+	
+	public boolean hasBufferedMessage() {
+		return bufferedLogger != null;
+	}
+	
+	public void writeBufferedMessage() {
+		if (hasBufferedMessage()) {
+			bufferedLogger.writeBufferedEntry();
+			bufferedLogger = null;
+		}
+	}
+	
+	public void clearBufferedMessage() {
+		bufferedLogger = null;
+	}
+	
+	public FluentLogger getBufferedMessage() {
+		return bufferedLogger;
+	}
+	
 	/**
 	 * Logs a tool tip.
 	 * 

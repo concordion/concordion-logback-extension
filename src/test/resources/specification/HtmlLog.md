@@ -161,8 +161,28 @@ LOGGER.error("Something when wrong", new Exception("me"));
 </pre></div>
 
 Exceptions are formatted within a [collapsible section](- "c:assertTrue=throwException(#fixture)") that presents the error message by default but will allow the user to drill down into the stack trace.
- 
-### Grouping Log Statements
+
+### Buffered Log Entries
+On occasion you may find a need to update a previous log entry with additional detail but want to log the first part
+immediately in case an exception is thrown and you loose some of the context, for example:
+* You're about to make a request that you want logged, but also want to include the result of the request
+* You're performing a repetitive task and only want to keep the most recent request
+
+This can be achieved by using `LOGGER.withBuffered()` instead of `LOGGER.with()`, the only catch is that if another log entry is made it will force the buffered log entry to be written to the log.  
+
+<div><pre concordion:set="#fixture">
+LOGGER.withBuffered().message("I'm buffered").debug();
+LOGGER.with().message("Oops, I forced writing the buffered entry").debug();
+
+LOGGER.withBuffered().message("I'm also buffered").debug();
+LOGGER.getBufferedMessage().message("I won't be buffered soon!");
+LOGGER.writeBufferedMessage();
+</pre></div>
+
+This will add a [the two buffered log entries](- "c:assertTrue=addBuffered(#fixture)") to the log.
+
+
+### Grouping Log Entries
 
 A test often involves a series of steps to complete a task.  This extension provides two mechanisms to group log statements under a step.  
    
@@ -173,7 +193,7 @@ LOGGER.step("My step here");
 
 This will add a [step](- "c:assertTrue=addStep(#fixture)") to the log.
 
-See (Configuration)[LogBackConfiguration.html] for an example of using the log level to achieve the same result.
+See [LogBack Configuration](LogBackConfiguration.html) for an example of using the log level to achieve the same result.
 
 ### Location Aware Logging
 

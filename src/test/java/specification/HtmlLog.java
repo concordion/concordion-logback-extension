@@ -117,6 +117,7 @@ public class HtmlLog extends BaseFixture {
 
 		return checkLogContains("<td class=\"Message\">" + logMessage + "</td>", true);
 	}
+	
 	public String getLogMessage(String javaFragment) throws Exception {
 		resetLogListener();
 
@@ -230,6 +231,19 @@ public class HtmlLog extends BaseFixture {
 		return result;
 	}
 
+	public boolean addBuffered(String javaFragment) throws Exception {
+		resetLogListener();
+
+		processHtmlAndJava(HTML_FRAGMENT, FIXTURE_START + javaFragment + FIXTURE_STOP);
+
+		boolean result = true;
+		
+		result = checkLogContains("I&#39;m buffered", result);
+		result = checkLogContains("I won&#39;t be buffered soon!", result);
+		
+		return result;
+	}
+	
 	public boolean locationAware(String helperClass, String javaFragment) throws Exception {
 		resetLogListener();
 

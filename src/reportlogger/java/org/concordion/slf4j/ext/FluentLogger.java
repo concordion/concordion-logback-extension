@@ -28,6 +28,10 @@ public class FluentLogger {
 	private final boolean instanceofLAL;
 	// The fully qualified class name of the logger instance
 	private final String reportLoggerFQCN;
+
+	private boolean buffered;
+	private int bufferedLevel;
+	private Throwable bufferedThrowable = null;
 	
 	private String overrideFQCN = null;
 	private Marker marker = null;
@@ -63,11 +67,16 @@ public class FluentLogger {
 	}
 	
 	public FluentLogger(Logger logger, boolean instanceofLAL) {
+		this(logger, instanceofLAL, false);
+	}
+
+	public FluentLogger(Logger logger, boolean instanceofLAL, boolean buffered) {
 		this.reportLoggerFQCN = FluentLogger.class.getName();
 		this.logger = logger;
 		this.instanceofLAL = instanceofLAL;
+		this.buffered = buffered;
 	}
-
+	
 	private void addMarker(Marker reference) {
 		if (marker == null) {
 			// Start with a detached marker so that any bound markers that are added are not accidentally reused in
@@ -195,6 +204,11 @@ public class FluentLogger {
 	}
 	
 	public void trace() {
+		if (buffered) {
+			bufferedLevel = LocationAwareLogger.TRACE_INT;
+			return;
+		}
+		
 		if (!logger.isTraceEnabled(marker)) {
 			return;
 		}
@@ -211,6 +225,11 @@ public class FluentLogger {
 	}
 
 	public void debug() {
+		if (buffered) {
+			bufferedLevel = LocationAwareLogger.DEBUG_INT;
+			return;
+		}
+		
 		if (!logger.isDebugEnabled(marker)) {
 			return;
 		}
@@ -227,6 +246,11 @@ public class FluentLogger {
 	}
 
 	public void info() {
+		if (buffered) {
+			bufferedLevel = LocationAwareLogger.INFO_INT;
+			return;
+		}
+		
 		if (!logger.isInfoEnabled(marker)) {
 			return;
 		}
@@ -243,6 +267,11 @@ public class FluentLogger {
 	}
 
 	public void warn() {
+		if (buffered) {
+			bufferedLevel = LocationAwareLogger.WARN_INT;
+			return;
+		}
+		
 		if (!logger.isWarnEnabled(marker)) {
 			return;
 		}
@@ -263,6 +292,12 @@ public class FluentLogger {
 	}
 
 	public void error(Throwable t) {
+		if (buffered) {
+			bufferedLevel = LocationAwareLogger.ERROR_INT;
+			bufferedThrowable = t;
+			return;
+		}
+		
 		if (!logger.isErrorEnabled(marker)) {
 			return;
 		}
@@ -278,6 +313,39 @@ public class FluentLogger {
 		reset();
 	}
 
+	void writeBufferedEntry() {
+		if (!buffered) {
+			return;
+		}
+		
+		buffered = false;
+		
+		switch (bufferedLevel) {
+		case LocationAwareLogger.TRACE_INT:
+			trace();
+			break;
+		
+		case LocationAwareLogger.DEBUG_INT:
+			debug();
+			break;
+			
+		case LocationAwareLogger.INFO_INT:
+			info();
+			break;
+			
+		case LocationAwareLogger.WARN_INT:
+			warn();
+			break;
+			
+		case LocationAwareLogger.ERROR_INT:
+			error(bufferedThrowable);
+			break;
+			
+		default:
+			throw new RuntimeException("Invalid buffer level");
+		}
+	}
+	
 	private void prepare() {
 		if (format == null) {
 			// Tell logger to ignore lines with no message - we're probably just wanting to notify an extension of some event
