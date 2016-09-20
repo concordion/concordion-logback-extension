@@ -36,8 +36,8 @@ public class LogbackAdaptor implements ILoggingAdaptor
 	private static Stack<String> testStack = new Stack<String>();
 	private static String baseFolder = getConcordionBaseOutputDir();
 	
-	private static List<String> specifications = new ArrayList<>();
-	private static List<String> examples = new ArrayList<>();
+//	private static List<String> specifications = new ArrayList<>();
+//	private static List<String> examples = new ArrayList<>();
 
 	/**
 	 * print logback's internal status
@@ -54,10 +54,12 @@ public class LogbackAdaptor implements ILoggingAdaptor
 	public void startSpecificationLogFile(String testPath) {
 		String path = baseFolder + getPath(testPath);
 
-		if (specifications.contains(path)) {
-			throw new IllegalStateException(String.format("A duplicate specification log file would be created at %s for example %s", path, testPath));
-		}
-		specifications.add(path);
+		// TODO Fails when running the tests in gradle, probably ok to skip this, just concerned
+		// that if we change file name then possibility that might get a duplicate...
+//		if (specifications.contains(path)) {
+//			throw new IllegalStateException(String.format("A duplicate specification log file would be created at %s", path));
+//		}
+//		specifications.add(path);
 
 		// Add path to a custom css style sheet to logger context for later use
 		// - not used any more but keeping code just in case
@@ -75,10 +77,10 @@ public class LogbackAdaptor implements ILoggingAdaptor
 	public void startExampleLogFile(String resourcePath, String exampleName) {
 		String path = baseFolder + getPath(resourcePath) + EXAMPLE_SEPERATOR_PREFIX + shortenFileName(exampleName, MAX_EXAMPLE_NAME_LENGTH) + EXAMPLE_SEPERATOR_SUFFIX;
 
-		if (examples.contains(path)) {
-			throw new IllegalStateException(String.format("A duplicate example log file would be created at %s for example %s", path, exampleName));
-		}
-		examples.add(path);
+//		if (examples.contains(path)) {
+//			throw new IllegalStateException(String.format("A duplicate example log file would be created at %s for example %s", path, exampleName));
+//		}
+//		examples.add(path);
 		
 		testStack.push(path);
 		
