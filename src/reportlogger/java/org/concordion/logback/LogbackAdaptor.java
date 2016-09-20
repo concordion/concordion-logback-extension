@@ -201,7 +201,7 @@ public class LogbackAdaptor implements ILoggingAdaptor
 			pos = pos2;
 		}
 
-		return resourcePath + shortenFileName(resourcePath.substring(pos), MAX_SPECIFICATION_NAME_LENGTH);
+		return resourcePath.substring(0, pos) + shortenFileName(resourcePath.substring(pos), MAX_SPECIFICATION_NAME_LENGTH);
 	}
 
 	private String shortenFileName(String fileName, int maxLength) {
