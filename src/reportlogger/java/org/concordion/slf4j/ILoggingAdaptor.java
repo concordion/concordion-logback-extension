@@ -9,6 +9,13 @@ import java.io.File;
  */
 public interface ILoggingAdaptor
 {
+	/* Windows 7 Max filename length */
+	public int MAX_FILENAME_LENGTH = 129;
+
+	public int MAX_SPECIFICATION_NAME_LENGTH = 60;
+	public int MAX_EXAMPLE_NAME_LENGTH = 40;
+	public int MAX_ATTACHMENT_NAME_LENGTH = 29;
+
 	/**
 	 * Update logger so that logging statements are directed a file
 	 *

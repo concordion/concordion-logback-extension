@@ -159,6 +159,6 @@ public class AttachmentMarker extends BaseDataMarker<AttachmentMarker> {
 	}
 
 	private String buildFileName(String baseFile, int index) {
-		return String.format("%sScreenShot%s-%s", baseFile, index, filename);
+		return String.format("%%s-%s", baseFile, index, filename);
 	}
 }

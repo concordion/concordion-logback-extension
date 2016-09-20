@@ -1,7 +1,9 @@
 package org.concordion.logback;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Stack;
 
 import org.concordion.slf4j.ILoggingAdaptor;
@@ -26,7 +28,6 @@ import ch.qos.logback.core.util.StatusPrinter;
 public class LogbackAdaptor implements ILoggingAdaptor
 {
 	public static final String LAYOUT_STYLESHEET = "LAYOUT_STYLESHEET";
-	//public static final String SCREENSHOT_TAKER = "SCREENSHOT_TAKER";
 
 	public static final String TEST_NAME = "testname";
 	public static final String EXAMPLE_SEPERATOR_PREFIX = "[";
@@ -35,6 +36,9 @@ public class LogbackAdaptor implements ILoggingAdaptor
 	private static Stack<String> testStack = new Stack<String>();
 	private static String baseFolder = getConcordionBaseOutputDir();
 	
+	private static List<String> specifications = new ArrayList<>();
+	private static List<String> examples = new ArrayList<>();
+
 	/**
 	 * print logback's internal status
 	 */
@@ -50,6 +54,11 @@ public class LogbackAdaptor implements ILoggingAdaptor
 	public void startSpecificationLogFile(String testPath) {
 		String path = baseFolder + getPath(testPath);
 
+		if (specifications.contains(path)) {
+			throw new IllegalStateException(String.format("A duplicate specification log file would be created at %s for example %s", path, testPath));
+		}
+		specifications.add(path);
+
 		// Add path to a custom css style sheet to logger context for later use
 		// - not used any more but keeping code just in case
 		// if (stylesheet != null) {
@@ -64,8 +73,13 @@ public class LogbackAdaptor implements ILoggingAdaptor
 
 	@Override
 	public void startExampleLogFile(String resourcePath, String exampleName) {
-		String path = baseFolder + getPath(resourcePath) + EXAMPLE_SEPERATOR_PREFIX + exampleName + EXAMPLE_SEPERATOR_SUFFIX;
+		String path = baseFolder + getPath(resourcePath) + EXAMPLE_SEPERATOR_PREFIX + shortenFileName(exampleName, MAX_EXAMPLE_NAME_LENGTH) + EXAMPLE_SEPERATOR_SUFFIX;
 
+		if (examples.contains(path)) {
+			throw new IllegalStateException(String.format("A duplicate example log file would be created at %s for example %s", path, exampleName));
+		}
+		examples.add(path);
+		
 		testStack.push(path);
 		
 		MDC.put(TEST_NAME, path);
@@ -180,30 +194,48 @@ public class LogbackAdaptor implements ILoggingAdaptor
 			resourcePath = resourcePath.substring(1);
 		}
 
-		return resourcePath;
+		int pos = resourcePath.lastIndexOf("/") + 1;
+		int pos2 = resourcePath.lastIndexOf("\\") + 1;
+
+		if (pos2 > pos) {
+			pos = pos2;
+		}
+
+		return resourcePath + shortenFileName(resourcePath.substring(pos), MAX_SPECIFICATION_NAME_LENGTH);
 	}
 
-//	@Override
-//	public void setScreenshotTaker(ScreenshotTaker screenshotTaker) {
-//		//LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
-//		//lc.putObject(SCREENSHOT_TAKER + threadName, screenshotTaker);
-//	}
+	private String shortenFileName(String fileName, int maxLength) {
+		if (fileName.length() <= maxLength) {
+			return fileName;
+		}
 
-//	@Override
-//	public void removeScreenshotTaker() {
-//		FluentLogger.removeLoggingAdaptor();
-//		
-////		String threadName = Thread.currentThread().getName();
-////		
-////		LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
-////		lc.removeObject(SCREENSHOT_TAKER + threadName);
-//	}
+		StringBuilder sb = new StringBuilder();
+		boolean addNextChar = false;
+		int index;
+		
+		for (index = fileName.length() - 1; index > 0; index--) {
+			Character chr = fileName.charAt(index);
 
-//	public ScreenshotTaker getScreenshotTaker() {
-//		String threadName = Thread.currentThread().getName();
-//		
-//		LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
-//		return (ScreenshotTaker) lc.getObject(SCREENSHOT_TAKER + threadName);
-//	}
-	
+			if (Character.isUpperCase(chr) || addNextChar) {
+				sb.append(String.valueOf(fileName.charAt(index)).toUpperCase());
+				addNextChar = false;
+			}
+
+			if (chr.equals('-')) {
+				addNextChar = true;
+			}
+			
+			if (index + sb.length() <= maxLength) {
+				break;
+			}
+		}
+
+		sb = sb.reverse();
+
+		if (index > 0) {
+			sb.insert(0, fileName.substring(0, index));
+		}
+
+		return sb.toString();
+	}
 }
