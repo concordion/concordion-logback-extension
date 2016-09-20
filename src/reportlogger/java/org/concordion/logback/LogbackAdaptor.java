@@ -218,14 +218,14 @@ public class LogbackAdaptor implements ILoggingAdaptor
 		for (index = fileName.length() - 1; index > 0; index--) {
 			Character chr = fileName.charAt(index);
 
-			if (Character.isUpperCase(chr) || addNextChar) {
+			if (addNextChar) {
 				sb.append(String.valueOf(fileName.charAt(index)).toUpperCase());
 				addNextChar = false;
 			}
 
-			if (chr.equals('-')) {
+			if (chr.equals(' ') || chr.equals('-')) {
 				addNextChar = true;
-			}
+			} 
 			
 			if (index + sb.length() <= maxLength) {
 				break;
