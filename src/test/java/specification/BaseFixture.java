@@ -42,6 +42,8 @@ public class BaseFixture {
     private static final Pattern CLASS_NAME_PATTERN = Pattern.compile("class\\s*(.*?)\\s*(\\{|extends)");
     private static String MESSAGE_TOKEN = "<td class=\"Message\">";
     private static String END_TOKEN = "</td>";
+	private int example = 0;
+	private String fixtureName = "testrig";
 	
 	@Extension
 	private final LoggingTooltipExtension tooltipExtension = new LoggingTooltipExtension(new LogbackLogMessenger(tooltipLogger.getName(), Level.ALL, true, "%msg%n"));
@@ -117,6 +119,14 @@ public class BaseFixture {
 
 	}
 
+	protected void setTestFixtureName(String fixtureName) {
+		this.fixtureName = fixtureName;
+	}
+
+	protected String getTestSpecificationName() {
+		return "extensionExample" + example;
+	}
+
 	protected String getLogMessage() {
 		String message = exampleLogListener.getLog(); 
 		
@@ -184,7 +194,7 @@ public class BaseFixture {
 	}
 	
     public ProcessingResult processHtml(String htmlFragment) throws Exception {
-    	return process(htmlFragment, this); //.getClass().newInstance());
+    	return process(htmlFragment, this);
     }
     
     public ProcessingResult processJava(String... javaFragments) throws Exception {
@@ -203,17 +213,17 @@ public class BaseFixture {
         
         return process(htmlFragment, fixture);
     }
-    
-    protected ProcessingResult process(String htmlFragment, Object fixture) {
+
+	protected ProcessingResult process(String htmlFragment, Object fixture) {
     	// As the TestRig runs the full lifecycle of a test it keeps removing
     	// the screenshot taker
     	ILoggingAdaptor loggingAdaptor = FluentLogger.getLoggingAdaptor();
     	ScreenshotTaker screenshotTaker = FluentLogger.getScreenshotTaker();
+		example++;
 
     	ProcessingResult result = getTestRig()
-			.withFixture(fixture)
-			.processFragment(htmlFragment);
-      
+				.withFixture(fixture)
+				.processFragment(htmlFragment, "/" + fixtureName + example);
         
         FluentLogger.addLoggingAdaptor(loggingAdaptor);
         FluentLogger.addScreenshotTaker(screenshotTaker);

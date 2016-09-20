@@ -23,6 +23,10 @@ public class HtmlLog extends BaseFixture {
 
 	private HTMLLayout layout;
 
+	public HtmlLog() {
+		setTestFixtureName("htmlLogExample");
+	}
+
 	@BeforeSpecification
 	private final void beforeSpecification() {
 		// Force the logger to create the various appenders and layouts required

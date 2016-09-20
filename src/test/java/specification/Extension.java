@@ -21,6 +21,10 @@ public class Extension extends BaseFixture {
 	private PatternLayout layout;
 	private PatternLayout backup;
 	
+	public Extension() {
+		setTestFixtureName("extensionExample");
+	}
+
 	@BeforeSpecification
 	private final void beforeSpecification() {
 		switchToClassicLogger(false);
@@ -96,7 +100,7 @@ public class Extension extends BaseFixture {
 
 		String html = processingResult.getElementXML("footer");
 		
-		return html.contains("href=\"testrig.log\">Log File</a>");
+		return html.contains("href=\"" + getTestSpecificationName() + ".log\">Log File</a>");
 	}
 
 	public boolean exampleHasLinkToLogFile(String javaFragment) throws Exception {
@@ -104,7 +108,7 @@ public class Extension extends BaseFixture {
 
 		String html = processingResult.getElementXML("example1");
 		
-		return html.contains("href=\"testrig[example1].log\">Log File</a>");
+		return html.contains("href=\"" + getTestSpecificationName() + "[example1].log\">Log File</a>");
 	}
 
 	public boolean useLogViewer(String javaFragment, String method) throws Exception {
@@ -114,7 +118,7 @@ public class Extension extends BaseFixture {
 
 		String html = processingResult.getElementXML("footer");
 		
-		return html.contains("href=\"testrigLogViewer.html\">Log File</a>");
+		return html.contains("href=\"" + getTestSpecificationName() + "LogViewer.html\">Log File</a>");
 	}
 
 	// Integration with other extensions
