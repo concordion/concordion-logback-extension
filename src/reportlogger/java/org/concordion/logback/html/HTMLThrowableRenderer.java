@@ -83,7 +83,8 @@ public class HTMLThrowableRenderer implements IThrowableRenderer<ILoggingEvent> 
         if (commonFrames > 0) {
             sb.append("<br />").append(CoreConstants.CAUSED_BY);
         }
-        sb.append(tp.getClassName()).append(": ").append(Transform.escapeTags(tp.getMessage()));
+		sb.append(tp.getClassName()).append(": ");
+		sb.append(Transform.escapeTags(tp.getMessage()).replace("\r\n", "<br />").replace("\n", "<br />"));
         sb.append(CoreConstants.LINE_SEPARATOR);
     }
 
