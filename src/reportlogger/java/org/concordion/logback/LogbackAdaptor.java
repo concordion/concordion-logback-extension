@@ -1,9 +1,7 @@
 package org.concordion.logback;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Stack;
 
 import org.concordion.slf4j.ILoggingAdaptor;
@@ -144,7 +142,11 @@ public class LogbackAdaptor implements ILoggingAdaptor
 				
 				if (outerAppender instanceof SiftingAppender) {
 					if (outerAppender.getName().equals("HTML-FILE-PER-TEST") || outerAppender.getName().equals("FILE-PER-TEST")) {
-						for (Appender<ILoggingEvent> appender : ((SiftingAppender) outerAppender).getAppenderTracker().allComponents()) {
+						Iterator<Appender<ILoggingEvent>> iter = ((SiftingAppender) outerAppender).getAppenderTracker().allComponents().iterator();
+
+						while (iter.hasNext()) {
+							Appender<ILoggingEvent> appender = iter.next();
+
 							if (appender instanceof FileAppender) {
 								FileAppender<?> fileAppender = (FileAppender<?>) appender;
 								String file = fileAppender.getFile();
