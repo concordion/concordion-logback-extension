@@ -86,7 +86,7 @@ public class LoggingFormatterExtension implements ConcordionExtension {
 		if (logListener instanceof FilterAttachable<?>) {
 			MarkerFilter filter = new MarkerFilter();
 			
-			filter.setFilterMarkers(logListener.getFilterMarkers());
+			filter.setMarkers(logListener.getFilterMarkers());
 			filter.setThread(Thread.currentThread().getName());
 			filter.start();
 			
