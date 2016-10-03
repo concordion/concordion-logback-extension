@@ -193,6 +193,11 @@ public class FluentLogger {
 		return this;
 	}
 
+	public FluentLogger locationAwareParent(String currentClass) {
+		overrideFQCN = currentClass;
+		return this;
+	}
+
 	public FluentLogger locationAwareParent(Object currentClass) {
 		overrideFQCN = currentClass.getClass().getName();
 		return this;
