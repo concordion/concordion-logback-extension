@@ -42,7 +42,7 @@ dependencies {
 	compile "org.concordion:concordion-logging-tooltip-extension:1.1.2"
 		
 	// Only needed for javadocs :-(
-	compileOnly 'commons-lang:commons-lang:2.6'
+	reportloggerCompileOnly 'commons-lang:commons-lang:2.6'
 }
 
 // build reportlogger jar
