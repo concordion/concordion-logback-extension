@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.core.spi.FilterAttachable;
+import ch.qos.logback.core.spi.FilterReply;
 
 /**
  * Formats the footer of the Concordion specification to show a link to the log file that has been created for this test.<br><br>
@@ -86,8 +87,11 @@ public class LoggingFormatterExtension implements ConcordionExtension {
 		if (logListener instanceof FilterAttachable<?>) {
 			MarkerFilter filter = new MarkerFilter();
 			
-			filter.setMarkers(logListener.getFilterMarkers());
 			filter.setThread(Thread.currentThread().getName());
+
+			filter.setMarkers(logListener.getFilterMarkers());
+			filter.setOnMismatch(FilterReply.DENY);
+
 			filter.start();
 			
 			logListener.addFilter(filter);

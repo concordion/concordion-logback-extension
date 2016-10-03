@@ -13,7 +13,10 @@ import ch.qos.logback.core.spi.FilterReply;
 public class MarkerFilter extends Filter<ILoggingEvent> {
 	private List<String> filterMarkers = new ArrayList<String>();
 	private String threadName = null;
-	
+
+	protected FilterReply onMatch = FilterReply.NEUTRAL;
+	protected FilterReply onMismatch = FilterReply.NEUTRAL;
+
 	/**
 	 * Appends an array of markers to the list of markers to filter by.
 	 * 
@@ -27,6 +30,21 @@ public class MarkerFilter extends Filter<ILoggingEvent> {
 		this.filterMarkers.addAll(Arrays.asList(markers));
 	}
 
+	public void setOnMatch(String action) {
+		onMatch = FilterReply.valueOf(action);
+	}
+
+	public void setOnMatch(FilterReply action) {
+		onMatch = action;
+	}
+
+	public void setOnMismatch(String action) {
+		onMismatch = FilterReply.valueOf(action);
+	}
+
+	public void setOnMismatch(FilterReply action) {
+		onMismatch = action;
+	}
 	/**
 	 * Appends a marker to the list of markers to filter by.
 	 * 
@@ -59,15 +77,19 @@ public class MarkerFilter extends Filter<ILoggingEvent> {
 			if (!Thread.currentThread().getName().equals(threadName)) {
 				return FilterReply.DENY;
 			}
+
+			if (filterMarkers.isEmpty()) {
+				return FilterReply.NEUTRAL;
+			}
 		}
 		
 		for (String marker : filterMarkers) {
 			if (containsMarker(event.getMarker(), marker)) {
-				return FilterReply.DENY;
+				return onMatch;
 			}
 		}
 
-		return FilterReply.NEUTRAL;
+		return onMismatch;
 	}
 	
 	private boolean containsMarker(Marker reference, String name) {
