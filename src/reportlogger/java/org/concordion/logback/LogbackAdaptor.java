@@ -46,11 +46,23 @@ public class LogbackAdaptor implements ILoggingAdaptor
 	}
 	
 	/**
+	 * Adds the test name to MDC so that sift appender can use it and log the new log events to a different file.
+	 * 
+	 * <p>Differs from {@link #startLogFile(String)} in that the full path to the file should be supplied.</p>
+	 */
+	@Override
+	public void startLogFile(String testPath) {
+		testStack.push(testPath);
+
+		MDC.put(TEST_NAME, testPath);		
+	}
+	
+	/**
 	 * Adds the test name to MDC so that sift appender can use it and log the new log events to a different file
 	 */
 	@Override
-	public void startSpecificationLogFile(String testPath) {
-		String path = baseFolder + getPath(testPath);
+	public void startSpecificationLogFile(String resourcePath) {
+		String path = baseFolder + getPath(resourcePath);
 
 		// TODO Fails when running the tests in gradle, probably ok to skip this, just concerned
 		// that if we change file name then possibility that might get a duplicate...

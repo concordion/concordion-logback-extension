@@ -17,12 +17,19 @@ public interface ILoggingAdaptor
 	public int MAX_ATTACHMENT_NAME_LENGTH = 29;
 
 	/**
+	 * Update logger so that logging statements are directed a file. Alternative to {@link #startSpecificationLogFile(String)} when not
+	 * running as a Concordion test.
+	 *
+	 * @param logPath Full path of the desired log file
+	 */
+	public void startLogFile(String logPath);
+	
+	/**
 	 * Update logger so that logging statements are directed a file
 	 *
-	 * @param testPath Path of the current test
-	 * @param stylesheet Name of a style sheet to append to the log file 
+	 * @param resourcePath Resource path of the current test (ie without base output directory)
 	 */
-	public void startSpecificationLogFile(String testPath);
+	public void startSpecificationLogFile(String resourcePath);
 	
 	/**
 	 * Update logger so that logging statements for a specific example are directed to specified file
@@ -30,7 +37,7 @@ public interface ILoggingAdaptor
 	 * @param testPath Path of the current test
 	 * @param exampleName Name of the current example 
 	 */
-	public void startExampleLogFile(String testPath, String exampleName);
+	public void startExampleLogFile(String resourcePath, String exampleName);
 
 	/**
 	 * Stop directing logging statements to test specific log file
