@@ -357,10 +357,14 @@ public class FluentLogger {
 			addMarker(ReportLoggerMarkers.PROGRESS_MARKER);
 		}
 
-		prepareData(marker);
+		try {
+			prepareData(marker);
+		} catch (Exception e) {
+			throw new RuntimeException("Unable to prepare log attachments: " + e.getMessage(), e);
+		}
 	}
 
-	private void prepareData(Marker reference) {
+	private void prepareData(Marker reference) throws Exception {
 
 		if (reference == null) {
 			return;

@@ -73,12 +73,8 @@ public class ScreenshotMarker extends BaseDataMarker<ScreenshotMarker> {
 	}
 
 	@Override
-	public void prepareData() {
-		try {
-			writeScreenshot();
-		} catch (Exception e) {
-			data = e.getMessage();
-		}
+	public void prepareData() throws IOException {
+		writeScreenshot();
 	}
 
 	public void writeScreenshot() throws IOException {

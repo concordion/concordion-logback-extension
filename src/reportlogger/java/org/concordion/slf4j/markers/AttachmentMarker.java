@@ -99,13 +99,8 @@ public class AttachmentMarker extends BaseDataMarker<AttachmentMarker> {
 	}
 
 	@Override
-	public void prepareData() {
-		try {
-			writeStream();
-
-		} catch (Exception e) {
-			data = e.getMessage();
-		}
+	public void prepareData() throws IOException {
+		writeStream();
 	}
 
 	public void writeStream() throws IOException {

@@ -16,7 +16,7 @@ public abstract class BaseDataMarker<T> extends ConcordionMarker {
 
 	public abstract String getFormattedData();
 
-	public abstract void prepareData();
+	public abstract void prepareData() throws Exception;
 
 	@SuppressWarnings("unchecked")
 	public T withMarker(Marker marker) {
