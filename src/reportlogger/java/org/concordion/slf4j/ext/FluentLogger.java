@@ -16,6 +16,7 @@ import org.concordion.slf4j.markers.ScreenshotMarker;
 import org.slf4j.Logger;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
+import org.slf4j.helpers.ConcordionMarker;
 import org.slf4j.helpers.MessageFormatter;
 import org.slf4j.spi.LocationAwareLogger;
 
@@ -109,12 +110,20 @@ public class FluentLogger {
 	public FluentLogger data(String format, Object... arguments) {
 		String formattedMessage = MessageFormatter.arrayFormat(format, arguments).getMessage();
 		
-		addMarker(new DataMarker("DATA" + String.valueOf(getMarkerCount() + 1), formattedMessage));
+		Marker helperMarker = new ConcordionMarker(ReportLoggerMarkers.DATA_MARKER_NAME + String.valueOf(getMarkerChildCount(marker) + 1));
+		helperMarker.add(new DataMarker(formattedMessage));
+		
+		addMarker(helperMarker);
+		
 		return this;
 	}
 
 	public FluentLogger html(String html) {
-		addMarker(new HtmlMarker("DATA" + String.valueOf(getMarkerCount() + 1), html));
+		Marker helperMarker = new ConcordionMarker(ReportLoggerMarkers.DATA_MARKER_NAME + String.valueOf(getMarkerChildCount(marker) + 1));
+		helperMarker.add(new HtmlMarker(html));
+		
+		addMarker(helperMarker);
+		
 		return this;
 	}
 
@@ -135,7 +144,10 @@ public class FluentLogger {
 			throw new RuntimeException("Logging adapter has not been set for the current thread");
 		}
 		
-		addMarker(new ScreenshotMarker("DATA" + String.valueOf(getMarkerCount() + 1), getLoggingAdaptor().getLogFile().getPath(), screenshotTaker));
+		Marker helperMarker = new ConcordionMarker(ReportLoggerMarkers.DATA_MARKER_NAME + String.valueOf(getMarkerChildCount(marker) + 1));
+		helperMarker.add(new ScreenshotMarker(getLoggingAdaptor().getLogFile().getPath(), screenshotTaker));
+		
+		addMarker(helperMarker);
 		
 		return this;
 	}
@@ -174,7 +186,10 @@ public class FluentLogger {
 	}
 	
 	public FluentLogger attachment(InputStream inputStream, String filename, String mediaType) {
-		addMarker(new AttachmentMarker("DATA" + String.valueOf(getMarkerCount() + 1), getLoggingAdaptor().getLogFile().getPath(), inputStream, filename, mediaType.toString()));
+		Marker helperMarker = new ConcordionMarker(ReportLoggerMarkers.DATA_MARKER_NAME + String.valueOf(getMarkerChildCount(marker) + 1));
+		helperMarker.add(new AttachmentMarker(getLoggingAdaptor().getLogFile().getPath(), inputStream, filename, mediaType.toString()));
+		
+		addMarker(helperMarker);
 
 		return this;
 	}
@@ -342,21 +357,17 @@ public class FluentLogger {
 		}
 	}
 	
-	private int getMarkerCount() {
+	private int getMarkerChildCount(Marker reference) {
+		int count = 0;
+	
 		if (marker == null) {
 			return 0;
 		}
 	
-		return getMarkerCount(marker);
-	}
-	
-	private int getMarkerCount(Marker reference) {
-		int count = 0;
-		
 		Iterator<Marker> references = reference.iterator();
 		while (references.hasNext()) {
 			count ++;
-			count = count + getMarkerCount(references.next());
+			references.next();
 		}
 		
 		return count;
@@ -369,7 +380,13 @@ public class FluentLogger {
 			marker = MarkerFactory.getDetachedMarker("FLUENT_LOGGER");
 		}
 
+		int count = getMarkerChildCount(marker);
+		
 		marker.add(reference);
+		
+		if (count == getMarkerChildCount(marker)) {
+			throw new RuntimeException("Marker " + marker.getName() + " was not added due to duplicate name");
+		}
 	}
 	
 	private void prepare() {

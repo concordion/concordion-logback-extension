@@ -17,8 +17,8 @@ public class ScreenshotMarker extends BaseDataMarker<ScreenshotMarker> {
 	private final ScreenshotTaker screenshotTaker;
 	private Dimension imageSize;
 	
-	public ScreenshotMarker(String markerName, String logFile, ScreenshotTaker screenshotTaker) {
-		super(markerName, "");
+	public ScreenshotMarker(String logFile, ScreenshotTaker screenshotTaker) {
+		super("");
 
 		this.logFile = logFile;
 		this.screenshotTaker = screenshotTaker;
