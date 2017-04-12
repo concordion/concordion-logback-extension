@@ -77,16 +77,6 @@ public class FluentLogger {
 		this.buffered = buffered;
 	}
 	
-	private void addMarker(Marker reference) {
-		if (marker == null) {
-			// Start with a detached marker so that any bound markers that are added are not accidentally reused in
-			// subsequent logging statements
-			marker = MarkerFactory.getDetachedMarker("FLUENT_LOGGER");
-		}
-
-		marker.add(reference);
-	}
-
 	public FluentLogger htmlMessage(String format, Object... arguments) {
 		addMarker(new HtmlMessageMarker(format, arguments));
 
@@ -118,12 +108,13 @@ public class FluentLogger {
 
 	public FluentLogger data(String format, Object... arguments) {
 		String formattedMessage = MessageFormatter.arrayFormat(format, arguments).getMessage();
-		addMarker(new DataMarker(formattedMessage));
+		
+		addMarker(new DataMarker("DATA" + String.valueOf(getMarkerCount() + 1), formattedMessage));
 		return this;
 	}
 
 	public FluentLogger html(String html) {
-		addMarker(new HtmlMarker(html));
+		addMarker(new HtmlMarker("DATA" + String.valueOf(getMarkerCount() + 1), html));
 		return this;
 	}
 
@@ -144,7 +135,7 @@ public class FluentLogger {
 			throw new RuntimeException("Logging adapter has not been set for the current thread");
 		}
 		
-		addMarker(new ScreenshotMarker(getLoggingAdaptor().getLogFile().getPath(), screenshotTaker));
+		addMarker(new ScreenshotMarker("DATA" + String.valueOf(getMarkerCount() + 1), getLoggingAdaptor().getLogFile().getPath(), screenshotTaker));
 		
 		return this;
 	}
@@ -183,7 +174,7 @@ public class FluentLogger {
 	}
 	
 	public FluentLogger attachment(InputStream inputStream, String filename, String mediaType) {
-		addMarker(new AttachmentMarker(getLoggingAdaptor().getLogFile().getPath(), inputStream, filename, mediaType.toString()));
+		addMarker(new AttachmentMarker("DATA" + String.valueOf(getMarkerCount() + 1), getLoggingAdaptor().getLogFile().getPath(), inputStream, filename, mediaType.toString()));
 
 		return this;
 	}
@@ -351,6 +342,36 @@ public class FluentLogger {
 		}
 	}
 	
+	private int getMarkerCount() {
+		if (marker == null) {
+			return 0;
+		}
+	
+		return getMarkerCount(marker);
+	}
+	
+	private int getMarkerCount(Marker reference) {
+		int count = 0;
+		
+		Iterator<Marker> references = reference.iterator();
+		while (references.hasNext()) {
+			count ++;
+			count = count + getMarkerCount(references.next());
+		}
+		
+		return count;
+	}
+	
+	private void addMarker(Marker reference) {
+		if (marker == null) {
+			// Start with a detached marker so that any bound markers that are added are not accidentally reused in
+			// subsequent logging statements
+			marker = MarkerFactory.getDetachedMarker("FLUENT_LOGGER");
+		}
+
+		marker.add(reference);
+	}
+	
 	private void prepare() {
 		if (format == null) {
 			// Tell logger to ignore lines with no message - we're probably just wanting to notify an extension of some event
@@ -370,7 +391,7 @@ public class FluentLogger {
 			return;
 		}
 
-		if (reference.getName().equals(ReportLoggerMarkers.DATA_MARKER_NAME)) {
+		if (reference instanceof BaseDataMarker) {
 			((BaseDataMarker<?>) reference).prepareData();
 		}
 

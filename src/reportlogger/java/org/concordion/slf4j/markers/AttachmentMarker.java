@@ -21,8 +21,8 @@ public class AttachmentMarker extends BaseDataMarker<AttachmentMarker> {
 	private final String filename;
 	private final String type;
 	
-	public AttachmentMarker(String logFile, InputStream stream, String filename, String type) {
-		super("");
+	public AttachmentMarker(String markerName, String logFile, InputStream stream, String filename, String type) {
+		super(markerName, "");
 
 		this.logFile = logFile;
 		this.stream = stream;

@@ -8,8 +8,8 @@ public abstract class BaseDataMarker<T> extends ConcordionMarker {
 
 	protected String data;
 
-	public BaseDataMarker(String data) {
-		super(ReportLoggerMarkers.DATA_MARKER_NAME);
+	public BaseDataMarker(String markerName, String data) {
+		super(markerName);
 
 		this.data = data;
 	}

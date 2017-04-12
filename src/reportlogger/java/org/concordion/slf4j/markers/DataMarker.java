@@ -5,8 +5,8 @@ import ch.qos.logback.core.helpers.Transform;
 public class DataMarker extends BaseDataMarker<DataMarker> {
 	private static final long serialVersionUID = -3228456581564867488L;
 
-	public DataMarker(String data) {
-		super(data);
+	public DataMarker(String markerName, String data) {
+		super(markerName, data);
 	}
 
 	@Override

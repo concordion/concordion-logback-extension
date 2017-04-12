@@ -133,9 +133,9 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
         
 		appendMessageToBuffer(buf, event);
         
-		if (containsMarker(event, ReportLoggerMarkers.DATA_MARKER_NAME)) {
-			appendDataToBuffer(buf, event, (BaseDataMarker<?>) getMarker(event.getMarker(), ReportLoggerMarkers.DATA_MARKER_NAME));
-        }
+		if (event.getMarker() != null) {
+			appendData(event.getMarker(), buf, event);
+		}
 
         if (event.getThrowableProxy() != null) {
         	if (throwableRenderer instanceof HTMLThrowableRenderer) {
@@ -147,6 +147,18 @@ public class HTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
         
         return buf.toString();
     }
+
+	private void appendData(Marker marker, StringBuilder buf, ILoggingEvent event) {
+		if (marker instanceof BaseDataMarker) {
+			appendDataToBuffer(buf, event, (BaseDataMarker<?>) marker);
+		}
+		
+		Iterator<Marker> references = marker.iterator();
+		
+		while (references.hasNext()) {
+			appendData(references.next(), buf, event);
+		}
+	}
 
 	public void appendStepToBuffer(StringBuilder buf, ILoggingEvent event) {
 		buf.append(LINE_SEPARATOR);
