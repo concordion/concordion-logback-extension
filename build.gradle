@@ -51,7 +51,7 @@ sourcesJar  {
 
 publishing { 
 	publications { 
-        mavenJava(MavenPublication) {
+        main(MavenPublication) { 
             artifact reportloggerJar { 
             	classifier 'reportlogger' 
             }
