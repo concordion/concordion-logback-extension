@@ -110,19 +110,13 @@ public class FluentLogger {
 	public FluentLogger data(String format, Object... arguments) {
 		String formattedMessage = MessageFormatter.arrayFormat(format, arguments).getMessage();
 		
-		Marker helperMarker = new ConcordionMarker(ReportLoggerMarkers.DATA_MARKER_NAME + String.valueOf(getMarkerChildCount(marker) + 1));
-		helperMarker.add(new DataMarker(formattedMessage));
-		
-		addMarker(helperMarker);
+		addMarker(new DataMarker(formattedMessage));
 		
 		return this;
 	}
 
 	public FluentLogger html(String html) {
-		Marker helperMarker = new ConcordionMarker(ReportLoggerMarkers.DATA_MARKER_NAME + String.valueOf(getMarkerChildCount(marker) + 1));
-		helperMarker.add(new HtmlMarker(html));
-		
-		addMarker(helperMarker);
+		addMarker(new HtmlMarker(html));
 		
 		return this;
 	}
@@ -144,10 +138,7 @@ public class FluentLogger {
 			throw new RuntimeException("Logging adapter has not been set for the current thread");
 		}
 		
-		Marker helperMarker = new ConcordionMarker(ReportLoggerMarkers.DATA_MARKER_NAME + String.valueOf(getMarkerChildCount(marker) + 1));
-		helperMarker.add(new ScreenshotMarker(getLoggingAdaptor().getLogFile().getPath(), screenshotTaker));
-		
-		addMarker(helperMarker);
+		addMarker(new ScreenshotMarker(getLoggingAdaptor().getLogFile().getPath(), screenshotTaker));
 		
 		return this;
 	}
@@ -186,10 +177,7 @@ public class FluentLogger {
 	}
 	
 	public FluentLogger attachment(InputStream inputStream, String filename, String mediaType) {
-		Marker helperMarker = new ConcordionMarker(ReportLoggerMarkers.DATA_MARKER_NAME + String.valueOf(getMarkerChildCount(marker) + 1));
-		helperMarker.add(new AttachmentMarker(getLoggingAdaptor().getLogFile().getPath(), inputStream, filename, mediaType.toString()));
-		
-		addMarker(helperMarker);
+		addMarker(new AttachmentMarker(getLoggingAdaptor().getLogFile().getPath(), inputStream, filename, mediaType.toString()));
 
 		return this;
 	}
@@ -385,7 +373,7 @@ public class FluentLogger {
 		marker.add(reference);
 		
 		if (count == getMarkerChildCount(marker)) {
-			throw new RuntimeException("Marker " + marker.getName() + " was not added due to duplicate name");
+			throw new RuntimeException("Marker " + marker.getName() + " has already been added to this logging entry, duplicates markers are not allowed");
 		}
 	}
 	

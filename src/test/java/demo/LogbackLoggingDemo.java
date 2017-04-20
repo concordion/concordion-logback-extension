@@ -27,11 +27,12 @@ public class LogbackLoggingDemo extends BaseFixture {
 	public void multiply(final String calulation) {
 		String values[] = calulation.split("[*]");
 		
-		FluentLogger logger = getLogger().with().message("data x 2");
-		
-		logger.data("data 1");
-		logger.data("data 2");
-		logger.debug();
+//		TODO Write a test for this
+//		FluentLogger logger = getLogger().with().message("data x 2");
+//		
+//		logger.data("data 1");
+//		logger.data("data 2");
+//		logger.debug();
 		
 		getLogger().trace("TRACE level logging should NOT appear in the console, but SHOULD appear in the test log");
 		getLogger().debug("DEBUG level logging  should NOT appear in the console, but SHOULD appear in the test log");
