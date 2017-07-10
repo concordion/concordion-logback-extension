@@ -30,17 +30,19 @@ public class MarkerFilter extends Filter<ILoggingEvent> {
 		this.filterMarkers.addAll(Arrays.asList(markers));
 	}
 
-	public void setOnMatch(String action) {
-		onMatch = FilterReply.valueOf(action);
-	}
+// TODO JUnit giving "Warning: Class 'org.concordion.logback.filter.MarkerFilter' contains multiple setters for the same property 'onMatch'." 
+//// when this present
+//	public void setOnMatch(String action) {
+//		onMatch = FilterReply.valueOf(action);
+//	}
 
 	public void setOnMatch(FilterReply action) {
 		onMatch = action;
 	}
 
-	public void setOnMismatch(String action) {
-		onMismatch = FilterReply.valueOf(action);
-	}
+//	public void setOnMismatch(String action) {
+//		onMismatch = FilterReply.valueOf(action);
+//	}
 
 	public void setOnMismatch(FilterReply action) {
 		onMismatch = action;
