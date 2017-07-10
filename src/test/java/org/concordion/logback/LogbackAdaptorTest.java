@@ -61,6 +61,7 @@ public class LogbackAdaptorTest {
 			lba.startLogFile(logfile);
 
 			for (int i = 0; i < 10; i++) { 
+				// TODO test without debug as that caused another problem in LogbackAdaptor
 				logger.debug("This is thread " + thread + " attempt " + String.valueOf(i));
 		
 				assertThat(lba.getLogFile(), equalTo(logfile));
