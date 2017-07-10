@@ -5,8 +5,6 @@ import org.concordion.api.AfterSpecification;
 import org.concordion.api.BeforeExample;
 import org.concordion.api.BeforeSpecification;
 import org.concordion.api.ExampleName;
-import org.concordion.slf4j.ext.FluentLogger;
-
 import specification.BaseFixture;
 
 /**
