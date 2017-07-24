@@ -152,23 +152,26 @@ public class LogbackAdaptor implements ILoggingAdaptor
 			for (Iterator<Appender<ILoggingEvent>> index = logger.iteratorForAppenders(); index.hasNext();) {
 				Appender<ILoggingEvent> outerAppender = index.next();
 				
+				// Avoid ConcurrentModificationException - might slow down logging momentarily but overall impact should hopefully be negligible (fingers crossed)
 				if (outerAppender instanceof SiftingAppender) {
 					if (outerAppender.getName().equals("HTML-FILE-PER-TEST") || outerAppender.getName().equals("FILE-PER-TEST")) {
-						Iterator<Appender<ILoggingEvent>> iter = ((SiftingAppender) outerAppender).getAppenderTracker().allComponents().iterator();
-
-						while (iter.hasNext()) {
-							Appender<ILoggingEvent> appender = iter.next();
-
-							if (appender instanceof FileAppender) {
-								FileAppender<?> fileAppender = (FileAppender<?>) appender;
-								String file = fileAppender.getFile();
-								
-								if (file.startsWith(currentTest)) {
-									if (file.length() > currentTest.length()) {
-										// If no log statements performed then appender won't be created so ensure not accidentally picking up
-										// example log file when after specification log file
-										if (!file.substring(currentTest.length(), currentTest.length() + 1).equals(EXAMPLE_SEPERATOR_PREFIX)) {
-											return fileAppender;
+						synchronized (outerAppender) {
+							Iterator<Appender<ILoggingEvent>> iter = ((SiftingAppender) outerAppender).getAppenderTracker().allComponents().iterator();
+	
+							while (iter.hasNext()) {
+								Appender<ILoggingEvent> appender = iter.next();
+	
+								if (appender instanceof FileAppender) {
+									FileAppender<?> fileAppender = (FileAppender<?>) appender;
+									String file = fileAppender.getFile();
+									
+									if (file.startsWith(currentTest)) {
+										if (file.length() > currentTest.length()) {
+											// If no log statements performed then appender won't be created so ensure not accidentally picking up
+											// example log file when after specification log file
+											if (!file.substring(currentTest.length(), currentTest.length() + 1).equals(EXAMPLE_SEPERATOR_PREFIX)) {
+												return fileAppender;
+											}
 										}
 									}
 								}

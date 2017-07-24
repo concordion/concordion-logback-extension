@@ -13,13 +13,18 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import org.concordion.logback.LogbackAdaptor;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class LogbackAdaptorTest {
 	private static final int THREAD_LIMIT = 5;
 	private static final int THREAD_POOL = 20;
+	
+	@Rule
+	public TemporaryFolder folder = new TemporaryFolder();
 
 	@Test
 	public void logginExtensionHandlesThreadingTest() throws InterruptedException, ExecutionException {
@@ -59,30 +64,14 @@ public class LogbackAdaptorTest {
 		public Boolean call() throws Exception {
 			LogbackAdaptor lba = new LogbackAdaptor();
 
-			String logfile = "/users/andrew/Documents/thread_" + thread +"_";
+			String logfile = folder.getRoot().getAbsolutePath() + "/thread_" + thread +"_";
 			lba.startLogFile(logfile);
 
 			for (int i = 0; i < 10; i++) { 
-				// TODO test without debug as that caused another problem in LogbackAdaptor
 				logger.debug("This is thread " + thread + " attempt " + String.valueOf(i));
 		
-// TODO Expecting to occasionally get java.util.ConcurrentModificationException at java.util.LinkedHashMap$LinkedHashIterator.nextNode (LinkedHashMap.java:711)
-// when calling getLogFile().  Need to fix this.
-//				
-// 	Sometimes this test gets following exception.  Why?  I've never seen it at MSD but not to say it hasn't happened.
-//				Caused by: java.lang.NullPointerException
-//				at org.concordion.logback.LogbackAdaptorTest$MyRunnable.call(LogbackAdaptorTest.java:71)
-//				at org.concordion.logback.LogbackAdaptorTest$MyRunnable.call(LogbackAdaptorTest.java:1)
-//				at java.util.concurrent.FutureTask.run(FutureTask.java:266)
-//				at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
-//				at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
-//				at java.lang.Thread.run(Thread.java:748)
-				assertThat(lba.getLogFile().getAbsolutePath(), startsWith(logfile));
+				assertThat(lba.getLogFile().getName(), startsWith(new File(logfile).getName()));
 			}
-			
-	
-
-
 
 			return true;
 		}
