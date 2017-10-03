@@ -137,7 +137,9 @@ public class FluentLogger {
 			throw new RuntimeException("Logging adapter has not been set for the current thread");
 		}
 		
-		addMarker(new ScreenshotMarker(getLoggingAdaptor().getLogFile().getPath(), screenshotTaker));
+		if (adaptor.getLogFile() != null) {
+			addMarker(new ScreenshotMarker(adaptor.getLogFile().getPath(), screenshotTaker));
+		}
 		
 		return this;
 	}
@@ -154,14 +156,14 @@ public class FluentLogger {
 	//		* should be able to do this with Logback formatting to disable marker
 	//		* support doing it programatically and via configuration
 	// 5. Storyboard marker will want to set title and result, could get title from ScreenshotFormatting interface
-	public FluentLogger screenshot(ScreenshotFormatting pageObject) {
-		return screenshot(getScreenshotTaker(), pageObject);
-	}
-
-	public FluentLogger screenshot(ScreenshotTaker screenshotTaker, ScreenshotFormatting pageObject) {
-		//addMarker(new ScreenshotMarker(getLoggingAdaptor().getLogFile().getPath(), screenshotTaker, pageObject));
-		return this;
-	}
+//	public FluentLogger screenshot(ScreenshotFormatting pageObject) {
+//		return screenshot(getScreenshotTaker(), pageObject);
+//	}
+//
+//	public FluentLogger screenshot(ScreenshotTaker screenshotTaker, ScreenshotFormatting pageObject) {
+//		addMarker(new ScreenshotMarker(getLoggingAdaptor().getLogFile().getPath(), screenshotTaker, pageObject));
+//		return this;
+//	}
 
 	public FluentLogger attachment(String input, String filename, MediaType mediaType) {
 		return attachment(new ByteArrayInputStream(input.getBytes()), filename, mediaType.toString());
