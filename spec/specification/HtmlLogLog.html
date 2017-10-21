@@ -1,0 +1,864 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+  <head>
+    <title>Logback Log Messages</title>
+<style type="text/css">
+
+html {
+	font-family: Arial, Helvetica, verdana sans-serif;
+	font-size: 0.9em;
+	font-style: normal;
+}
+
+body {
+	margin-left: 2em;
+	margin-right: 2em;
+}
+
+/* set default tab size to 4 characters - no IE support */
+pre xmp {
+	-moz-tab-size: 4;
+	-o-tab-size: 4;
+	tab-size: 4;
+}
+
+h1 {
+	font-size: 1.5em;
+}
+
+/* TODO Get header (and first row of table) to stay at top of screen */
+.floattopright {
+	position: fixed;
+	right: 0;
+	background-color: white;
+	display: inline-block;
+	float: right;
+	margin-right: 2em;
+	z-index: 1000;
+	padding: 6px 8px;
+	border: 1px solid lightgrey;
+}
+
+table {
+	background-color: #fff;
+	border-collapse: collapse;
+	width: calc(100%);
+}
+
+table thead th {
+	border-right: 1px solid #fff;
+	color: #fff;
+	text-align: center;
+	padding: 2px 12px;
+	text-transform: uppercase;
+	height: 25px;
+	background-color: #a3c159;
+	font-weight: normal;
+}
+
+/*
+tfoot {
+color:#1ba6b2;
+padding:2px;
+text-transform:uppercase;
+font-size:1.2em; 
+ font-weigth: bold;
+margin-top:6px;
+border-top: 6px solid #e9f7f6;
+}
+*/
+
+table tbody tr {
+	background-color: #fff;
+	border-bottom: 1px solid #f0f0f0;
+}
+
+table tbody td {
+	color: #414141;
+	padding: 5px;
+	text-align: left;
+}
+
+table tbody tr td.output {
+	text-align: left;
+	background-image:
+		url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAFCAYAAACEhIafAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjEwMPRyoQAAABdJREFUGFdjAAJlECEFIoRABCcQMzAAAAWUAFmQZlpWAAAAAElFTkSuQmCC");
+	background-repeat: repeat-x;
+	margin: 0;
+	padding: 12px 0 8px 0;
+	position: relative;
+}
+
+table tbody tr.record:hover {
+	background: #ffffd3;
+	background: -moz-linear-gradient(top, #ffffd3 0%, #ffffaf 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #ffffd3), color-stop(100%, #ffffaf));
+	background: -webkit-linear-gradient(top, #ffffd3 0%, #ffffaf 100%);
+	background: -o-linear-gradient(top, #ffffd3 0%, #ffffaf 100%);
+	background: -ms-linear-gradient(top, #ffffd3 0%, #ffffaf 100%);
+	background: linear-gradient(to bottom, #ffffd3 0%, #ffffaf 100%); 
+	cursor: pointer;
+}
+
+TH.Message { width: 100%; }
+TD.Message { word-break: break-all; }
+
+TR.step {
+	background: #a3c159; /* For browsers that do not support gradients */
+	background: linear-gradient(to bottom, white, #a3c159);
+}
+
+TD.warn { color: orange; font-weight: bold; }
+TD.error, TD.fatal { color: #FF4040; font-weight: bold; }
+TD.Time, TD.Date { text-align: right; }
+TD.FileOfCaller { max-width: 19em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.greyed { color: #999; }
+
+/* Stack Trace */
+.exceptionMessage {
+	border-top: none;
+	background-color: #fdd;
+	font-family: Courier New, Courier, Monospace;
+	font-size: 10pt;
+	font-weight: normal;
+	padding-left: 12px !important;
+	padding-right: 12px !important;
+	text-decoration: none !important;
+}
+
+.stackTrace, .stackTrace * {
+	font-weight: normal;
+}
+
+.stackTrace {
+	display: none;
+	padding: 1px 4px 4px 4px;
+	border-top: 1px dotted black;
+}
+
+.stackTraceExceptionMessage {
+	display: block;
+	font-family: Courier New, Courier, Monospace;
+	font-size: 8pt;
+	white-space: wrap;
+	padding: 1px 0px 1px 0px;
+}
+
+.stackTraceEntry {
+	white-space: nowrap;
+	font-family: Courier New, Courier, Monospace;
+	display: block;
+	font-size: 8pt;
+	padding: 1px 0px 1px 32px;
+}
+
+.stackTraceButton {
+	font-size: 8pt;
+	margin: 2px 8px 2px 0px;
+	font-weight: normal;
+	font-family: Arial;
+}
+
+/* Screenshot */
+img.screenshot {
+	position: absolute;
+	visibility: hidden;
+	left: 0;
+	top: 0;
+	height: auto;
+	border: solid 1px black;
+	z-index: 3000;
+	border: none;
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+img.sizewidth {
+	height: auto;
+	border: 1px solid lightgrey;
+}
+
+img.sizeheight {
+	width: auto;
+	border: 1px solid lightgrey;
+}
+
+/* Embedded Object */
+.attachmentMenu {
+	text-align: right;
+}
+
+div.resizeable {
+	box-sizing: border-box;
+	border: 1px solid lightgrey;
+	/* resize:both; */
+	overflow: hidden;
+	max-height: 100px;
+}
+
+div.resizeable>object {
+	box-sizing: border-box;
+	margin: 0px;
+	width: auto;
+	height: auto;
+}
+
+xmp {
+	box-sizing: border-box;
+	margin: 0px;
+	width: 0; /* XMP tag not obeying parent size without this */
+}
+
+/* IE & EDGE hack for above */
+_:-ms-lang(x), xmp { 
+	white-space: pre-wrap; 
+}
+
+.fadeout {
+	position:relative;
+}
+
+.fadeout:after {
+    content:"";
+    position:absolute;
+    top:60px;
+    left:0;
+    height:40px;
+    width:2000px; /* Force extra wide as cannot get flexible width with xmp.resizeable */
+    background: -webkit-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100%);
+    background: -moz-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100%);
+	background: -ms-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100%);
+    background: -o-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100%);
+    background: linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100%);
+}
+
+</style><script type="text/javascript">
+/*
+ * TODO This may allow fixed header at top of page - works with chrome but firefox and edge body cells loose their
+ * width.  Possibly setting body cell min-width to header width during onload, then header width during onresize
+ * might do the trick.
+ 
+//window.onresize = function() {
+window.onload = function() {
+	var table = document.getElementsByTagName("table")[0];
+	var thead = table.getElementsByTagName("thead")[0];
+	var htr = thead.getElementsByTagName("tr")[0];
+	
+	htr.style.position = "fixed";
+	htr.style.zIndex = "1000";
+	
+	var tbody = table.getElementsByTagName("tbody")[0];
+	var btr = tbody.getElementsByTagName("tr")[0];
+	
+	for(var i = 0; i < btr.cells.length; i++) {
+	var w1 = btr.cells[i].getBoundingClientRect().width;
+	var w2 = btr.cells[i].offsetWidth;
+		htr.cells[i].width = w2 + 'px';
+	}
+}
+*/
+
+function hasClass(element, cls) {
+	return element.classList ? element.classList.contains(cls) : (' ' + element.className + ' ').indexOf(' ' + cls + ' ') > -1;
+}
+
+function addClass(element, cls) {
+	if (element.classList) {
+		element.classList.add(cls);
+	} else {
+		if (!hasClass(element, cls)) {
+			element.className += " " + cls;
+		}
+	}
+}
+
+function removeClass(element, cls) {
+	if (element.classList) {
+		element.classList.remove(cls);
+    } else {
+        var classes = element.className.split(" ");
+        classes.splice(classes.indexOf(cls), 1);
+        element.className = classes.join(" ");
+    }
+}
+
+/* Stack Trace Toggling */
+function getElementById(id) {
+	var element;
+
+	if (document.getElementById) { // standard
+		return document.getElementById(id);
+	} else if (document.all) { // old IE versions
+		return document.all[id];
+	} else if (document.layers) { // nn4
+		return document.layers[id];
+	}
+	alert("Sorry, but your web browser is not supported by Concordion.");
+}
+
+function isVisible(element) {
+	return element.style.display;
+}
+
+function makeVisible(element) {
+	element.style.display = "block";
+}
+
+function makeInvisible(element) {
+	element.style.display = "";
+}
+
+function toggleStackTrace(stackTraceNumber) {
+	var stackTrace = getElementById("stackTrace" + stackTraceNumber);
+	var stackTraceButton = getElementById("stackTraceButton" + stackTraceNumber);
+	if (isVisible(stackTrace)) {
+		makeInvisible(stackTrace);
+		stackTraceButton.value = "View Stack";
+	} else {
+		makeVisible(stackTrace);
+		stackTraceButton.value = "Hide Stack";
+	}
+}
+
+/* Image popup */
+function showScreenPopup(src) {
+	var img = document.getElementById('ScreenshotPopup');
+	img.src = src.src
+
+	var scrollTop = Math.max(document.body.scrollTop, document.documentElement.scrollTop);
+	var scrollLeft = Math.max(document.body.scrollLeft, document.documentElement.scrollLeft);
+	var viewportWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+	var viewportHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+	var scrollbarWidth = viewportWidth - document.body.offsetWidth;
+
+	var srcRect = src.getBoundingClientRect();
+	var imgRect = img.getBoundingClientRect();
+	var naturalWidth = (img.naturalWidth || 0);
+	var naturalHeight = (img.naturalHeight || 0);
+
+	var above = srcRect.top > (viewportHeight - srcRect.top - srcRect.height);
+	var posTop = 0;
+	var posLeft = 0;
+
+	if (above) {
+		var height = Math.min(naturalHeight, srcRect.top - 10)
+		posTop = scrollTop + srcRect.top - height;
+
+		img.style.height = height + "px";
+		img.style.width = 'auto';
+
+		if (img.width > Math.min(naturalWidth, viewportWidth)) {
+			img.style.height = 'auto';
+			img.style.width = Math.min(naturalWidth, viewportWidth) + "px";
+
+			posTop = scrollTop + srcRect.top - img.height;
+		}
+	} else {
+		var height = Math.min(naturalHeight, viewportHeight - srcRect.top - srcRect.height - 10)
+		posTop = scrollTop + srcRect.top + srcRect.height;
+
+		img.style.height = height + "px";
+		img.style.width = 'auto';
+
+		if (img.width > Math.min(naturalWidth, viewportWidth)) {
+			img.style.height = 'auto';
+			img.style.width = Math.min(naturalWidth, viewportWidth) + "px";
+		}
+	}
+
+	var posLeft = srcRect.left + scrollLeft + 1;
+
+	if (posLeft + img.width > scrollLeft + viewportWidth - scrollbarWidth) {
+		posLeft = scrollLeft + viewportWidth - img.width - scrollbarWidth;
+	}
+	if (posLeft < scrollLeft) {
+		posLeft = scrollLeft;
+	}
+
+	img.style.left = posLeft + "px";
+	img.style.top = posTop + "px";
+	img.style.visibility = 'visible';   
+}
+
+function hideScreenPopup() {
+	document.getElementById('ScreenshotPopup').style.visibility = 'hidden';
+}
+
+/* Log Filtering */
+function filterDebug(cb) {
+	doFilter("debug", cb.checked);
+}
+function filterTrace(cb) {
+	doFilter("trace", cb.checked);
+}
+
+function doFilter(className, checked) {
+	var displaySetting = checked ? "" : "none";
+	var borderSetting = checked ? "1px solid #f0f0f0" : "1px dotted black";
+
+	var scrollToElement = getFirstVisibleRow(className);
+	
+	var all = document.querySelectorAll("TR." + className);
+	for (var i = 0; i < all.length; i++) {
+		var prevrow = all[i].previousElementSibling;
+		if (prevrow != null && !hasClass(prevrow, className)) {
+			prevrow.style.borderBottom = borderSetting;
+		}
+
+		all[i].style.display = displaySetting;
+	}
+	
+	// Attempt to keep the currently selected row visible
+	if (scrollToElement) {
+		scrollToElement.scrollIntoView();
+	}
+}
+
+function getFirstVisibleRow(className) { 
+	var element = null;
+	
+	if (document.caretPositionFromPoint) {
+		var range = document.caretPositionFromPoint(0, 5);
+		element = range.offsetNode.parentElement;
+		
+	} else if (document.caretRangeFromPoint) {
+		var range = document.caretRangeFromPoint(0, 5);
+		element = range.startContainer.parentNode;
+		
+	} else if (document.elementFromPoint) {
+		element = document.elementFromPoint(100, 5).parentElement;
+	}
+ 	
+	while (element != null && (element.tagName.toLowerCase() != 'tr' || hasClass(element, className))) {
+		if (element.tagName.toLowerCase() == 'tr') {
+			element = element.previousElementSibling;
+		} else {
+			element = element.parentElement;
+		}
+	}
+	
+	return element;
+}
+
+/* Expand / Collapse embedded content */
+function toggleContent(el) {
+	var resizeEl = el.parentElement;
+	var isCollapsed = el.text == "Collapse";
+
+	while (resizeEl != null) {
+		if (hasClass(resizeEl, "resizeable")) {
+			if (isCollapsed) {
+				resizeEl.style.maxHeight = "100px";
+				resizeEl.style.overflow = "hidden";
+				el.text = "Expand";
+
+			} else {
+				resizeEl.style.maxHeight = viewport().height - 100 + 'px';
+				//console.log(resizeEl.style.maxHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0) * .8);
+				console.log(viewport());
+				resizeEl.style.overflow = "auto";
+				el.text = "Collapse";
+			}
+
+			// Resized element
+			resizeEl = resizeEl.firstElementChild;
+
+			if (resizeEl.tagName.toLowerCase() == "object") {
+				if (isCollapsed) {
+					resizeEl.style.height = 'auto';
+					resizeEl.style.width = 'auto';
+				} else {   
+					resizeEl.style.height = viewport().height - 300 + 'px';
+					resizeEl.style.width = viewport().width - 300 + 'px';                                                                                                                                                                      
+				}
+			} else {
+				if (isCollapsed) {
+					addClass(resizeEl, "fadeout");
+				} else {
+					removeClass(resizeEl, "fadeout");
+				}
+			}			
+
+			break;
+		}
+
+		resizeEl = resizeEl.nextElementSibling;
+	}
+}
+
+function viewport() {
+	var e = window, a = 'inner';
+	if (!('innerWidth' in window )) {
+		a = 'client';
+		e = document.documentElement || document.body;
+	}
+	return { width : e[ a+'Width' ] , height : e[ a+'Height' ] };
+}
+
+
+</script>
+  </head>
+<body>
+<label class="floattopright"><input id="chkTrace" type="checkbox" onclick="filterTrace(this);" checked>Show 'TRACE' level statements</label><img id="ScreenshotPopup" class="screenshot" /><h1>Log session start time Sat Oct 21 15:18:43 NZDT 2017</h1><p></p>
+
+<table>
+<thead>
+<tr><th class="Row">Row</th>
+<th class="Level">Level</th>
+<th class="Message">Message</th>
+<th class="Time">Time</th>
+<th class="FileOfCaller">File&nbsp;Of&nbsp;Caller</th>
+<th class="LineOfCaller">Line&nbsp;Of&nbsp;Caller</th>
+</tr>
+</thead>
+<tbody>
+
+<tr class="record debug">
+<td>1.</td><td class="Level debug">DEBUG</td>
+<td class="Message">preparing logger for testing</td>
+<td class="Time">15:18:43.331</td>
+<td class="FileOfCaller" title="HtmlLog.java">HtmlLog.java</td>
+<td class="LineOfCaller">34</td>
+</tr>
+<tr class="record debug">
+<td>2.</td><td class="Level debug">DEBUG</td>
+<td class="Message">This uses the classic logger</td>
+<td class="Time">15:18:43.336</td>
+<td class="FileOfCaller" title="HtmlLog.java">HtmlLog.java</td>
+<td class="LineOfCaller">84</td>
+</tr>
+<tr class="record trace">
+<td>4.</td><td class="Level trace">TRACE</td>
+<td class="Message">trace</td>
+<td class="Time">15:18:43.338</td>
+<td class="FileOfCaller" title="HtmlLog.java">HtmlLog.java</td>
+<td class="LineOfCaller">92</td>
+</tr>
+<tr class="record debug">
+<td>6.</td><td class="Level debug">DEBUG</td>
+<td class="Message">debug</td>
+<td class="Time">15:18:43.338</td>
+<td class="FileOfCaller" title="HtmlLog.java">HtmlLog.java</td>
+<td class="LineOfCaller">93</td>
+</tr>
+<tr class="record info">
+<td>8.</td><td class="Level info">INFO</td>
+<td class="Message">info</td>
+<td class="Time">15:18:43.339</td>
+<td class="FileOfCaller" title="HtmlLog.java">HtmlLog.java</td>
+<td class="LineOfCaller">94</td>
+</tr>
+<tr class="record warn">
+<td>10.</td><td class="Level warn">WARN</td>
+<td class="Message">warn</td>
+<td class="Time">15:18:43.340</td>
+<td class="FileOfCaller" title="HtmlLog.java">HtmlLog.java</td>
+<td class="LineOfCaller">95</td>
+</tr>
+<tr class="record error">
+<td>12.</td><td class="Level error">ERROR</td>
+<td class="Message">error</td>
+<td class="Time">15:18:43.340</td>
+<td class="FileOfCaller" title="HtmlLog.java">HtmlLog.java</td>
+<td class="LineOfCaller">96</td>
+</tr>
+<tr class="record info">
+<td>14.</td><td class="Level info">INFO</td>
+<td class="Message">This '&#8658;' is a funky arrow</td>
+<td class="Time">15:18:43.342</td>
+<td class="FileOfCaller" title="HtmlLog.java">HtmlLog.java</td>
+<td class="LineOfCaller">97</td>
+</tr>
+<tr class="record info">
+<td>16.</td><td class="Level info">INFO</td>
+<td class="Message">This is an attachment</td>
+<td class="Time">15:18:43.348</td>
+<td class="FileOfCaller" title="HtmlLog.java">HtmlLog.java</td>
+<td class="LineOfCaller">116</td>
+</tr>
+<tr class="companion info">
+<td class="indent"></td><td colspan="5" class="output">
+<div class="attachmentMenu">
+<a href="HtmlLogLog1-data.xml" target="_blank">Open</a>&nbsp;&nbsp;
+<a href="#" onclick="toggleContent(this); return false;">Expand</a>
+</div>
+<div class="resizeable">
+<xmp class="fadeout"><tag>Lorem ipsum dolor sit amet, 
+consectetur adipisicing elit,
+sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+Ut enim ad minim veniam, 
+quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+Excepteur sint occaecat cupidatat non proident, 
+sunt in culpa qui officia deserunt mollit anim id est laborum.</tag><tag>Lorem ipsum dolor sit amet, 
+consectetur adipisicing elit,
+sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+Ut enim ad minim veniam, 
+quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+Excepteur sint occaecat cupidatat non proident, 
+sunt in culpa qui officia deserunt mollit anim id est laborum.</tag>
+<ns4:manage xmlns:ns4="http://MSD_WD/ManageIncomeBPMService.tws" xmlns:ns2="http://msd.govt.nz/integration/utils/technical/schema/messaging/v1" xmlns:ns3="http://msd.govt.nz/bpm/derived/income/schema/manageincome/v1"></xmp>
+</div>
+</td>
+</tr>
+<tr class="record debug">
+<td>18.</td><td class="Level debug">DEBUG</td>
+<td class="Message">Log a value</td>
+<td class="Time">15:18:43.394</td>
+<td class="FileOfCaller" title="Test.java">Test.java</td>
+<td class="LineOfCaller">9</td>
+</tr>
+<tr class="record debug">
+<td>20.</td><td class="Level debug">DEBUG</td>
+<td class="Message">This is a &lt;TEXT&gt; message</td>
+<td class="Time">15:18:43.447</td>
+<td class="FileOfCaller" title="Test.java">Test.java</td>
+<td class="LineOfCaller">12</td>
+</tr>
+<tr class="record trace">
+<td>22.</td><td class="Level trace">TRACE</td>
+<td class="Message"><b>This is BOLD</b></td>
+<td class="Time">15:18:43.493</td>
+<td class="FileOfCaller" title="Test.java">Test.java</td>
+<td class="LineOfCaller">12</td>
+</tr>
+<tr class="record trace">
+<td>24.</td><td class="Level trace">TRACE</td>
+<td class="Message"><b>This is BOLD</b></td>
+<td class="Time">15:18:43.553</td>
+<td class="FileOfCaller" title="Test.java">Test.java</td>
+<td class="LineOfCaller">12</td>
+</tr>
+<tr class="record trace">
+<td>26.</td><td class="Level trace">TRACE</td>
+<td class="Message"><b>This is BOLD</b></td>
+<td class="Time">15:18:43.602</td>
+<td class="FileOfCaller" title="Test.java">Test.java</td>
+<td class="LineOfCaller">13</td>
+</tr>
+<tr class="record trace">
+<td>28.</td><td class="Level trace">TRACE</td>
+<td class="Message">Clicking &#39;Login&#39;</td>
+<td class="Time">15:18:43.748</td>
+<td class="FileOfCaller" title="Test.java">Test.java</td>
+<td class="LineOfCaller">15</td>
+</tr>
+<tr class="companion trace">
+<td class="indent"></td><td colspan="5" class="output">
+<a href="HtmlLogLogScreenShot2.jpg"><img src="HtmlLogLogScreenShot2.jpg" onMouseOver="showScreenPopup(this);this.style.cursor='pointer'" onMouseOut="hideScreenPopup();this.style.cursor='default'" width="350px"  class="sizewidth"/></a>
+</td>
+</tr>
+<tr class="record trace">
+<td>30.</td><td class="Level trace">TRACE</td>
+<td class="Message">Clicking &#39;Login&#39;</td>
+<td class="Time">15:18:43.804</td>
+<td class="FileOfCaller" title="Test.java">Test.java</td>
+<td class="LineOfCaller">13</td>
+</tr>
+<tr class="companion trace">
+<td class="indent"></td><td colspan="5" class="output">
+<a href="HtmlLogLogScreenShot3.jpg"><img src="HtmlLogLogScreenShot3.jpg" onMouseOver="showScreenPopup(this);this.style.cursor='pointer'" onMouseOut="hideScreenPopup();this.style.cursor='default'" width="350px"  class="sizewidth"/></a>
+</td>
+</tr>
+<tr class="record trace">
+<td>32.</td><td class="Level trace">TRACE</td>
+<td class="Message">Some html will be included below</td>
+<td class="Time">15:18:43.861</td>
+<td class="FileOfCaller" title="Test.java">Test.java</td>
+<td class="LineOfCaller">13</td>
+</tr>
+<tr class="companion trace">
+<td class="indent"></td><td colspan="5" class="output">
+This is <b>BOLD</b>
+</td>
+</tr>
+<tr class="record trace">
+<td>34.</td><td class="Level trace">TRACE</td>
+<td class="Message">Sending SOAP request</td>
+<td class="Time">15:18:43.900</td>
+<td class="FileOfCaller" title="Test.java">Test.java</td>
+<td class="LineOfCaller">13</td>
+</tr>
+<tr class="companion trace">
+<td class="indent"></td><td colspan="5" class="output">
+<xmp>&lt;soapenv&gt;...&lt;/soapenv&gt;</xmp>
+</td>
+</tr>
+<tr class="record trace">
+<td>36.</td><td class="Level trace">TRACE</td>
+<td class="Message">Show this attachment</td>
+<td class="Time">15:18:43.964</td>
+<td class="FileOfCaller" title="Test.java">Test.java</td>
+<td class="LineOfCaller">20</td>
+</tr>
+<tr class="companion trace">
+<td class="indent"></td><td colspan="5" class="output">
+<div class="attachmentMenu">
+<a href="HtmlLogLog4-example.txt" target="_blank">Open</a>&nbsp;&nbsp;
+<a href="#" onclick="toggleContent(this); return false;">Expand</a>
+</div>
+<div class="resizeable">
+<xmp class="fadeout">Example</xmp>
+</div>
+</td>
+</tr>
+<tr class="record error">
+<td>38.</td><td class="Level error">ERROR</td>
+<td class="Message">Something when wrong</td>
+<td class="Time">15:18:44.014</td>
+<td class="FileOfCaller" title="Test.java">Test.java</td>
+<td class="LineOfCaller">10</td>
+</tr>
+<tr class="companion">
+<td class="indent"></td><td colspan="5" class="output exceptionMessage"><div>
+java.lang.Exception: me
+
+</div>
+<input id="stackTraceButton1" class="stackTraceButton" type="button" value="View Stack" onclick="javascript:toggleStackTrace('1')"/>
+<div id="stackTrace1" class="stackTrace" style="">
+<div class="stackTraceEntry">at Test.logSomething(Test.java:10)</div>
+<div class="stackTraceEntry">at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)</div>
+<div class="stackTraceEntry">at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)</div>
+<div class="stackTraceEntry">at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)</div>
+<div class="stackTraceEntry">at java.lang.reflect.Method.invoke(Method.java:498)</div>
+<div class="stackTraceEntry">at ognl.OgnlRuntime.invokeMethod(OgnlRuntime.java:893)</div>
+<div class="stackTraceEntry">at ognl.OgnlRuntime.callAppropriateMethod(OgnlRuntime.java:1295)</div>
+<div class="stackTraceEntry">at ognl.ObjectMethodAccessor.callMethod(ObjectMethodAccessor.java:68)</div>
+<div class="stackTraceEntry">at ognl.OgnlRuntime.callMethod(OgnlRuntime.java:1371)</div>
+<div class="stackTraceEntry">at ognl.ASTMethod.getValueBody(ASTMethod.java:90)</div>
+<div class="stackTraceEntry">at ognl.SimpleNode.evaluateGetValueBody(SimpleNode.java:212)</div>
+<div class="stackTraceEntry">at ognl.SimpleNode.getValue(SimpleNode.java:258)</div>
+<div class="stackTraceEntry">at ognl.Ognl.getValue(Ognl.java:494)</div>
+<div class="stackTraceEntry">at ognl.Ognl.getValue(Ognl.java:596)</div>
+<div class="stackTraceEntry">at ognl.Ognl.getValue(Ognl.java:566)</div>
+<div class="stackTraceEntry">at org.concordion.internal.OgnlEvaluator.evaluate(OgnlEvaluator.java:24)</div>
+<div class="stackTraceEntry">at org.concordion.internal.SimpleEvaluator.evaluate(SimpleEvaluator.java:12)</div>
+<div class="stackTraceEntry">at org.concordion.internal.command.executeCommand.ExecuteCommand.normalExecution(ExecuteCommand.java:75)</div>
+<div class="stackTraceEntry">at org.concordion.internal.command.executeCommand.ExecuteCommand.execute(ExecuteCommand.java:68)</div>
+<div class="stackTraceEntry">at org.concordion.api.AbstractCommandDecorator$2.run(AbstractCommandDecorator.java:25)</div>
+<div class="stackTraceEntry">at org.concordion.internal.command.LocalTextDecorator.process(LocalTextDecorator.java:26)</div>
+<div class="stackTraceEntry">at org.concordion.api.AbstractCommandDecorator.execute(AbstractCommandDecorator.java:23)</div>
+<div class="stackTraceEntry">at org.concordion.api.AbstractCommandDecorator$2.run(AbstractCommandDecorator.java:25)</div>
+<div class="stackTraceEntry">at org.concordion.internal.command.ThrowableCatchingDecorator.process(ThrowableCatchingDecorator.java:38)</div>
+<div class="stackTraceEntry">at org.concordion.api.AbstractCommandDecorator.execute(AbstractCommandDecorator.java:23)</div>
+<div class="stackTraceEntry">at org.concordion.api.CommandCall.execute(CommandCall.java:72)</div>
+<div class="stackTraceEntry">at org.concordion.api.CommandCallList.processSequentially(CommandCallList.java:33)</div>
+<div class="stackTraceEntry">at org.concordion.internal.command.SpecificationCommand.execute(SpecificationCommand.java:36)</div>
+<div class="stackTraceEntry">at org.concordion.api.CommandCall.execute(CommandCall.java:72)</div>
+<div class="stackTraceEntry">at org.concordion.internal.XMLSpecification.processNode(XMLSpecification.java:61)</div>
+<div class="stackTraceEntry">at org.concordion.internal.XMLSpecification.processExample(XMLSpecification.java:78)</div>
+<div class="stackTraceEntry">at org.concordion.Concordion.processExample(Concordion.java:103)</div>
+<div class="stackTraceEntry">at test.concordion.TestRig.process(TestRig.java:80)</div>
+<div class="stackTraceEntry">at test.concordion.TestRig.process(TestRig.java:103)</div>
+<div class="stackTraceEntry">at test.concordion.TestRig.processFragment(TestRig.java:38)</div>
+<div class="stackTraceEntry">at specification.BaseFixture.process(BaseFixture.java:226)</div>
+<div class="stackTraceEntry">at specification.BaseFixture.processHtmlAndJava(BaseFixture.java:214)</div>
+<div class="stackTraceEntry">at specification.HtmlLog.throwException(HtmlLog.java:228)</div>
+<div class="stackTraceEntry">at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)</div>
+<div class="stackTraceEntry">at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)</div>
+<div class="stackTraceEntry">at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)</div>
+<div class="stackTraceEntry">at java.lang.reflect.Method.invoke(Method.java:498)</div>
+<div class="stackTraceEntry">at ognl.OgnlRuntime.invokeMethod(OgnlRuntime.java:872)</div>
+<div class="stackTraceEntry">at ognl.OgnlRuntime.callAppropriateMethod(OgnlRuntime.java:1295)</div>
+<div class="stackTraceEntry">at ognl.ObjectMethodAccessor.callMethod(ObjectMethodAccessor.java:68)</div>
+<div class="stackTraceEntry">at ognl.OgnlRuntime.callMethod(OgnlRuntime.java:1371)</div>
+<div class="stackTraceEntry">at ognl.ASTMethod.getValueBody(ASTMethod.java:90)</div>
+<div class="stackTraceEntry">at ognl.SimpleNode.evaluateGetValueBody(SimpleNode.java:212)</div>
+<div class="stackTraceEntry">at ognl.SimpleNode.getValue(SimpleNode.java:258)</div>
+<div class="stackTraceEntry">at ognl.Ognl.getValue(Ognl.java:494)</div>
+<div class="stackTraceEntry">at ognl.Ognl.getValue(Ognl.java:596)</div>
+<div class="stackTraceEntry">at ognl.Ognl.getValue(Ognl.java:566)</div>
+<div class="stackTraceEntry">at org.concordion.internal.OgnlEvaluator.evaluate(OgnlEvaluator.java:24)</div>
+<div class="stackTraceEntry">at org.concordion.internal.SimpleEvaluator.evaluate(SimpleEvaluator.java:12)</div>
+<div class="stackTraceEntry">at org.concordion.internal.command.BooleanCommand.verify(BooleanCommand.java:33)</div>
+<div class="stackTraceEntry">at org.concordion.api.AbstractCommandDecorator$3.run(AbstractCommandDecorator.java:33)</div>
+<div class="stackTraceEntry">at org.concordion.internal.command.LocalTextDecorator.process(LocalTextDecorator.java:26)</div>
+<div class="stackTraceEntry">at org.concordion.api.AbstractCommandDecorator.verify(AbstractCommandDecorator.java:31)</div>
+<div class="stackTraceEntry">at org.concordion.api.AbstractCommandDecorator$3.run(AbstractCommandDecorator.java:33)</div>
+<div class="stackTraceEntry">at org.concordion.internal.command.ThrowableCatchingDecorator.process(ThrowableCatchingDecorator.java:38)</div>
+<div class="stackTraceEntry">at org.concordion.api.AbstractCommandDecorator.verify(AbstractCommandDecorator.java:31)</div>
+<div class="stackTraceEntry">at org.concordion.api.CommandCall.verify(CommandCall.java:76)</div>
+<div class="stackTraceEntry">at org.concordion.api.CommandCallList.processSequentially(CommandCallList.java:34)</div>
+<div class="stackTraceEntry">at org.concordion.internal.command.SpecificationCommand.execute(SpecificationCommand.java:36)</div>
+<div class="stackTraceEntry">at org.concordion.api.CommandCall.execute(CommandCall.java:72)</div>
+<div class="stackTraceEntry">at org.concordion.internal.XMLSpecification.processNode(XMLSpecification.java:61)</div>
+<div class="stackTraceEntry">at org.concordion.internal.XMLSpecification.processExample(XMLSpecification.java:78)</div>
+<div class="stackTraceEntry">at org.concordion.Concordion.processExample(Concordion.java:103)</div>
+<div class="stackTraceEntry">at org.concordion.internal.FixtureRunner.run(FixtureRunner.java:38)</div>
+<div class="stackTraceEntry">at org.concordion.integration.junit4.ConcordionRunner.invoke(ConcordionRunner.java:207)</div>
+<div class="stackTraceEntry">at org.concordion.integration.junit4.ConcordionRunner$1.invoke(ConcordionRunner.java:31)</div>
+<div class="stackTraceEntry">at org.concordion.integration.junit4.ConcordionFrameworkMethod.invokeExplosively(ConcordionFrameworkMethod.java:58)</div>
+<div class="stackTraceEntry">at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)</div>
+<div class="stackTraceEntry">at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)</div>
+<div class="stackTraceEntry">at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)</div>
+<div class="stackTraceEntry">at org.concordion.integration.junit4.ConcordionRunner.runChild(ConcordionRunner.java:191)</div>
+<div class="stackTraceEntry">at org.concordion.integration.junit4.ConcordionRunner.runChild(ConcordionRunner.java:23)</div>
+<div class="stackTraceEntry">at org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)</div>
+<div class="stackTraceEntry">at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)</div>
+<div class="stackTraceEntry">at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)</div>
+<div class="stackTraceEntry">at org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)</div>
+<div class="stackTraceEntry">at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)</div>
+<div class="stackTraceEntry">at org.junit.runners.ParentRunner.run(ParentRunner.java:363)</div>
+<div class="stackTraceEntry">at org.concordion.integration.junit4.ConcordionRunner.run(ConcordionRunner.java:150)</div>
+<div class="stackTraceEntry">at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecuter.runTestClass(JUnitTestClassExecuter.java:114)</div>
+<div class="stackTraceEntry">at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecuter.execute(JUnitTestClassExecuter.java:57)</div>
+<div class="stackTraceEntry">at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassProcessor.processTestClass(JUnitTestClassProcessor.java:66)</div>
+<div class="stackTraceEntry">at org.gradle.api.internal.tasks.testing.SuiteTestClassProcessor.processTestClass(SuiteTestClassProcessor.java:51)</div>
+<div class="stackTraceEntry">at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)</div>
+<div class="stackTraceEntry">at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)</div>
+<div class="stackTraceEntry">at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)</div>
+<div class="stackTraceEntry">at java.lang.reflect.Method.invoke(Method.java:498)</div>
+<div class="stackTraceEntry">at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:35)</div>
+<div class="stackTraceEntry">at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)</div>
+<div class="stackTraceEntry">at org.gradle.internal.dispatch.ContextClassLoaderDispatch.dispatch(ContextClassLoaderDispatch.java:32)</div>
+<div class="stackTraceEntry">at org.gradle.internal.dispatch.ProxyDispatchAdapter$DispatchingInvocationHandler.invoke(ProxyDispatchAdapter.java:93)</div>
+<div class="stackTraceEntry">at com.sun.proxy.$Proxy1.processTestClass(Unknown Source)</div>
+<div class="stackTraceEntry">at org.gradle.api.internal.tasks.testing.worker.TestWorker.processTestClass(TestWorker.java:108)</div>
+<div class="stackTraceEntry">at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)</div>
+<div class="stackTraceEntry">at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)</div>
+<div class="stackTraceEntry">at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)</div>
+<div class="stackTraceEntry">at java.lang.reflect.Method.invoke(Method.java:498)</div>
+<div class="stackTraceEntry">at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:35)</div>
+<div class="stackTraceEntry">at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)</div>
+<div class="stackTraceEntry">at org.gradle.internal.remote.internal.hub.MessageHubBackedObjectConnection$DispatchWrapper.dispatch(MessageHubBackedObjectConnection.java:146)</div>
+<div class="stackTraceEntry">at org.gradle.internal.remote.internal.hub.MessageHubBackedObjectConnection$DispatchWrapper.dispatch(MessageHubBackedObjectConnection.java:128)</div>
+<div class="stackTraceEntry">at org.gradle.internal.remote.internal.hub.MessageHub$Handler.run(MessageHub.java:404)</div>
+<div class="stackTraceEntry">at org.gradle.internal.concurrent.ExecutorPolicy$CatchAndRecordFailures.onExecute(ExecutorPolicy.java:63)</div>
+<div class="stackTraceEntry">at org.gradle.internal.concurrent.ManagedExecutorImpl$1.run(ManagedExecutorImpl.java:46)</div>
+<div class="stackTraceEntry">at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)</div>
+<div class="stackTraceEntry">at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)</div>
+<div class="stackTraceEntry">at org.gradle.internal.concurrent.ThreadFactoryImpl$ManagedThreadRunnable.run(ThreadFactoryImpl.java:55)</div>
+<div class="stackTraceEntry">at java.lang.Thread.run(Thread.java:748)</div>
+</div></td></tr>
+<tr class="record debug">
+<td>40.</td><td class="Level debug">DEBUG</td>
+<td class="Message">I&#39;m buffered</td>
+<td class="Time">15:18:44.064</td>
+<td class="FileOfCaller" title="ReportLogger.java">ReportLogger.java</td>
+<td class="LineOfCaller">114</td>
+</tr>
+<tr class="record debug">
+<td>42.</td><td class="Level debug">DEBUG</td>
+<td class="Message">Oops, I forced writing the buffered entry</td>
+<td class="Time">15:18:44.065</td>
+<td class="FileOfCaller" title="Test.java">Test.java</td>
+<td class="LineOfCaller">11</td>
+</tr>
+<tr class="record debug">
+<td>44.</td><td class="Level debug">DEBUG</td>
+<td class="Message">I won&#39;t be buffered soon!</td>
+<td class="Time">15:18:44.066</td>
+<td class="FileOfCaller" title="ReportLogger.java">ReportLogger.java</td>
+<td class="LineOfCaller">114</td>
+</tr>
+<tr class="record step">
+<td colspan="6">46. My step here</td>
+</tr>
+<tr class="record trace">
+<td>48.</td><td class="Level trace">TRACE</td>
+<td class="Message">This is a location aware logged entry</td>
+<td class="Time">15:18:44.156</td>
+<td class="FileOfCaller" title="Test.java">Test.java</td>
+<td class="LineOfCaller">10</td>
+</tr>
