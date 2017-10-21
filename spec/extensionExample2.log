@@ -1,4 +1,4 @@
-21-10-2017 15:43:06.379 ERROR o.c.e.l.LoggingFormatterSpecificationListener - Exception thrown while evaluating expression 'throwException()':
+21-10-2017 15:48:53.245 ERROR o.c.e.l.LoggingFormatterSpecificationListener - Exception thrown while evaluating expression 'throwException()':
 	Exception: Oops!
 org.concordion.internal.InvalidExpressionException: Exception: Oops!
 	at specification.Extension.throwException(Extension.java:95)
