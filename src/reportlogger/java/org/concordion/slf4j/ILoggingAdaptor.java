@@ -52,9 +52,9 @@ public interface ILoggingAdaptor
 	public boolean logFileExists();
 	
 	/**
-	 * Return the file for the currently active log.
-	 * 
-	 * @return the log file, if one exists otherwise null
-	 */
+     * Return the file for the currently active log.
+     * 
+     * @return the log file, if one exists otherwise a new file object with exists set to false.
+     */
 	public File getLogFile();
 }

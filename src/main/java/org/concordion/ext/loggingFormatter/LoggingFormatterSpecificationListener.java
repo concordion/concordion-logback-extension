@@ -77,9 +77,10 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 	@Override
 	public void afterProcessingSpecification(final SpecificationProcessingEvent event) {
 		try {
-			if (loggingAdaptor.logFileExists()) {
-				appendLogFileLinkToFooter(event, loggingAdaptor.getLogFile());
-			}
+            File logFile = loggingAdaptor.getLogFile();
+            if (logFile.exists()) {
+                appendLogFileLinkToFooter(event, logFile);
+            }
 		} finally {
 			loggingAdaptor.stopLogFile();
 			FluentLogger.removeLoggingAdaptor();
@@ -215,8 +216,9 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 	@Override
 	public void afterExample(ExampleEvent event) {
 		try {
-			if (loggingAdaptor.logFileExists()) {
-				appendLogFileLinkToExample(event, loggingAdaptor.getLogFile());
+            File logFile = loggingAdaptor.getLogFile();
+            if (logFile.exists()) {
+                appendLogFileLinkToExample(event, logFile);
 			}
 		} finally  {
 			loggingAdaptor.stopLogFile();		

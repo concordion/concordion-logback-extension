@@ -117,21 +117,15 @@ public class LogbackAdaptor implements ILoggingAdaptor
 		
 	@Override
 	public boolean logFileExists() {
-		File file = getLogFile();
-
-		if (file == null) {
-			return false;
-		}
-		
-		return file.exists();
-	}
+        return getLogFile().exists();
+    }
 
 	@Override
 	public File getLogFile() {
 		FileAppender<?> appender = getCurrentAppender();
 
 		if (appender == null) {
-			return null;
+            return new File("");
 		}
 
 		return new File(appender.getFile());
@@ -165,14 +159,16 @@ public class LogbackAdaptor implements ILoggingAdaptor
 									FileAppender<?> fileAppender = (FileAppender<?>) appender;
 									String file = fileAppender.getFile();
 									
-									if (file.startsWith(currentTest)) {
-										if (file.length() > currentTest.length()) {
+                                    if (file.equalsIgnoreCase(currentTest + "Log.html") || file.equalsIgnoreCase(currentTest + ".log")) {
+                                        // if (file.startsWith(currentTest)) {
+                                        // if (file.length() > currentTest.length()) {
 											// If no log statements performed then appender won't be created so ensure not accidentally picking up
 											// example log file when after specification log file
-											if (!file.substring(currentTest.length(), currentTest.length() + 1).equals(EXAMPLE_SEPERATOR_PREFIX)) {
+                                        // if (!file.substring(currentTest.length(), currentTest.length() + 1).equals(EXAMPLE_SEPERATOR_PREFIX)) {
 												return fileAppender;
-											}
-										}
+                                        // }
+                                        // }
+                                        // }
 									}
 								}
 							}

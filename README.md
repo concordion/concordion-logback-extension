@@ -22,7 +22,7 @@ The LoggingFormatterExtension places a link at the bottom right of each specific
  
 The log is presented wrapped by a log viewer page, this was an attempt to make the logging less scary for non developers and came before I thought of the [storyboard extension](http://github.com/concordion/concordion-storyboard-extension).  I'm a little unsure whether its an improvement or not.  There log viewer provides access to the raw log file as well. 
 
-Your Logback configuration must have an active SiftingAppender with a discriminator key of "testname".  If found the extension will add a link at the bottom right of your specification that links to the log file.  This log file is assumed to be in the same location as the specificaiton, and with the same base name, but with a file extension of '.log'.  See the demo project for an example.
+Your Logback configuration must have an active SiftingAppender with a discriminator key of "testname".  If found the extension will add a link at the bottom right of your specification that links to the log file.  This log file is assumed to be in the same location as the specification, and with the same base name, but ending with either '.log', or 'Log.html'.  See the demo project for an example.
 
 # Further info
 
