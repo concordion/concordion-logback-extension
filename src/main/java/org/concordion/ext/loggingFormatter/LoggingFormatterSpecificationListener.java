@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -135,12 +136,12 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 
 		try {
 			// Copy LogViewer.html to Concordion output location
-			String viewerContent = IOUtils.toString(LoggingFormatterSpecificationListener.class.getResourceAsStream("LogViewer.html"));
+			String viewerContent = IOUtils.toString(LoggingFormatterSpecificationListener.class.getResourceAsStream("LogViewer.html"), Charset.defaultCharset());
 
 			viewerContent = viewerContent.replaceAll("LOG_FILE_NAME", logName);
 			viewerContent = viewerContent.replaceAll("LOG_FILE_CONTENT", Matcher.quoteReplacement(getLogContent(logFile)));
 			
-			FileUtils.writeStringToFile(new File(logFile.getParent(), logName), viewerContent);
+			FileUtils.writeStringToFile(new File(logFile.getParent(), logName), viewerContent, Charset.defaultCharset());
 		} catch (IOException e) {
 			LOGGER.error(e.getMessage());
 			logName = logFile.getName();

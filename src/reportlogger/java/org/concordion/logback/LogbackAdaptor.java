@@ -1,19 +1,13 @@
 package org.concordion.logback;
 
 import java.io.File;
-import java.util.Iterator;
 import java.util.Stack;
 
 import org.concordion.slf4j.ILoggingAdaptor;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
-import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.classic.sift.SiftingAppender;
-import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.core.Appender;
-import ch.qos.logback.core.FileAppender;
 import ch.qos.logback.core.util.StatusPrinter;
 
 // TODO The implementation (and names of some of the interface methods) is tied into Concordion, can we make these a bit more generic?
@@ -122,65 +116,27 @@ public class LogbackAdaptor implements ILoggingAdaptor
 
 	@Override
 	public File getLogFile() {
-		FileAppender<?> appender = getCurrentAppender();
-
-		if (appender == null) {
-            return new File("");
-		}
-
-		return new File(appender.getFile());
-	}
-	
-	/** Finds the first appender matching the MDC value. */
-	private static FileAppender<?> getCurrentAppender() {
-
 		String currentTest = MDC.get(TEST_NAME);
-
+		
 		if (currentTest == null || currentTest.isEmpty()) {
-			return null;
+			return new File("");
 		}
-
-		LoggerContext context = (LoggerContext)LoggerFactory.getILoggerFactory();
-		for (Logger logger : context.getLoggerList())
-		{
-			for (Iterator<Appender<ILoggingEvent>> index = logger.iteratorForAppenders(); index.hasNext();) {
-				Appender<ILoggingEvent> outerAppender = index.next();
-				
-				// Avoid ConcurrentModificationException - might slow down logging momentarily but overall impact should hopefully be negligible (fingers crossed)
-				if (outerAppender instanceof SiftingAppender) {
-					if (outerAppender.getName().equals("HTML-FILE-PER-TEST") || outerAppender.getName().equals("FILE-PER-TEST")) {
-						synchronized (outerAppender) {
-							Iterator<Appender<ILoggingEvent>> iter = ((SiftingAppender) outerAppender).getAppenderTracker().allComponents().iterator();
-	
-							while (iter.hasNext()) {
-								Appender<ILoggingEvent> appender = iter.next();
-	
-								if (appender instanceof FileAppender) {
-									FileAppender<?> fileAppender = (FileAppender<?>) appender;
-									String file = fileAppender.getFile();
-									
-                                    if (file.equalsIgnoreCase(currentTest + "Log.html") || file.equalsIgnoreCase(currentTest + ".log")) {
-                                        // if (file.startsWith(currentTest)) {
-                                        // if (file.length() > currentTest.length()) {
-											// If no log statements performed then appender won't be created so ensure not accidentally picking up
-											// example log file when after specification log file
-                                        // if (!file.substring(currentTest.length(), currentTest.length() + 1).equals(EXAMPLE_SEPERATOR_PREFIX)) {
-												return fileAppender;
-                                        // }
-                                        // }
-                                        // }
-									}
-								}
-							}
-						}
-					}
-				}
-			}
+		
+		File logFile;
+		
+		logFile = new File(currentTest + "Log.html");
+		if (logFile.exists()) {
+			return logFile;
 		}
-
-		return null;
+		
+		logFile = new File(currentTest + ".log");
+		if (logFile.exists()) {
+			return logFile;
+		}
+		
+		return new File("");
 	}
-
+	
 	/**
 	 * Gets the base output folder used by concordion - copied from ConcordionBuilder.getBaseOutputDir()
 	 * 
@@ -201,8 +157,8 @@ public class LogbackAdaptor implements ILoggingAdaptor
 	}
 
 	private String getPath(String resourcePath) {
-		if (resourcePath.indexOf(".") > 0) {
-			resourcePath = resourcePath.substring(0, resourcePath.indexOf("."));
+		if (resourcePath.lastIndexOf(".") > 0) {
+			resourcePath = resourcePath.substring(0, resourcePath.lastIndexOf("."));
 		}
 
 		if (resourcePath.startsWith("/") || resourcePath.startsWith("\\")) {
