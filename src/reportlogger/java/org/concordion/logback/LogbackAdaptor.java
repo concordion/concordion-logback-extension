@@ -26,8 +26,7 @@ public class LogbackAdaptor implements ILoggingAdaptor
 	public static final String EXAMPLE_SEPERATOR_SUFFIX = "]";
 
 	private static Stack<String> testStack = new Stack<String>();
-	private static String baseFolder = getConcordionBaseOutputDir();
-	
+		
 //	private static List<String> specifications = new ArrayList<>();
 //	private static List<String> examples = new ArrayList<>();
 
@@ -56,7 +55,7 @@ public class LogbackAdaptor implements ILoggingAdaptor
 	 */
 	@Override
 	public void startSpecificationLogFile(String resourcePath) {
-		String path = baseFolder + getPath(resourcePath);
+		String path = new File(getBaseOutputDir(), getPath(resourcePath)).getPath();
 
 		// TODO Fails when running the tests in gradle, probably ok to skip this, just concerned
 		// that if we change file name then possibility that might get a duplicate...
@@ -79,8 +78,8 @@ public class LogbackAdaptor implements ILoggingAdaptor
 
 	@Override
 	public void startExampleLogFile(String resourcePath, String exampleName) {
-		String path = baseFolder + getPath(resourcePath) + EXAMPLE_SEPERATOR_PREFIX + shortenFileName(exampleName, MAX_EXAMPLE_NAME_LENGTH) + EXAMPLE_SEPERATOR_SUFFIX;
-
+		String path = new File(getBaseOutputDir(), getPath(resourcePath) + EXAMPLE_SEPERATOR_PREFIX + shortenFileName(exampleName, MAX_EXAMPLE_NAME_LENGTH) + EXAMPLE_SEPERATOR_SUFFIX).getPath();
+		
 //		if (examples.contains(path)) {
 //			throw new IllegalStateException(String.format("A duplicate example log file would be created at %s for example %s", path, exampleName));
 //		}
@@ -137,25 +136,6 @@ public class LogbackAdaptor implements ILoggingAdaptor
 		return new File("");
 	}
 	
-	/**
-	 * Gets the base output folder used by concordion - copied from ConcordionBuilder.getBaseOutputDir()
-	 * 
-	 * @return base output folder
-	 */
-	private static String getConcordionBaseOutputDir() {
-		String outputPath = System.getProperty("concordion.output.dir");
-
-		if (outputPath == null) {
-			outputPath = new File(System.getProperty("java.io.tmpdir"), "concordion").getAbsolutePath();
-		}
-
-		outputPath = outputPath.replaceAll("\\\\", "/");
-		if (!outputPath.endsWith("/")) {
-			outputPath = outputPath + "/";
-		}
-		return outputPath;
-	}
-
 	private String getPath(String resourcePath) {
 		if (resourcePath.lastIndexOf(".") > 0) {
 			resourcePath = resourcePath.substring(0, resourcePath.lastIndexOf("."));
@@ -209,4 +189,24 @@ public class LogbackAdaptor implements ILoggingAdaptor
 
 		return sb.toString();
 	}
+	
+	/**
+	 * Gets the base output folder used by concordion - copied from ConcordionBuilder.getBaseOutputDir()
+	 * 
+	 * @return base output folder
+	 */
+	private static final String PROPERTY_OUTPUT_DIR = "concordion.output.dir";
+	private static File baseOutputDir;
+	
+	public File getBaseOutputDir() {
+        if (baseOutputDir == null) {
+            String outputPath = System.getProperty(PROPERTY_OUTPUT_DIR);
+            if (outputPath != null) {
+                baseOutputDir = new File(outputPath);
+            } else {
+                baseOutputDir = new File(System.getProperty("java.io.tmpdir"), "concordion");
+            }
+        }
+        return baseOutputDir;
+    }
 }

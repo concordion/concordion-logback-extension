@@ -1,5 +1,5 @@
-apply from: 'https://raw.githubusercontent.com/concordion/concordion-extension-build/master/extension-build.gradle'
-// apply from: 'extension-build.gradle'
+//apply from: 'https://raw.githubusercontent.com/concordion/concordion-extension-build/master/extension-build.gradle'
+apply from: 'extension-build.gradle'
 
 description = 'An extension to Concordion that adds Logback logging support'
 

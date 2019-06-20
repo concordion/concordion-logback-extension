@@ -73,12 +73,28 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 		testPath = event.getResource().getPath();
 
 		loggingAdaptor.startSpecificationLogFile(testPath);
+		
+		LOGGER.info("beforeProcessingSpecification - event file {}", event.getResource().getPath());
+		LOGGER.info("beforeProcessingSpecification - log file   {}", loggingAdaptor.getLogFile());
+		LOGGER.info("beforeProcessingSpecification - log folder   {}", loggingAdaptor.getBaseOutputDir());
+		
 	}
 
 	@Override
 	public void afterProcessingSpecification(final SpecificationProcessingEvent event) {
 		try {
-            File logFile = loggingAdaptor.getLogFile();
+			
+			LOGGER.info("After Thread: {}", Thread.currentThread().getId());
+			LOGGER.info("afterProcessingSpecification - event file {}", event.getResource().getPath());
+			LOGGER.info("afterProcessingSpecification - log file   {}", loggingAdaptor.getLogFile());
+			LOGGER.info("beforeProcessingSpecification - log folder   {}", loggingAdaptor.getBaseOutputDir());
+			
+			File logFile = new File(loggingAdaptor.getBaseOutputDir(), getPath(event.getResource().getPath()) + "Log.html");
+			if (!logFile.exists()) {
+				logFile = new File(loggingAdaptor.getBaseOutputDir(), getPath(event.getResource().getPath()) + ".log");
+			}
+			
+			//File logFile = loggingAdaptor.getLogFile();
             if (logFile.exists()) {
                 appendLogFileLinkToFooter(event, logFile);
             }
@@ -88,7 +104,67 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 			FluentLogger.removeScreenshotTaker();
 		}
 	}
+	
+////////////////////remove me start	
+	public int MAX_SPECIFICATION_NAME_LENGTH = 60;
+	public int MAX_EXAMPLE_NAME_LENGTH = 40;
+	public int MAX_ATTACHMENT_NAME_LENGTH = 29;
 
+	private String getPath(String resourcePath) {
+		if (resourcePath.lastIndexOf(".") > 0) {
+			resourcePath = resourcePath.substring(0, resourcePath.lastIndexOf("."));
+		}
+
+		if (resourcePath.startsWith("/") || resourcePath.startsWith("\\")) {
+			resourcePath = resourcePath.substring(1);
+		}
+
+		int pos = resourcePath.lastIndexOf("/") + 1;
+		int pos2 = resourcePath.lastIndexOf("\\") + 1;
+
+		if (pos2 > pos) {
+			pos = pos2;
+		}
+
+		return resourcePath.substring(0, pos) + shortenFileName(resourcePath.substring(pos), MAX_SPECIFICATION_NAME_LENGTH);
+	}
+	
+	private String shortenFileName(String fileName, int maxLength) {
+		if (fileName.length() <= maxLength) {
+			return fileName;
+		}
+
+		StringBuilder sb = new StringBuilder();
+		boolean addNextChar = false;
+		int index;
+		
+		for (index = fileName.length() - 1; index > 0; index--) {
+			Character chr = fileName.charAt(index);
+
+			if (addNextChar) {
+				sb.append(String.valueOf(fileName.charAt(index)).toUpperCase());
+				addNextChar = false;
+			}
+
+			if (chr.equals(' ') || chr.equals('-')) {
+				addNextChar = true;
+			} 
+			
+			if (index + sb.length() <= maxLength) {
+				break;
+			}
+		}
+
+		sb = sb.reverse();
+
+		if (index > 0) {
+			sb.insert(0, fileName.substring(0, index));
+		}
+
+		return sb.toString();
+	}
+////////////////////remove me end
+	
 	private void appendLogFileLinkToFooter(final SpecificationProcessingEvent event, File logFile) {
 		String logURL = createViewer(logFile);
 

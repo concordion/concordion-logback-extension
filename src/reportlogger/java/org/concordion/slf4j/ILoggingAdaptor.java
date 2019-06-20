@@ -57,4 +57,6 @@ public interface ILoggingAdaptor
      * @return the log file, if one exists otherwise a new file object with exists set to false.
      */
 	public File getLogFile();
+	
+	public File getBaseOutputDir();
 }
