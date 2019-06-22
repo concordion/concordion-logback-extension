@@ -59,4 +59,6 @@ public interface ILoggingAdaptor
 	public File getLogFile();
 	
 	public File getBaseOutputDir();
+
+    public String getTestMDC();
 }

@@ -25,7 +25,7 @@ public class LogbackAdaptor implements ILoggingAdaptor
 	public static final String EXAMPLE_SEPERATOR_PREFIX = "[";
 	public static final String EXAMPLE_SEPERATOR_SUFFIX = "]";
 
-	private static Stack<String> testStack = new Stack<String>();
+    private static Stack<String> testStack = new Stack<String>();
 		
 //	private static List<String> specifications = new ArrayList<>();
 //	private static List<String> examples = new ArrayList<>();
@@ -38,6 +38,11 @@ public class LogbackAdaptor implements ILoggingAdaptor
 		StatusPrinter.print(lc);
 	}
 	
+    @Override
+    public String getTestMDC() {
+        return MDC.get(TEST_NAME);
+    }
+
 	/**
 	 * Adds the test name to MDC so that sift appender can use it and log the new log events to a different file.
 	 * 
@@ -45,7 +50,7 @@ public class LogbackAdaptor implements ILoggingAdaptor
 	 */
 	@Override
 	public void startLogFile(String testPath) {
-		testStack.push(testPath);
+        testStack.push(testPath);
 
 		MDC.put(TEST_NAME, testPath);		
 	}
@@ -71,7 +76,7 @@ public class LogbackAdaptor implements ILoggingAdaptor
 		// lc.putProperty(LAYOUT_STYLESHEET, stylesheet);
 		// }
 		
-		testStack.push(path);
+        testStack.push(path);
 
 		MDC.put(TEST_NAME, path);
 	}
@@ -85,7 +90,7 @@ public class LogbackAdaptor implements ILoggingAdaptor
 //		}
 //		examples.add(path);
 		
-		testStack.push(path);
+        testStack.push(path);
 		
 		MDC.put(TEST_NAME, path);
 	}
@@ -99,13 +104,13 @@ public class LogbackAdaptor implements ILoggingAdaptor
 	 */
 	@Override
 	public void stopLogFile() {
-		testStack.pop();
+        testStack.pop();
 		
-		if (testStack.isEmpty()) {
+        if (testStack.isEmpty()) {
 			MDC.remove(TEST_NAME);
-		} else {
-			MDC.put(TEST_NAME, testStack.peek());
-		}
+        } else {
+            MDC.put(TEST_NAME, testStack.peek());
+        }
 	}
 		
 	@Override

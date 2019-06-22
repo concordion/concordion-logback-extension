@@ -1,4 +1,6 @@
-# Prove multi-thread tests get incorrect log
-# afterSpecification logs ending up in wrong log
+rem Prove multi-thread tests get incorrect log
+rem afterSpecification logs ending up in wrong log
 
-gradlew clean test -Dtest.single=demo/LogbackLoggingIndex -Dlogback.configurationFile=logback-jenkins.xml -Dconcordion.run.threadCount=5
+gradlew clean test -Dtest.single=demo/LogbackLoggingIndex -Dconcordion.run.threadCount=5  -Dorg.gradle.java.home="C:\Program Files\Java\jdk1.8.0_121"
+
+rem -Dlogback.configurationFile=logback-jenkins.xml  
