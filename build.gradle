@@ -34,7 +34,8 @@ dependencies {
     compile sourceSets.reportlogger.compileClasspath
     
 	compile "org.concordion:concordion-logging-tooltip-extension:1.1.2"
-		
+	compile "org.concordion:concordion-parallel-run-extension:+"
+
 	// Only needed for javadocs :-(
 	reportloggerCompileOnly 'commons-lang:commons-lang:2.6'
 }
@@ -63,6 +64,8 @@ test.dependsOn cleanTest
 test {
     exclude 'specification/BaseFixture.class'
 	systemProperties['concordion.output.dir'] = "$reporting.baseDir/spec"
+	systemProperties['concordion.run.threadCount'] = 5
+	systemProperties['concordion.extensions'] = "org.concordion.ext.ParallelRunExtension"
 	outputs.upToDateWhen { false } // force it to run even if test code hasn't changed
 	testLogging {
 		events "passed", "skipped", "failed", "standardError"
