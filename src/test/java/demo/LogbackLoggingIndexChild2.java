@@ -1,7 +1,10 @@
 package demo;
 
+import org.concordion.api.AfterExample;
 import org.concordion.api.AfterSpecification;
+import org.concordion.api.BeforeExample;
 import org.concordion.api.BeforeSpecification;
+import org.concordion.api.ExampleName;
 
 import specification.BaseFixture;
 
@@ -26,12 +29,22 @@ public class LogbackLoggingIndexChild2 extends BaseFixture {
 	}
 	
 	@BeforeSpecification
-	public void before() {
-		getLogger().info("before spec");
-	}
+    public void before() {
+        getLogger().info("before child index 2 spec");
+    }
 
-	@AfterSpecification
-	public void after() {
-		getLogger().info("after spec");
-	}
+    @AfterSpecification
+    public void after() {
+        getLogger().info("after child index 2 spec");
+    }
+
+    @BeforeExample
+    public void beforeExample(@ExampleName String exampleName) {
+        getLogger().info("before child index 2 example: " + exampleName);
+    }
+
+    @AfterExample
+    public void afterExample(@ExampleName String exampleName) {
+        getLogger().info("after child index 2 example: " + exampleName);
+    }
 }

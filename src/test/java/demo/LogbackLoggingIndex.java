@@ -1,7 +1,10 @@
 package demo;
 
+import org.concordion.api.AfterExample;
 import org.concordion.api.AfterSpecification;
+import org.concordion.api.BeforeExample;
 import org.concordion.api.BeforeSpecification;
+import org.concordion.api.ExampleName;
 
 import specification.BaseFixture;
 
@@ -17,21 +20,23 @@ import specification.BaseFixture;
  * Run this class as a JUnit test to produce the Concordion results.
  */
 public class LogbackLoggingIndex extends BaseFixture {
-	public void logBeforeRun() {
-		getLogger().info("logging something to where?");
-	}
-	
-	public void logAfterRun() {
-		getLogger().info("done logging?");
-	}
-	
 	@BeforeSpecification
 	public void before() {
-		getLogger().info("before spec");
+        getLogger().info("before index spec");
 	}
 
 	@AfterSpecification
 	public void after() {
-		getLogger().info("after spec");
+        getLogger().info("after index spec");
 	}
+
+    @BeforeExample
+    public void beforeExample(@ExampleName String exampleName) {
+        getLogger().info("before index example: " + exampleName);
+    }
+
+    @AfterExample
+    public void afterExample(@ExampleName String exampleName) {
+        getLogger().info("after index example: " + exampleName);
+    }
 }

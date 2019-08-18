@@ -19,7 +19,7 @@ import specification.BaseFixture;
  * <p>
  * Run this class as a JUnit test to produce the Concordion results.
  */
-public class LogbackLoggingDemo extends BaseFixture {
+public class LogbackLoggingDemo2 extends BaseFixture {
 
 	private Integer result;
 
@@ -37,21 +37,21 @@ public class LogbackLoggingDemo extends BaseFixture {
 	
 	@BeforeSpecification
 	public void before() {
-		getLogger().info("before spec demo");
+        getLogger().info("before spec demo 2");
 	}
 
 	@AfterSpecification
 	public void after() {
-		getLogger().info("after spec demo");
+        getLogger().info("after spec demo 2");
 	}
 	
 	@BeforeExample
 	public void beforeExample(@ExampleName String exampleName) {
-        getLogger().info("before demo example: " + exampleName);
+        getLogger().info("before demo 2 example: " + exampleName);
 	}
 	
 	@AfterExample
 	public void afterExample(@ExampleName String exampleName) {
-        getLogger().info("after demo example: " + exampleName);
+        getLogger().info("after demo 2 example: " + exampleName);
 	}
 }

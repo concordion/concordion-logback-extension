@@ -104,6 +104,12 @@ public class LogbackAdaptor implements ILoggingAdaptor
 	 */
 	@Override
 	public void stopLogFile() {
+        String currentMdc = getTestMDC();
+        String currentStack = testStack.peek();
+
+        if (currentMdc != currentStack) {
+            currentStack = currentStack;
+        }
         testStack.pop();
 		
         if (testStack.isEmpty()) {

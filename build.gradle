@@ -26,7 +26,7 @@ sourceSets {
 }
 
 dependencies {
-	reportloggerCompile 'org.slf4j:slf4j-ext:1.7.25'
+	reportloggerCompile 'org.slf4j:slf4j-ext:1.7.28'
     reportloggerCompile 'ch.qos.logback:logback-classic:1.2.3'
     reportloggerCompile 'commons-io:commons-io:2.5'
         
