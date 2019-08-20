@@ -20,6 +20,10 @@ import specification.BaseFixture;
  * Run this class as a JUnit test to produce the Concordion results.
  */
 public class LogbackLoggingIndexChild2 extends BaseFixture {
+    public LogbackLoggingIndexChild2() {
+        loggingExtension.setDebugit();
+    }
+
 	public void logBeforeRun() {
 		getLogger().info("logging something to where?");
 	}

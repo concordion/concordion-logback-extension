@@ -68,6 +68,11 @@ public class LoggingFormatterExtension implements ConcordionExtension {
 		return this;
 	}
 	
+    public LoggingFormatterExtension setDebugit() {
+        listener.setDebugit();
+        return this;
+    }
+
 	/**
 	 * Registers listeners for other extensions to listen in on log messages.
 	 *  

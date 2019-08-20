@@ -23,6 +23,10 @@ public class LogbackLoggingDemo extends BaseFixture {
 
 	private Integer result;
 
+    public LogbackLoggingDemo() {
+        loggingExtension.setDebugit();
+    }
+
 	public void multiply(final String calulation) {
 		String values[] = calulation.split("[*]");
 		

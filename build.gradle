@@ -34,7 +34,7 @@ dependencies {
     compile sourceSets.reportlogger.compileClasspath
     
 	compile "org.concordion:concordion-logging-tooltip-extension:1.1.2"
-	compile "org.concordion:concordion-parallel-run-extension:+"
+	compile "org.concordion:concordion-parallel-run-extension:1.1.0"
 
 	// Only needed for javadocs :-(
 	reportloggerCompileOnly 'commons-lang:commons-lang:2.6'

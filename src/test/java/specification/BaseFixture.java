@@ -49,7 +49,7 @@ public class BaseFixture {
 	private final LoggingTooltipExtension tooltipExtension = new LoggingTooltipExtension(new LogbackLogMessenger(tooltipLogger.getName(), Level.ALL, true, "%msg%n"));
 
 	@Extension
-	private final LoggingFormatterExtension loggingExtension = new LoggingFormatterExtension()
+    public final LoggingFormatterExtension loggingExtension = new LoggingFormatterExtension()
 			.registerListener(exampleLogListener)
 			.registerListener(exampleStoryboardListener);
 	

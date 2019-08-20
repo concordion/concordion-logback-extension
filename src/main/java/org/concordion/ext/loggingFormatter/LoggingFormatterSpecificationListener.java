@@ -39,6 +39,12 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 			
 	private List<Marker> markers = new ArrayList<Marker>();
 
+    private boolean debugit = false;
+
+    public void setDebugit() {
+        debugit = true;
+    }
+
 	public void setUseLogFileViewer(boolean useLogFileViewer) {
 		this.useLogFileViewer = useLogFileViewer;
 	}
@@ -74,11 +80,12 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 
 		loggingAdaptor.startSpecificationLogFile(testPath);
 		
-        LOGGER.info("Before Thread: {} {}", Thread.currentThread().getId(), Thread.currentThread().getName());
-		LOGGER.info("beforeProcessingSpecification - event file {}", event.getResource().getPath());
-		LOGGER.info("beforeProcessingSpecification - log file   {}", loggingAdaptor.getLogFile());
-        LOGGER.info("beforeProcessingSpecification - MDC        {}", loggingAdaptor.getTestMDC());
-		
+        if (debugit) {
+            LOGGER.info("Before Thread: {} {}", Thread.currentThread().getId(), Thread.currentThread().getName());
+            LOGGER.info("beforeProcessingSpecification - event file {}", event.getResource().getPath());
+            LOGGER.info("beforeProcessingSpecification - log file   {}", loggingAdaptor.getLogFile());
+            LOGGER.info("beforeProcessingSpecification - MDC        {}", loggingAdaptor.getTestMDC());
+        }
 	}
 
 	@Override
@@ -86,10 +93,12 @@ public class LoggingFormatterSpecificationListener implements SpecificationProce
 		try {
             // TODO MDC got out of sync on LogbackLoggingIndexChild2 - think example wasn't removed properly. Debug that.
 			
-			LOGGER.info("After Thread: {}", Thread.currentThread().getId());
-			LOGGER.info("afterProcessingSpecification - event file {}", event.getResource().getPath());
-			LOGGER.info("afterProcessingSpecification - log file   {}", loggingAdaptor.getLogFile());
-            LOGGER.info("afterProcessingSpecification - MDC        {}", loggingAdaptor.getTestMDC());
+            if (debugit) {
+                LOGGER.info("After Thread: {}", Thread.currentThread().getId());
+                LOGGER.info("afterProcessingSpecification - event file {}", event.getResource().getPath());
+                LOGGER.info("afterProcessingSpecification - log file   {}", loggingAdaptor.getLogFile());
+                LOGGER.info("afterProcessingSpecification - MDC        {}", loggingAdaptor.getTestMDC());
+            }
 
 			File logFile = new File(loggingAdaptor.getBaseOutputDir(), getPath(event.getResource().getPath()) + "Log.html");
 			if (!logFile.exists()) {
