@@ -39,7 +39,7 @@ public class BaseFixture {
 	protected LayoutFormattedLogListener exampleLogListener = new LayoutFormattedLogListener();
 	protected ExampleStoryboardListener exampleStoryboardListener = new ExampleStoryboardListener();
 	private JavaSourceCompiler compiler;
-    private static final Pattern CLASS_NAME_PATTERN = Pattern.compile("class\\s*(.*?)\\s*(\\{|extends)");
+    private static final Pattern CLASS_NAME_PATTERN = Pattern.compile(".*class\\s*(.*?)\\s*(\\{|extends)");
     private static String MESSAGE_TOKEN = "<td class=\"Message\">";
     private static String END_TOKEN = "</td>";
 	private int example = 0;
