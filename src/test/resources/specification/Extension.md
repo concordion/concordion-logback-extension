@@ -60,7 +60,7 @@ If the specification makes use of the new Concordion Example command, a separate
 
 ### Log Viewer
 
-This extension includes a log viewer to make the logs a little friendlier to use and gives the ability to filter the logs by the log level.  The log viewer is enabled by calling the method [`setUseLogFileViewer(true)`](- "c:assertTrue=useLogViewer(#fixture, #TEXT)") on the logging extension
+This extension includes a log viewer to make the logs a little friendlier to use and gives the ability to filter the logs by the log level.  The log viewer is enabled by calling the method [setUseLogFileViewer(true)](- "c:assertTrue=useLogViewer(#fixture, #TEXT)") on the logging extension
 
     @Extension 
     private final LoggingFormatterExtension loggingExtension = new LoggingFormatterExtension().setUseLogFileViewer(true);

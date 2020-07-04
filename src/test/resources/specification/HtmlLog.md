@@ -47,7 +47,7 @@ LOGGER.with()
 	.debug();
 </pre></div>
 
-This will add a debug level entry in the HTML log with the message [This is a &amp;lt;TEXT&amp;gt; message](- "?=getLogMessage(#fixture)").  
+This will add a debug level entry in the HTML log with the message [This is a &lt;TEXT&gt; message](- "?=getLogMessage(#fixture)").  
 	
 ### HTML Message
 The log entry can often be improved with a little HTML.
@@ -58,7 +58,7 @@ LOGGER.with()
 	.trace();
 </pre></div>
 
-This will add a log entry in the HTML log with the message [&lt;b&gt;This is BOLD&lt;/b&gt;](- "?=getLogMessage(#fixture)").
+This will add a log entry in the HTML log with the message [<b>This is BOLD</b>](- "?=getLogMessage(#fixture)").
 
 Other appenders such as the console appender will continue log the text [without the HTML](- "c:assertTrue=consoleLogIsPlainText(#fixture)") tags.
 
@@ -72,7 +72,7 @@ LOGGER.with()
 	.trace();
 </pre></div>
 
-This [example](- "processConsoleExample(#fixture)") will append [This is not bold](- "?=getConsoleMessage()") to the console and [&lt;b&gt;This is BOLD&lt;/b&gt;](- "?=getLogMessage()") to the log file. 
+This [example](- "processConsoleExample(#fixture)") will append [This is not bold](- "?=getConsoleMessage()") to the console and [<b>This is BOLD</b>](- "?=getLogMessage()") to the log file. 
 
 ### Screenshots
 To include screenshots in your logs you must provide a class that implements ScreenShotTaker.  See the demo project for an example of a Selenium screenshot taker. 
