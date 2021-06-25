@@ -26,14 +26,14 @@ sourceSets {
 }
 
 dependencies {
-	reportloggerCompile 'org.slf4j:slf4j-ext:1.7.25'
-    reportloggerCompile 'ch.qos.logback:logback-classic:1.2.3'
-    reportloggerCompile 'commons-io:commons-io:2.5'
+	reportloggerImplementation 'org.slf4j:slf4j-ext:1.7.25'
+    reportloggerImplementation 'ch.qos.logback:logback-classic:1.2.3'
+    reportloggerImplementation 'commons-io:commons-io:2.5'
         
-    compile sourceSets.reportlogger.output
-    compile sourceSets.reportlogger.compileClasspath
+    implementation sourceSets.reportlogger.output
+    implementation sourceSets.reportlogger.compileClasspath
     
-	compile "org.concordion:concordion-logging-tooltip-extension:1.1.2"
+	implementation "org.concordion:concordion-logging-tooltip-extension:1.1.2"
 		
 	// Only needed for javadocs :-(
 	reportloggerCompileOnly 'commons-lang:commons-lang:2.6'
@@ -44,14 +44,15 @@ task reportloggerJar(type: Jar) {
     from sourceSets.reportlogger.output
 }
 
-// Include reportlogger source set in sources jar
-sourcesJar  { 
-    from sourceSets.reportlogger.allSource
-} 
+// TODO add equivalent for Gradle 7
+// // Include reportlogger source set in sources jar
+// sourcesJar  { 
+//     from sourceSets.reportlogger.allSource
+// } 
 
 publishing { 
 	publications { 
-        main(MavenPublication) { 
+        mavenJava(MavenPublication) { 
             artifact reportloggerJar { 
             	classifier 'reportlogger' 
             }
