@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/concordion/concordion-logback-extension.svg?branch=master)](https://travis-ci.com/concordion/concordion-logback-extension)
+[![Build and Test](https://github.com/concordion/concordion-logback-extension/actions/workflows/ci.yml/badge.svg)](https://github.com/concordion/concordion-logback-extension/actions/workflows/ci.yml)
 
 This [Concordion](http://www.concordion.org) extension provides support for Logback logging.
 
