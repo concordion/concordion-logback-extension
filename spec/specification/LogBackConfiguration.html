@@ -166,89 +166,62 @@ ins {
 <h2>Configuration Files</h2>
 <p>The extension comes with a set of logback configuration files to get you up and running:</p>
 <table>
-  <tbody>
-    <tr>
-      <td><strong>logback-test.xml</strong> </td>
-      <td>Default configuration picked up by LogBack when running tests, it is configured to log everything both to standard out and to HTML style log file(s) </td>
-    </tr>
-    <tr>
-      <td><strong>logback-jenkins.xml</strong> </td>
-      <td>Alternative configuration differs from the above in that the console log on receives information, warning and error level entries </td>
-    </tr>
-    <tr>
-      <td><strong>logback-include.xml</strong> </td>
-      <td>Configuration for the various appenders used by the logging framework, it is used by the previous two configuration files </td>
-    </tr>
-  </tbody>
+<thead />
+<tbody>
+<tr><td> <strong>logback-test.xml</strong>    </td><td> Default configuration picked up by LogBack when running tests, it is configured to log everything both to standard out and to HTML style log file(s) </td></tr>
+<tr><td> <strong>logback-jenkins.xml</strong> </td><td> Alternative configuration differs from the above in that the console log on receives information, warning and error level entries </td></tr>
+<tr><td> <strong>logback-include.xml</strong> </td><td> Configuration for the various appenders used by the logging framework, it is used by the previous two configuration files </td></tr>
+</tbody>
 </table>
-<p>These files must be placed in the class path of your project, eg in the src/test/resources folder. </p>
+<p>These files must be placed in the class path of your project, eg in the src/test/resources folder.</p>
 <h2>Configuration Selection</h2>
-<p>By default LogBack will search for logback-test.xml and use that to configure logging. This file has been set up with defaults that will work well in when running tests in your favourite IDE but possibly not so great when running in a continuous integration environment. </p>
+<p>By default LogBack will search for logback-test.xml and use that to configure logging.  This file has been set up with defaults that will work well in when running tests in your favourite IDE but possibly not so great when running in a continuous integration environment.</p>
 <p>In a continuous integration environment such as Jenkins you have the option to provide a different configuration file to LogBack by including the command line argument <code>-Dlogback.configurationFile=logback-jenkins.xml</code>.</p>
 <h2>Appender Configuration</h2>
 <p>The logback-include.xml configuration files provide a number of pre-configured appenders that allow you to control the style of the logs you want.</p>
 <table>
-  <thead>
-    <tr>
-      <th>Appender </th>
-      <th>Description </th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td colspan="2"><strong>Console Appenders</strong> </td>
-    </tr>
-    <tr>
-      <td>STDOUT </td>
-      <td>Is designed to log everything to the console, you might prefer to use this when running tests within an IDE such as Eclipse </td>
-    </tr>
-    <tr>
-      <td>STDOUT-INFO </td>
-      <td>Is designed to log only INFO level and above to the console and ignore DEBUG and below log statements. This can be useful in a continuous integration environment such as Jenkins, especially if running tests in parallel as the logs can become all but incomprehensible </td>
-    </tr>
-    <tr>
-      <td colspan="2"><strong>File Appenders</strong> </td>
-    </tr>
-    <tr>
-      <td>FILE-PER-TEST </td>
-      <td>Automatically creates a new text based (i.e. classic) log file per test (or example if using Concordion's Example command) </td>
-    </tr>
-    <tr>
-      <td>HTML‑FILE‑PER‑TEST </td>
-      <td>Automatically creates a new HTML based log file per test (or example if using Concordion's Example command). This logger also allows embedding screenshots, and other data that a text based log file cannot handle in an easy to read format. (This is the default file appender) </td>
-    </tr>
-  </tbody>
+<thead>
+<tr><th> Appender               </th><th> Description                                          </th></tr>
+</thead>
+<tbody>
+<tr><td colspan="2"> <strong>Console Appenders</strong>                                                        </td></tr>
+<tr><td> STDOUT                 </td><td> Is designed to log everything to the console, you might prefer to use this when running tests within an IDE such as Eclipse </td></tr>
+<tr><td> STDOUT-INFO            </td><td> Is designed to log only INFO level and above to the console and ignore DEBUG and below log statements.  This can be useful in a continuous integration environment such as Jenkins, especially if running tests in parallel as the logs can become all but incomprehensible </td></tr>
+<tr><td colspan="2"><strong>File Appenders</strong>                                                            </td></tr>
+<tr><td> FILE-PER-TEST          </td><td> Automatically creates a new text based (i.e. classic) log file per test (or example if using Concordion's Example command) </td></tr>
+<tr><td> HTML‑FILE‑PER‑TEST  </td><td> Automatically creates a new HTML based log file per test (or example if using Concordion's Example command).  This logger also allows embedding screenshots, and other data that a text based log file cannot handle in an easy to read format. (This is the default file appender) </td></tr>
+</tbody>
 </table>
 <h2>Log Message Format</h2>
-<p>The configuration files default to logging to an HTML file, to use the classic text based file appender, edit both the logback-jenkins.xml and logback-test.xml files and replace: </p>
+<p>The configuration files default to logging to an HTML file, to use the classic text based file appender, edit both the logback-jenkins.xml and logback-test.xml files and replace:</p>
 <pre><code>&lt;appender-ref ref="HTML-FILE-PER-TEST" /&gt;
 </code></pre>
-<p>with: </p>
+<p>with:</p>
 <pre><code>&lt;appender-ref ref="FILE-PER-TEST" /&gt;
 </code></pre>
 <p>To customise the log message format edit logback-include.xml and update the <a href="http://logback.qos.ch/manual/layouts.html#ClassicPatternLayout">pattern</a> with the desired conversion words.</p>
 <h3>Classic Text Log Pattern</h3>
 <p>This pattern will be found in the FILE-PER-TEST appender configuration.</p>
 <pre><code>&lt;appender name="FILE-PER-TEST" class="ch.qos.logback.classic.sift.SiftingAppender"&gt;&gt;
-    ...       
-         &lt;layout class="ch.qos.logback.classic.PatternLayout"&gt;
-          &lt;pattern&gt;%d{dd-MM-yyyy HH:mm:ss.SSS} %-5level %logger{36} - %msg%n%ex{short}&lt;/pattern&gt; 
-         &lt;/layout&gt;&gt;
-    ....
+	...		
+			&lt;layout class="ch.qos.logback.classic.PatternLayout"&gt;
+				&lt;pattern&gt;%d{dd-MM-yyyy HH:mm:ss.SSS} %-5level %logger{36} - %msg%n%ex{short}&lt;/pattern&gt; 
+			&lt;/layout&gt;&gt;
+	....
 &lt;/appender&gt;&gt;
 </code></pre>
 <h3>HTML Log Patternn</h3>
 <p>Conversion words should not add exception information to the message (eg %exception, %throwable, %rootException, etc) as this information is automatically appended by HTMLLayout in a new table row below the logging statement.</p>
-<p>Each conversion word in the layout pattern will be shown in a <span concordion:assertTrue="multiColumnLayout()" class="success">separate column</span>. </p>
+<p>Each conversion word in the layout pattern will be shown in a <span concordion:assertTrue="multiColumnLayout()" class="success">separate column</span>.</p>
 <p>One notable exception about the use of PatternLayout with HTMLLayout is that conversion words should not be separated by space characters or more generally by literal text. Each specifier found in the pattern will result in a separate column. Likewise a separate column will be generated for each block of literal text found in the pattern, potentially wasting valuable real-estate on your screen.</p>
 <pre><code>&lt;layout class="org.concordion.logback.html.HTMLLayout"&gt;&gt;
   &lt;pattern&gt;%date{HH:mm:ss.SSS}%message%file%line&lt;/pattern&gt;&gt;
 &lt;/layout&gt;&gt;
 </code></pre>
 <h3>Grouping Log Statements</h3>
-<p>A test often involves a series of steps to complete a task. This extension provides two mechanisms to group log statements under a step. </p>
-<p>The simplest method is to choose select a <span concordion:assertTrue="recordStepsUsingLogLevel()" class="success">log level</span> (either INFO or DEBUG) and any log messages logged at that level will create a step in your log file. This may work well for existing test suites. </p>
-<p>A more flexible option (and the default) is to use a <span concordion:assertTrue="recordStepsUsingStepMarker()" class="success">step marker</span>, and any log statement with that marker will be formatted as a step. </p>
+<p>A test often involves a series of steps to complete a task.  This extension provides two mechanisms to group log statements under a step.</p>
+<p>The simplest method is to choose select a <span concordion:assertTrue="recordStepsUsingLogLevel()" class="success">log level</span> (either INFO or DEBUG) and any log messages logged at that level will create a step in your log file.  This may work well for existing test suites.</p>
+<p>A more flexible option (and the default) is to use a <span concordion:assertTrue="recordStepsUsingStepMarker()" class="success">step marker</span>, and any log statement with that marker will be formatted as a step.</p>
 <p>Configuration is done in logback-include.xml by updating the value of the step recorder property to: STEP_MARKER, INFO_LOG_LEVEL, or DEBUG_LOG_LEVEL.</p>
 <pre><code>&lt;!-- This is set in logback-include.xml --&gt;
 &lt;layout class="org.concordion.logback.HTMLLayout"&gt;
@@ -257,9 +230,9 @@ ins {
   &lt;stepRecorder&gt;STEP_MARKER&lt;/stepRecorder&gt;
 &lt;/layout&gt;
 
-
+    
 LOGGER.info("My step here");
 
 // Using a step marker will always work, regardless of the setting of the StepRecorder property
 LOGGER.step("My step here");
-</code></pre><div class="footer">Results generated by <a href="http://www.concordion.org" style="font-weight: bold; text-decoration: none; color: #89C;">Concordion</a><div class="testTime">in 61 ms on 18-Jun-2019 at 18:39:04 NZST</div><div class="testTime"><a style="font-weight: bold; text-decoration: none; color: #89C;" href="LogBackConfigurationLog.html">Log File</a></div></div></body></html>
+</code></pre><div class="footer">Results generated by <a href="http://www.concordion.org" style="font-weight: bold; text-decoration: none; color: #89C;">Concordion</a><div class="testTime">in 61 ms on 11-Jul-2021 at 16:38:49 NZST</div><div class="testTime"><a style="font-weight: bold; text-decoration: none; color: #89C;" href="LogBackConfigurationLog.html">Log File</a></div></div></body></html>

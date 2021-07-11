@@ -167,44 +167,39 @@ ins {
 <p>Like all Concordion extensions the logging extension can be registered with an annotation on the test (or ancestor) class:</p>
 <pre><code>@Extensions(LoggingFormatterExtension.class)
 </code></pre>
-<p>However it is likely that you'll want to customise the extension so more often you'll register the extension manually: </p>
+<p>However it is likely that you'll want to customise the extension so more often you'll register the extension manually:</p>
 <pre><code>@Extension 
 private final LoggingFormatterExtension loggingExtension = new LoggingFormatterExtension()
 </code></pre>
 <div id="usingtheextension" />
 <h2>Using the extension</h2>
-<p>Assuming the the logger is <span concordion:assertTrue="isClassicLoggerConfigured()" class="success">configured correctly</span> (see <a href="LogBackConfiguration.html">here</a> for more information), appending entries to the log is as simple as declaring the logger and logging away. </p>
-<p>Note that we are using SLF4J rather than referring to the logging implementation (i.e. LogBack) directly. </p>
+<p>Assuming the the logger is <span concordion:assertTrue="isClassicLoggerConfigured()" class="success">configured correctly</span> (see <a href="LogBackConfiguration.html">here</a> for more information), appending entries to the log is as simple as declaring the logger and logging away.</p>
+<p>Note that we are using SLF4J rather than referring to the logging implementation (i.e. LogBack) directly.</p>
 <div><pre concordion:set="#fixture">
 import org.concordion.api.extension.Extension;
 import org.concordion.ext.LoggingFormatterExtension;
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.runner.RunWith;
+<p>import org.slf4j.Logger; import org.slf4j.LoggerFactory;</p>
+<p>@RunWith(ConcordionRunner.class) public class ExampleFixture { private static final Logger LOGGER = LoggerFactory.getLogger(ExampleFixture.class);</p>
+<pre><code>@Extension 
+private final LoggingFormatterExtension loggingExtension = new LoggingFormatterExtension();
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-@RunWith(ConcordionRunner.class)
-public class ExampleFixture {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ExampleFixture.class);
-    
-    @Extension 
-    private final LoggingFormatterExtension loggingExtension = new LoggingFormatterExtension();
-
-    public void logSomething() {
-        LOGGER.debug("Log a value");
-    }
+public void logSomething() {
+    LOGGER.debug("Log a value");
 }
+</code></pre>
+<p>}</p>
 </pre></div>
 <p>This will append the entry <span concordion:assert-equals="canUseClassicLogger(#fixture)" class="success">DEBUG ExampleFixture - Log a value</span> into the log file.</p>
 <h3>Automatic Exception Logging</h3>
-<p>The extension will automatically catch and log any <span concordion:assertTrue="logUncaughtException()" class="success">uncaught exceptions</span> thrown within your tests. This removes the need to catch and log exceptions potentially simplifying your test code.</p>
+<p>The extension will automatically catch and log any <span concordion:assertTrue="logUncaughtException()" class="success">uncaught exceptions</span> thrown within your tests.  This removes the need to catch and log exceptions potentially simplifying your test code.</p>
 <h3>Specification Log</h3>
 <p>For ease of access, and to support running tests in parallel, a separate log file will be created per specification (but only if the test writes a log entry) and a link to that log file will be placed in the <span concordion:assertTrue="specificationHasLinkToLogFile(#fixture)" class="success">specifications footer</span>.</p>
 <h3>Example Logs</h3>
-<p>If the specification makes use of the new Concordion Example command, a separate log file will be created per example and a link to that log file will be placed at the <span concordion:assertTrue="exampleHasLinkToLogFile(#fixture)" class="success">top right of the example</span> </p>
+<p>If the specification makes use of the new Concordion Example command, a separate log file will be created per example and a link to that log file will be placed at the <span concordion:assertTrue="exampleHasLinkToLogFile(#fixture)" class="success">top right of the example</span></p>
 <h3>Log Viewer</h3>
-<p>This extension includes a log viewer to make the logs a little friendlier to use and gives the ability to filter the logs by the log level. The log viewer is enabled by calling the method <span concordion:assertTrue="useLogViewer(#fixture, #TEXT)" class="success"><code>setUseLogFileViewer(true)</code></span> on the logging extension</p>
+<p>This extension includes a log viewer to make the logs a little friendlier to use and gives the ability to filter the logs by the log level.  The log viewer is enabled by calling the method <span concordion:assertTrue="useLogViewer(#fixture, #TEXT)" class="success">setUseLogFileViewer(true)</span> on the logging extension</p>
 <pre><code>@Extension 
 private final LoggingFormatterExtension loggingExtension = new LoggingFormatterExtension().setUseLogFileViewer(true);
 </code></pre>
@@ -213,8 +208,8 @@ private final LoggingFormatterExtension loggingExtension = new LoggingFormatterE
 <h2>Integration With other Extensions</h2>
 <p>The logging extension allows listeners to be registered to allow other extensions to monitor and <span concordion:assertTrue="integration()" class="success">react to log entries</span> when a specific marker is encountered.</p>
 <pre><code>@Extension private final LoggingFormatterExtension loggingExtension = new LoggingFormatterExtension()
-       .registerListener(new ExampleStoryboardListener());
+		.registerListener(new ExampleStoryboardListener());
 </code></pre>
-<p>These listeners will work with when tests run in <span concordion:assertTrue="parallel()" class="success">parallel</span>. </p>
+<p>These listeners will work with when tests run in <span concordion:assertTrue="parallel()" class="success">parallel</span>.</p>
 <h2>Using an Alternative Logging Implementation</h2>
-<p>If for some reason you do not wish to use LogBack then the extension will accept a custom logging adaptor that implements the <code>ILoggingAdaptor</code> interface.</p><div class="footer">Results generated by <a href="http://www.concordion.org" style="font-weight: bold; text-decoration: none; color: #89C;">Concordion</a><div class="testTime">in 238 ms on 18-Jun-2019 at 18:39:05 NZST</div><div class="testTime"><a style="font-weight: bold; text-decoration: none; color: #89C;" href="Extension.log">Log File</a></div></div></body></html>
+<p>If for some reason you do not wish to use LogBack then the extension will accept a custom logging adaptor that implements the <code>ILoggingAdaptor</code> interface.</p><div class="footer">Results generated by <a href="http://www.concordion.org" style="font-weight: bold; text-decoration: none; color: #89C;">Concordion</a><div class="testTime">in 277 ms on 11-Jul-2021 at 16:38:51 NZST</div><div class="testTime"><a style="font-weight: bold; text-decoration: none; color: #89C;" href="Extension.log">Log File</a></div></div></body></html>

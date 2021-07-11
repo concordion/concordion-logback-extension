@@ -165,31 +165,29 @@ ins {
 <p>Plain text logs supply a lot of useful information but it can take time to trawl though to find the information you want and the context of what is being logged is often lacking.</p>
 <p>The goals of the HTML based logs are to:</p>
 <ul>
-  <li>Allow adding text based data, html data, screenshots, and exceptions easily</li>
-  <li>Integrate with logging framework with minimal changes - ie stick with an SLF4J based logging interface and provide a Logback implementation</li>
-  <li>Provide a platform to integrate with other extensions such as tooltip, storyboard and screenshot giving is a common interface for interacting with these extensions</li>
-  <li>Support 'location aware' logging so class and line number information can be included in the logs</li>
+<li>Allow adding text based data, html data, screenshots, and exceptions easily</li>
+<li>Integrate with logging framework with minimal changes - ie stick with an SLF4J based logging interface and provide a Logback implementation</li>
+<li>Provide a platform to integrate with other extensions such as tooltip, storyboard and screenshot giving is a common interface for interacting with these extensions</li>
+<li>Support 'location aware' logging so class and line number information can be included in the logs</li>
 </ul>
 <p>The implementation is based around <a href="http://slf4j.org/extensions.html">SLF4J Extensions</a> and provides a custom <a href="http://logback.qos.ch/manual/layouts.html">layout</a> and <a href="http://logback.qos.ch/manual/appenders.html">appender</a> for the LogBack logging framework.</p>
-<p>Advanced logging features such as recording steps, screenshots and data are enabled by the use of <a href="http://www.slf4j.org/apidocs/org/slf4j/Marker.html">Markers</a> (there is some more information on markers buried in the LogBack manuals chapter on <a href="http://logback.qos.ch/manual/filters.html">filters</a>). </p>
-<p>Before using this the logger, LogBack must be configured. See <a href="LogBackConfiguration.html">LogBack Configuration</a> for more information.</p>
+<p>Advanced logging features such as recording steps, screenshots and data are enabled by the use of <a href="http://www.slf4j.org/apidocs/org/slf4j/Marker.html">Markers</a> (there is some more information on markers buried in the LogBack manuals chapter on <a href="http://logback.qos.ch/manual/filters.html">filters</a>).</p>
+<p>Before using this the logger, LogBack must be configured.  See <a href="LogBackConfiguration.html">LogBack Configuration</a> for more information.</p>
 <h2>Usage</h2>
 <hr />
-<p>When the logger is configured to <span concordion:assertTrue="isHtmlAppenderConfigured()" class="success">use the HTML appender</span> you can continue to use the <span concordion:assertTrue="canUseClassicLogger()" class="success">standard logger</span> to log to the HTML log file. However, to use the advanced logging features you will need to use the ReportLogger which can be setup as follows: </p>
+<p>When the logger is configured to <span concordion:assertTrue="isHtmlAppenderConfigured()" class="success">use the HTML appender</span> you can continue to use the <span concordion:assertTrue="canUseClassicLogger()" class="success">standard logger</span> to log to the HTML log file.  However, to use the advanced logging features you will need to use the ReportLogger which can be setup as follows:</p>
 <div><pre concordion:set="#fixture">
 import org.concordion.slf4j.ext.ReportLogger;
 import org.concordion.slf4j.ext.ReportLoggerFactory;
-
-public class Test {
-    private static final ReportLogger LOGGER = ReportLoggerFactory.getReportLogger(Test.class);
-    
-    public void logSomething() {
-        LOGGER.debug("Log a value");
-    }
+<p>public class Test { private static final ReportLogger LOGGER = ReportLoggerFactory.getReportLogger(Test.class);</p>
+<pre><code>public void logSomething() {
+    LOGGER.debug("Log a value");
 }
+</code></pre>
+<p>}</p>
 </pre></div>
 <p>This will append the entry <span concordion:assertTrue="canUseReportLogger(#fixture, #TEXT)" class="success">Log a value</span> to the log file.</p>
-<p>To aid in the creation of a log entry the logging API allows you to chain a number of methods together before telling it at what level to perform the logging by using the <code>with()</code> method on the logger. </p>
+<p>To aid in the creation of a log entry the logging API allows you to chain a number of methods together before telling it at what level to perform the logging by using the <code>with()</code> method on the logger.</p>
 <h3>Text Message</h3>
 <p>Plain text log entries are still supported and use the same SLF4J format for passing arguments.</p>
 <div><pre concordion:set="#fixture">
@@ -197,7 +195,7 @@ LOGGER.with()
 	.message("This is a &lt;TEXT&gt; {}", "message")
 	.debug();
 </pre></div>
-<p>This will add a debug level entry in the HTML log with the message <span concordion:assert-equals="getLogMessage(#fixture)" class="success">This is a &amp;lt;TEXT&amp;gt; message</span>. </p>
+<p>This will add a debug level entry in the HTML log with the message <span concordion:assert-equals="getLogMessage(#fixture)" class="success">This is a &amp;lt;TEXT&amp;gt; message</span>.</p>
 <h3>HTML Message</h3>
 <p>The log entry can often be improved with a little HTML.</p>
 <div><pre concordion:set="#fixture">
@@ -214,9 +212,9 @@ LOGGER.with()
 	.htmlMessage("&lt;b&gt;This is BOLD&lt;/b&gt;")
 	.trace();
 </pre></div>
-<p>This <span concordion:execute="processConsoleExample(#fixture)">example</span> will append <span concordion:assert-equals="getConsoleMessage()" class="success">This is not bold</span> to the console and <span concordion:assert-equals="getLogMessage()" class="success">&lt;b&gt;This is BOLD&lt;/b&gt;</span> to the log file. </p>
+<p>This <span concordion:execute="processConsoleExample(#fixture)">example</span> will append <span concordion:assert-equals="getConsoleMessage()" class="success">This is not bold</span> to the console and <span concordion:assert-equals="getLogMessage()" class="success">&lt;b&gt;This is BOLD&lt;/b&gt;</span> to the log file.</p>
 <h3>Screenshots</h3>
-<p>To include screenshots in your logs you must provide a class that implements ScreenShotTaker. See the demo project for an example of a Selenium screenshot taker. </p>
+<p>To include screenshots in your logs you must provide a class that implements ScreenShotTaker.  See the demo project for an example of a Selenium screenshot taker.</p>
 <p>To allow the extension to include screenshots in the logs when an exception or failure is detected during a test, then the screenshot taker must either be registered with:</p>
 <div><pre concordion:set="#fixture">
 // Registering via extension
@@ -227,20 +225,15 @@ getLoggingExtension().setScreenshotTaker(new DummyScreenshotTaker());
 // Registering via ReportLoggerFactory
 ReportLoggerFactory.setScreenshotTaker(new DummyScreenshotTaker());
 </pre></div>
-<p>... or directly with the <span concordion:assertTrue="registerExtension(#fixture)" class="success">report logger</span> </p>
-<p><strong>Note</strong> that the screenshot taker is automatically unregistered as the specification completes and are only valid for the thread they are registered with. </p>
+<p>... or directly with the <span concordion:assertTrue="registerExtension(#fixture)" class="success">report logger</span></p>
+<p><strong>Note</strong> that the screenshot taker is automatically unregistered as the specification completes and are only valid for the thread they are registered with.</p>
 <p>Logging of the screenshots can be performed:</p>
 <div><pre concordion:set="#fixture">
 ReportLoggerFactory.setScreenshotTaker(new DummyScreenshotTaker());
-
-LOGGER.with()
-	.message("Clicking 'Login'")
-	.screenshot()
-	.trace();
-
-ReportLoggerFactory.removeScreenshotTaker();
+<p>LOGGER.with() .message("Clicking 'Login'") .screenshot() .trace();</p>
+<p>ReportLoggerFactory.removeScreenshotTaker();</p>
 </pre></div>
-<p>... using the pre-registered <span concordion:assertTrue="hasScreenshot(#fixture)" class="success">screenshot taker</span> </p>
+<p>... using the pre-registered <span concordion:assertTrue="hasScreenshot(#fixture)" class="success">screenshot taker</span></p>
 <div><pre concordion:set="#fixture">
 LOGGER.with()
 	.message("Clicking 'Login'")
@@ -267,11 +260,7 @@ LOGGER.with()
 <h3>Attachments</h3>
 <div><pre concordion:set="#fixture">
 InputStream stream = new ByteArrayInputStream("Example".getBytes(StandardCharsets.UTF_8));
-
-LOGGER.with()
-	.message("Show this attachment")
-	.attachment(stream, "example.txt", MediaType.PLAIN_TEXT)
-	.trace();
+<p>LOGGER.with() .message("Show this attachment") .attachment(stream, "example.txt", MediaType.PLAIN_TEXT) .trace();</p>
 </pre></div>
 <p>If you wish to include non text base files, or just want keep your data outside of the log file, then <span concordion:assertTrue="addAttachment(#fixture)" class="success">attachments</span> allow you to do this.</p>
 <h3>Exceptions</h3>
@@ -281,18 +270,15 @@ LOGGER.error("Something when wrong", new Exception("me"));
 <p>Exceptions are formatted within a <span concordion:assertTrue="throwException(#fixture)" class="success">collapsible section</span> that presents the error message by default but will allow the user to drill down into the stack trace.</p>
 <h3>Buffered Log Entries</h3>
 <p>On occasion you may find a need to update a previous log entry with additional detail but want to log the first part immediately in case an exception is thrown and you loose some of the context, for example: * You're about to make a request that you want logged, but also want to include the result of the request * You're performing a repetitive task and only want to keep the most recent request</p>
-<p>This can be achieved by using <code>LOGGER.withBuffered()</code> instead of <code>LOGGER.with()</code>, the only catch is that if another log entry is made it will force the buffered log entry to be written to the log. </p>
+<p>This can be achieved by using <code>LOGGER.withBuffered()</code> instead of <code>LOGGER.with()</code>, the only catch is that if another log entry is made it will force the buffered log entry to be written to the log.</p>
 <div><pre concordion:set="#fixture">
 LOGGER.withBuffered().message("I'm buffered").debug();
 LOGGER.with().message("Oops, I forced writing the buffered entry").debug();
-
-LOGGER.withBuffered().message("I'm also buffered").debug();
-LOGGER.getBufferedMessage().message("I won't be buffered soon!");
-LOGGER.writeBufferedMessage();
+<p>LOGGER.withBuffered().message("I'm also buffered").debug(); LOGGER.getBufferedMessage().message("I won't be buffered soon!"); LOGGER.writeBufferedMessage();</p>
 </pre></div>
 <p>This will add a <span concordion:assertTrue="addBuffered(#fixture)" class="success">the two buffered log entries</span> to the log.</p>
 <h3>Grouping Log Entries</h3>
-<p>A test often involves a series of steps to complete a task. This extension provides two mechanisms to group log statements under a step. </p>
+<p>A test often involves a series of steps to complete a task.  This extension provides two mechanisms to group log statements under a step.</p>
 <div><pre concordion:set="#fixture">
 // Using a step marker will always work, regardless of the setting of the StepRecorder property
 LOGGER.step("My step here");
@@ -300,33 +286,31 @@ LOGGER.step("My step here");
 <p>This will add a <span concordion:assertTrue="addStep(#fixture)" class="success">step</span> to the log.</p>
 <p>See <a href="LogBackConfiguration.html">LogBack Configuration</a> for an example of using the log level to achieve the same result.</p>
 <h3>Location Aware Logging</h3>
-<p>When debugging tests it is often desireable to know where something happened within your tests and the SLF4J/LogBack combination can provide the line and file of each logging statement out of the box. This is not necessary that helpful on helper classes used by tests so we have the option of telling the logger to log the location as that of the calling class rather than the current class.</p>
+<p>When debugging tests it is often desireable to know where something happened within your tests and the SLF4J/LogBack combination can provide the line and file of each logging statement out of the box.  This is not necessary that helpful on helper classes used by tests so we have the option of telling the logger to log the location as that of the calling class rather than the current class.</p>
 <p>For example, if we have a helper class that sets the locationAwareParent() to the current class...</p>
 <div><pre concordion:set="#helperclass">	
 import org.concordion.slf4j.ext.ReportLogger;
 import org.concordion.slf4j.ext.ReportLoggerFactory;
-
-public class LocationHelper {
-	private final ReportLogger logger = ReportLoggerFactory.getReportLogger(this.getClass().getName());
-
-	public void logLocationAware() {
-		logger.with()
-				.htmlMessage("<b>This is a location aware logged entry</b>")
-				.locationAwareParent(this)
-				.trace();
-	}
-	
-	public void logLocationAware2() {
-		logger.with()
-				.htmlMessage("<b>This is also a location aware logged entry</b>")
-				.locationAwareParent(LocationHelper.class)
-				.trace();
-	}
+<p>public class LocationHelper { private final ReportLogger logger = ReportLoggerFactory.getReportLogger(this.getClass().getName());</p>
+<pre><code>public void logLocationAware() {
+	logger.with()
+			.htmlMessage("&lt;b&gt;This is a location aware logged entry&lt;/b&gt;")
+			.locationAwareParent(this)
+			.trace();
 }
+
+public void logLocationAware2() {
+	logger.with()
+			.htmlMessage("&lt;b&gt;This is also a location aware logged entry&lt;/b&gt;")
+			.locationAwareParent(LocationHelper.class)
+			.trace();
+}
+</code></pre>
+<p>}</p>
 </pre></div>
 <p>That is used by a test...</p>
 <div><pre concordion:set="#fixture">
 new LocationHelper().logLocationAware();
 </pre></div>
-<p>Then log statements will show the location and line number of the class where the <span concordion:assertTrue="locationAware(#helperclass, #fixture)" class="success">logging statement was called</span>. </p>
-<p><strong>Note</strong> use the locationAwareParent(Class) version when attempting this in a base class and want logging to appear as if it was called from the parent.</p><div class="footer">Results generated by <a href="http://www.concordion.org" style="font-weight: bold; text-decoration: none; color: #89C;">Concordion</a><div class="testTime">in 1434 ms on 18-Jun-2019 at 18:39:05 NZST</div><div class="testTime"><a style="font-weight: bold; text-decoration: none; color: #89C;" href="HtmlLogLog.html">Log File</a></div></div></body></html>
+<p>Then log statements will show the location and line number of the class where the <span concordion:assertTrue="locationAware(#helperclass, #fixture)" class="success">logging statement was called</span>.</p>
+<p><strong>Note</strong> use the locationAwareParent(Class) version when attempting this in a base class and want logging to appear as if it was called from the parent.</p><div class="footer">Results generated by <a href="http://www.concordion.org" style="font-weight: bold; text-decoration: none; color: #89C;">Concordion</a><div class="testTime">in 1626 ms on 11-Jul-2021 at 16:38:51 NZST</div><div class="testTime"><a style="font-weight: bold; text-decoration: none; color: #89C;" href="HtmlLogLog.html">Log File</a></div></div></body></html>
