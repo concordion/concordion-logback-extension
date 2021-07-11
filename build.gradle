@@ -30,10 +30,10 @@ dependencies {
     reportloggerImplementation 'ch.qos.logback:logback-classic:1.2.3'
     reportloggerImplementation 'commons-io:commons-io:2.10.0'
         
-    implementation sourceSets.reportlogger.output
-    implementation sourceSets.reportlogger.compileClasspath
+    api sourceSets.reportlogger.output
+    api sourceSets.reportlogger.compileClasspath
     
-	implementation "org.concordion:concordion-logging-tooltip-extension:1.1.2"
+	api "org.concordion:concordion-logging-tooltip-extension:1.1.2"
 		
 	// Only needed for javadocs :-(
 	reportloggerCompileOnly 'commons-lang:commons-lang:2.6'
