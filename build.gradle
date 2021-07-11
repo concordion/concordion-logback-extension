@@ -26,9 +26,9 @@ sourceSets {
 }
 
 dependencies {
-	reportloggerImplementation 'org.slf4j:slf4j-ext:1.7.25'
+	reportloggerImplementation 'org.slf4j:slf4j-ext:1.7.31'
     reportloggerImplementation 'ch.qos.logback:logback-classic:1.2.3'
-    reportloggerImplementation 'commons-io:commons-io:2.5'
+    reportloggerImplementation 'commons-io:commons-io:2.10.0'
         
     implementation sourceSets.reportlogger.output
     implementation sourceSets.reportlogger.compileClasspath
